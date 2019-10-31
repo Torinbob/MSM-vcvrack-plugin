@@ -1,14 +1,11 @@
 #include "MSM.hpp"
 
-Plugin *plugin;
+Plugin *pluginInstance;
 
 
 void init(rack::Plugin *p) {
-	plugin = p;		
-	p->slug = TOSTRING(SLUG);
-
-	p->version = TOSTRING(VERSION);
-
+	pluginInstance = p;
+		
 	p->addModel(modelVCO);
 	p->addModel(modelBVCO);
 	p->addModel(modelExperimentalVCO);
@@ -31,5 +28,5 @@ void init(rack::Plugin *p) {
 	p->addModel(modelSimpleSlider);
 	p->addModel(modelxseq);
 	p->addModel(modelBlankPanel);
-	
+
 };

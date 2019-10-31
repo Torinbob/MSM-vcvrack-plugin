@@ -37,12 +37,21 @@ struct VCA : Module {
 	float mixR_A = 0.0f ? 0.0f : 0.0f;
 	float mixLP_A = 0.0f ? 0.0f : 0.0f;
 	float mixRP_A = 0.0f ? 0.0f : 0.0f;
-	
+
 	int Theme = 0;
 	const float expBase = 50.0f;
-	
-	VCA() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {}
-	void step() override;
+
+	VCA() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+		configParam(VCA::MODE_A, 0.0, 1.0, 1.0, "");
+		configParam(VCA::MODE_LIN_EXP_L_PARAM_A, 0.0, 1.0, 1.0, "");
+		configParam(VCA::MODE_LIN_EXP_R_PARAM_A, 0.0, 1.0, 1.0, "");
+		configParam(VCA::LEVEL_A_L, 0.0, 1.0, 0.5, "");
+		configParam(VCA::LEVEL_A_R, 0.0, 1.0, 0.5, "");
+		configParam(VCA::PAN_A, -1.0, 1.0, 0.0, "");
+	}
+
+	void process(const ProcessArgs& args) override;
 
 	//PAN LEVEL
 	float PanL(float balance, float cv){ // -1...+1
@@ -50,12 +59,12 @@ struct VCA : Module {
 			p=M_PI*(balance+1)/4;
 			if(cv){
 				gl=std::cos(p)*(1+((cv+1)/5));
-			}else 
+			}else
 				{gl=std::cos(p);
 			}
 			return gl;
 	}
-	
+
 	float PanR(float balance , float cv){
 			float p, gr;
 			p=M_PI*(balance+1)/4;
@@ -65,27 +74,27 @@ struct VCA : Module {
 			}
 			return gr;
 	}
-	
+
 	//Json for Panel Theme
-	json_t *toJson() override	{
+	json_t *dataToJson() override	{
 		json_t *rootJ = json_object();
 		json_object_set_new(rootJ, "Theme", json_integer(Theme));
 		return rootJ;
 	}
-	void fromJson(json_t *rootJ) override	{
+	void dataFromJson(json_t *rootJ) override	{
 		json_t *ThemeJ = json_object_get(rootJ, "Theme");
 		if (ThemeJ)
 			Theme = json_integer_value(ThemeJ);
-	}	
-	
+	}
+
 };
 
-void VCA::step() {
-	
+void VCA::process(const ProcessArgs& args) {
+
 	float IN_A = inputs[IN_L_A].active ? inputs[IN_L_A].value : 0.0f;
 	float IN_B = inputs[IN_R_A].active ? inputs[IN_R_A].value : 0.0f;
 	float IN_PAN = IN_A + IN_B;
-	
+
 	if(params[MODE_A].value==1) { // normal mode
 		//VCA L
 		mixL_A = IN_A * params[LEVEL_A_L].value;
@@ -123,11 +132,11 @@ void VCA::step() {
 			outputs[SUM_NEG_A].value = 1.0f - saturate(mixL_A + mixR_A);
 		}
 	}
-	
+
 
 	if(params[MODE_A].value==0) { // pan mode
 		// VCA L PAN
-		mixRP_A = (IN_PAN * params[LEVEL_A_R].value) * PanR(params[PAN_A].value,(inputs[CV_PAN_INPUT_A].value)); 
+		mixRP_A = (IN_PAN * params[LEVEL_A_R].value) * PanR(params[PAN_A].value,(inputs[CV_PAN_INPUT_A].value));
 		if(inputs[CV2_A].active) {
 			if(params[MODE_LIN_EXP_R_PARAM_A].value==1) {
 				mixRP_A *= clamp(inputs[CV2_A].value / 10.0f, 0.0f, 1.0f);
@@ -135,7 +144,7 @@ void VCA::step() {
 			else {
 				mixRP_A *= rescale(powf(expBase, clamp(inputs[CV2_A].value / 10.0f, 0.0f, 1.0f)), 1.0f, expBase, 0.0f, 1.0f);
 			}
-		}	
+		}
 
 		// VCA R PAN
 		mixLP_A = (IN_PAN * params[LEVEL_A_L].value) * PanL(params[PAN_A].value,(inputs[CV_PAN_INPUT_A].value));
@@ -147,7 +156,7 @@ void VCA::step() {
 				mixLP_A *= rescale(powf(expBase, clamp(inputs[CV1_A].value / 10.0f, 0.0f, 1.0f)), 1.0f, expBase, 0.0f, 1.0f);
 			}
 		}
-	
+
 		// Outputs
 		if(outputs[OUTL_A].active) {
 		outputs[OUTL_A].value = saturate(mixLP_A);
@@ -160,77 +169,14 @@ void VCA::step() {
 		}
 		if(outputs[SUM_NEG_A].active) {
 			outputs[SUM_NEG_A].value = 1.0f - saturate(mixLP_A + mixRP_A);
-		}	
+		}
 
 	}
 };
 
-struct VCAWidget : ModuleWidget {
-	// Panel Themes
-	SVGPanel *panelClassic;
-	SVGPanel *panelNightMode;
-	
-	VCAWidget(VCA *module);
-	void step() override;
-	
-	Menu* createContextMenu() override;
-};
-
-VCAWidget::VCAWidget(VCA *module) : ModuleWidget(module) {
-	box.size = Vec(8 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
-	panelClassic = new SVGPanel();
-	panelClassic->box.size = box.size;
-	panelClassic->setBackground(SVG::load(assetPlugin(plugin, "res/Panels/VCA.svg")));
-	addChild(panelClassic);
-	
-	panelNightMode = new SVGPanel();
-	panelNightMode->box.size = box.size;
-	panelNightMode->setBackground(SVG::load(assetPlugin(plugin, "res/Panels/VCA-Dark.svg")));
-	addChild(panelNightMode);
-
-	addChild(Widget::create<MScrewA>(Vec(15, 0)));
-	addChild(Widget::create<MScrewD>(Vec(box.size.x-30, 0)));
-	addChild(Widget::create<MScrewC>(Vec(15, 365)));
-	addChild(Widget::create<MScrewB>(Vec(box.size.x-30, 365)));
-	
-	//addParam
-	addParam(ParamWidget::create<VioM2Switch>(Vec(53, 60), module, VCA::MODE_A, 0.0, 1.0, 1.0));
-	addParam(ParamWidget::create<VioM2Switch>(Vec(10, 190), module, VCA::MODE_LIN_EXP_L_PARAM_A, 0.0, 1.0, 1.0));	
-	addParam(ParamWidget::create<VioM2Switch>(Vec(95, 190), module, VCA::MODE_LIN_EXP_R_PARAM_A, 0.0, 1.0, 1.0));	
-	
-	addParam(ParamWidget::create<GreenLargeKnob>(Vec(10, 100), module, VCA::LEVEL_A_L, 0.0, 1.0, 0.5));
-	addParam(ParamWidget::create<GreenLargeKnob>(Vec(64, 100), module, VCA::LEVEL_A_R, 0.0, 1.0, 0.5));
-	
-	addParam(ParamWidget::create<GreenLargeKnob>(Vec(36, 175), module, VCA::PAN_A, -1.0, 1.0, 0.0));	
-	//addInput
-	addInput(Port::create<SilverSixPortA>(Vec(8, 240), Port::INPUT, module, VCA::IN_L_A));
-	addInput(Port::create<SilverSixPortD>(Vec(86, 240), Port::INPUT, module, VCA::IN_R_A));
-		
-	addInput(Port::create<SilverSixPortC>(Vec(8, 280), Port::INPUT, module, VCA::CV1_A));
-	addInput(Port::create<SilverSixPortA>(Vec(86, 280), Port::INPUT, module, VCA::CV2_A));
-	
-	addInput(Port::create<SilverSixPortD>(Vec(47, 240), Port::INPUT, module, VCA::CV_PAN_INPUT_A));
-	
-	//addOutput
-	addOutput(Port::create<SilverSixPortB>(Vec(8, 320), Port::OUTPUT, module, VCA::OUTL_A));
-	addOutput(Port::create<SilverSixPortC>(Vec(86, 320), Port::OUTPUT, module, VCA::OUTR_A));
-	
-	addOutput(Port::create<SilverSixPortD>(Vec(47, 280), Port::OUTPUT, module, VCA::SUM_POS_A));
-	addOutput(Port::create<SilverSixPortA>(Vec(47, 320), Port::OUTPUT, module, VCA::SUM_NEG_A));	
-	
-};
-
-void VCAWidget::step() {
-	VCA *vca = dynamic_cast<VCA*>(module);
-	assert(vca);
-	panelClassic->visible = (vca->Theme == 0);
-	panelNightMode->visible = (vca->Theme == 1);
-	ModuleWidget::step();
-}
-
 struct VCAClassicMenu : MenuItem {
 	VCA *vca;
-	void onAction(EventAction &e) override {
+	void onAction(const event::Action &e) override {
 		vca->Theme = 0;
 	}
 	void step() override {
@@ -241,7 +187,7 @@ struct VCAClassicMenu : MenuItem {
 
 struct VCANightModeMenu : MenuItem {
 	VCA *vca;
-	void onAction(EventAction &e) override {
+	void onAction(const event::Action &e) override {
 		vca->Theme = 1;
 	}
 	void step() override {
@@ -250,15 +196,78 @@ struct VCANightModeMenu : MenuItem {
 	}
 };
 
-Menu* VCAWidget::createContextMenu() {
-	Menu* menu = ModuleWidget::createContextMenu();
-	VCA *vca = dynamic_cast<VCA*>(module);
-	assert(vca);
-	menu->addChild(construct<MenuEntry>());
-	menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Theme"));
-	menu->addChild(construct<VCAClassicMenu>(&VCAClassicMenu::text, "Classic (default)", &VCAClassicMenu::vca, vca));
-	menu->addChild(construct<VCANightModeMenu>(&VCANightModeMenu::text, "Night Mode", &VCANightModeMenu::vca, vca));
-	return menu;
+struct VCAWidget : ModuleWidget {
+	// Panel Themes
+	SvgPanel *panelClassic;
+	SvgPanel *panelNightMode;
+
+	void appendContextMenu(Menu* menu) override {
+		VCA *vca = dynamic_cast<VCA*>(module);
+		assert(vca);
+		menu->addChild(construct<MenuEntry>());
+		menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Theme"));
+		menu->addChild(construct<VCAClassicMenu>(&VCAClassicMenu::text, "Classic (default)", &VCAClassicMenu::vca, vca));
+		menu->addChild(construct<VCANightModeMenu>(&VCANightModeMenu::text, "Night Mode", &VCANightModeMenu::vca, vca));
+	}
+
+	VCAWidget(VCA *module);
+	void step() override;
+};
+
+VCAWidget::VCAWidget(VCA *module) {
+	setModule(module);
+	box.size = Vec(8 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
+	panelClassic = new SvgPanel();
+	panelClassic->box.size = box.size;
+	panelClassic->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/VCA.svg")));
+	addChild(panelClassic);
+
+	panelNightMode = new SvgPanel();
+	panelNightMode->box.size = box.size;
+	panelNightMode->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/VCA-Dark.svg")));
+	addChild(panelNightMode);
+
+	addChild(createWidget<MScrewA>(Vec(15, 0)));
+	addChild(createWidget<MScrewD>(Vec(box.size.x-30, 0)));
+	addChild(createWidget<MScrewC>(Vec(15, 365)));
+	addChild(createWidget<MScrewB>(Vec(box.size.x-30, 365)));
+
+	//addParam
+	addParam(createParam<VioM2Switch>(Vec(53, 60), module, VCA::MODE_A));
+	addParam(createParam<VioM2Switch>(Vec(10, 190), module, VCA::MODE_LIN_EXP_L_PARAM_A));
+	addParam(createParam<VioM2Switch>(Vec(95, 190), module, VCA::MODE_LIN_EXP_R_PARAM_A));
+
+	addParam(createParam<GreenLargeKnob>(Vec(10, 100), module, VCA::LEVEL_A_L));
+	addParam(createParam<GreenLargeKnob>(Vec(64, 100), module, VCA::LEVEL_A_R));
+
+	addParam(createParam<GreenLargeKnob>(Vec(36, 175), module, VCA::PAN_A));
+	//addInput
+	addInput(createInput<SilverSixPortA>(Vec(8, 240), module, VCA::IN_L_A));
+	addInput(createInput<SilverSixPortD>(Vec(86, 240), module, VCA::IN_R_A));
+
+	addInput(createInput<SilverSixPortC>(Vec(8, 280), module, VCA::CV1_A));
+	addInput(createInput<SilverSixPortA>(Vec(86, 280), module, VCA::CV2_A));
+
+	addInput(createInput<SilverSixPortD>(Vec(47, 240), module, VCA::CV_PAN_INPUT_A));
+
+	//addOutput
+	addOutput(createOutput<SilverSixPortB>(Vec(8, 320), module, VCA::OUTL_A));
+	addOutput(createOutput<SilverSixPortC>(Vec(86, 320), module, VCA::OUTR_A));
+
+	addOutput(createOutput<SilverSixPortD>(Vec(47, 280), module, VCA::SUM_POS_A));
+	addOutput(createOutput<SilverSixPortA>(Vec(47, 320), module, VCA::SUM_NEG_A));
+
+};
+
+void VCAWidget::step() {
+	if (module) {
+		VCA *vca = dynamic_cast<VCA*>(module);
+		assert(vca);
+		panelClassic->visible = (vca->Theme == 0);
+		panelNightMode->visible = (vca->Theme == 1);
+	}
+
+	ModuleWidget::step();
 }
 
-Model *modelVCA = Model::create<VCA, VCAWidget>("MSM", "PAN-VCA", "PAN-VCA", AMPLIFIER_TAG, PANNING_TAG);
+Model *modelVCA = createModel<VCA, VCAWidget>("PAN-VCA");

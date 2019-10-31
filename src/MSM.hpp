@@ -3,15 +3,6 @@
 #include "app.hpp"
 #include "asset.hpp"
 
-#include "dsp/digital.hpp"
-#include "dsp/functions.hpp"
-#include "dsp/resampler.hpp"
-#include "dsp/filter.hpp"
-#include "dsp/decimator.hpp"
-#include "dsp/samplerate.hpp"
-#include "dsp/ringbuffer.hpp"
-#include "dsp/frame.hpp"
-
 #include <math.h>
 #include <assert.h>
 #include <stdio.h>
@@ -31,7 +22,7 @@
 
 using namespace rack;
 
-extern Plugin *plugin;
+extern Plugin *pluginInstance;
 
 extern Model *modelVCO;
 extern Model *modelBVCO;

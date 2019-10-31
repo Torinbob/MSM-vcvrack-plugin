@@ -2,18 +2,18 @@
 based on Fundamental LFO by Andrew Belt
 */
 
-class LowFrequencyOscillator {	
+class LowFrequencyOscillator {
 	public:
-		LowFrequencyOscillator() 
+		LowFrequencyOscillator()
 		{
-			
+
 		}
-		
+
 		void Settings(bool offset, bool invert) {
 			_offset = offset;
 			_invert = invert;
 		}
-				
+
 		void setPitch(float pitch) {
 			pitch = fminf(pitch, 10.0f);
 			freq = powf(2.0f, pitch);
@@ -61,12 +61,12 @@ class LowFrequencyOscillator {
 			float sqr = ((phase < pw) ^ _invert) ? 1.0f : -1.0f;
 			return _offset ? sqr + 1.0f : sqr;
 		}
-		
+
 	private:
 		float phase = 0.0f;
 		float pw = 0.5f;
 		float freq = 1.0f;
 		bool _offset = false;
 		bool _invert = false;
-		SchmittTrigger resetTrigger;
+		dsp::SchmittTrigger resetTrigger;
 };

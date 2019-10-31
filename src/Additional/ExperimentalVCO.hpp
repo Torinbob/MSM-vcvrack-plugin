@@ -31,14 +31,14 @@ class MSVCO {
 		_wdw = 0.0f;
 		_type = 0;
 		interp.reset_hist();
-		
+
 	}
-	
+
 	void setPitch(float _pitchK, float _pitchCV, char _lfomode) {
 		pitch = _pitchK;
 		pitch = roundf(pitch);
 		pitch += _pitchCV;
-				
+
 		switch(_lfomode) {
 			case 0:
 				freq = (261.626f * std::pow(2.0f, pitch / 12.0f)) / 100.0f;
@@ -46,34 +46,34 @@ class MSVCO {
 			case 1:
 				freq = 261.626f * std::pow(2.0f, pitch / 12.0f);
 			break;
-		}		
+		}
 	}
-	
+
 	void Window(float _maxWindow) {
 		_wdw = _maxWindow;
 	}
-	
+
 	void Mods(float _mod1, float _mod2, float _mod3) {
 		modder1 = _mod1;
 		modder2 = _mod2;
 		modder3 = _mod3;
 	}
-	
+
 	void TYPE(float type) {
 		_type = type;
 	}
-	
+
 	void outEnabled(bool _enable) {
 		_outEnabled = _enable;
 	}
-		
+
 	void process(float deltaTime, float syncValue, bool sync) {
 		syncEnabled = sync;
 		// Advance phase
 		deltaPhase = clamp(freq * deltaTime, 1e-6, 0.5f) * (1.0f / OVERSAMPLE);
 		// Detect sync
-		int syncIndex = -1.0f; 
-		float syncCrossing = 0.0f; 
+		int syncIndex = -1.0f;
+		float syncCrossing = 0.0f;
 		if (syncEnabled) {
 			syncValue -= 0.01;
 			if (syncValue > 0.0f && lastSyncValue <= 0.0f) {
@@ -85,15 +85,15 @@ class MSVCO {
 			}
 			lastSyncValue = syncValue;
 		}
-		
+
 		if (syncDirection)
 			deltaPhase *= -1.0f;
-		
+
 		for (int i = 0; i < OVERSAMPLE; i++) {
 			if (syncIndex == i) {
 				phase = 0.0f;
 			}
-						
+
 			if(_outEnabled) {
 				for(int y = 0; y < modder1; y++) {
 					switch(_type) {
@@ -110,7 +110,7 @@ class MSVCO {
 							a[i] = interp.process8x(clamp(fastSin((yamt * M_PI / modder2) * (x * interpolateLinear(grainTableD, phase * _wdw)) / modder1), rl, rh) / modder3, out);
 						break;
 						case 4:
-							a[i] = interp.process8x(clamp(fastSin((yamt * (M_PI / modder3) / modder2) * (sqramt * interpolateLinear(grainTableE, phase * _wdw)) / modder1), rl, rh), out); 
+							a[i] = interp.process8x(clamp(fastSin((yamt * (M_PI / modder3) / modder2) * (sqramt * interpolateLinear(grainTableE, phase * _wdw)) / modder1), rl, rh), out);
 						break;
 						case 5:
 							a[i] = interp.process8x(clamp(fastSin((yamt * M_PI / modder2) * (x * interpolateLinear(grainTableF, phase * _wdw)) / modder1), rl, rh) / modder3, out);
@@ -143,8 +143,8 @@ class MSVCO {
 				}
 			}
 		}
-									
-			
+
+
 			// Advance phase
 			phase += deltaPhase;
 			while (phase > 1.0f) {
@@ -154,37 +154,37 @@ class MSVCO {
                 phase += 1.0f;
             }
 	}
-		
+
 	inline float getOutput() {
 		return  OutDecimator.process(out);
 	}
-			
+
 	private:
-					
+
 		float a[OVERSAMPLE] = {};
 		float out[OVERSAMPLE] = {};
 		float oo[OVERSAMPLE] = {};
 		interpolator_linear interp;
-		
-		Decimator<OVERSAMPLE, QUALITY> OutDecimator;
-		
+
+		dsp::Decimator<OVERSAMPLE, QUALITY> OutDecimator;
+
 		float lastSyncValue;
 		float phase;
 		float freq;
 		float pitch;
 		float deltaPhase;
-		
+
 		char _type;
 		float _wdw;
 		float modder1;
 		float modder2;
 		float modder3;
-		
+
 		bool syncEnabled = false;
 		bool syncDirection = false;
-		
+
 		bool _outEnabled = false;
-		
+
 		const float x = 1.25f;
 		const float yamt = 2.0f;
 		const float z = 1.0f;

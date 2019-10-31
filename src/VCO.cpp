@@ -5,11 +5,11 @@
 
 class OSiXFold {
 	public:
-		OSiXFold() 
+		OSiXFold()
 		{
-			
+
 		}
-		
+
 		void Shape(double in, double sc, double sccv, double up, double down, bool folderactive) {
 			_sc = sc + sccv;
 			_up = up;
@@ -23,38 +23,38 @@ class OSiXFold {
 					double s = 1.0;
 					double j = -1.0;
 					double combine = 0, sig1 = 0, sig2 = 0, X = 0, Y = 0, Z = 0, W = 0, A1 = 0, A2 = 0, result = 0;
-					
+
 					combine = (_in) / (1.0f - _sc + 1.0f);
-					
+
 					sig1 = (-(combine - 1.0f) * 2.0f);
-					X = std::isgreater(combine, s); 
+					X = std::isgreater(combine, s);
 					Y =	sig1 * X;
 					A1 = fastSin(Y * _up) * 2.0f;
-					
+
 					sig2 = (-(combine + 1.0f) * 2.0f);
 					Z = std::isless(combine, j);
 					W = sig2 * Z;
 					A2 = fastSin(W * _down) * 2.0f;
-					
+
 					result = combine + A1 + A2;
-					
+
 					folderBuffer = (2.0f * fastSin(tanh_noclip(fastSin(result * M_PI / 2.0f)) / M_PI)) * 10.0f;
 				}
 		};
-		
+
 		inline double Output() {
 			return folderBuffer;
 		};
-	
+
 	private:
-		
+
 		double folderBuffer = 0.0f;
-		
+
 		double _sc = 0.0f;
 		double _up = 0.0f;
 		double _down = 0.0f;
 		double _in = 0.0f;
-		
+
 		bool _folderactive = false;
 };
 
@@ -69,12 +69,12 @@ class Boscillator {
 			freq = 0.0f;
 			pitch = 0.0f;
 		}
-		
+
 		bool analog = false;
 		bool soft = false;
 		bool syncEnabled = false;
 		bool syncDirection = false;
-		
+
 		void setPitch(float pitchKnob, float pitchCv, char _lfomode) {
 			// Compute frequency
 			pitch = pitchKnob;
@@ -96,16 +96,16 @@ class Boscillator {
 				case 1:
 					freq = 261.626f * std::pow(2.0f, pitch / 12.0f);
 				break;
-			}	
+			}
 		}
-		
+
 		bool Tri_isAct = false;
 		bool Saw_isAct = false;
 		bool Sqr_isAct = false;
 		bool F_isAct = false;
 		bool H_isAct = false;
 		bool Ramp_isAct = false;
-			
+
 		void Tri_Active(bool act) {
 			Tri_isAct = act;
 		}
@@ -124,7 +124,7 @@ class Boscillator {
 		void Ramp_Active(bool act) {
 			Ramp_isAct = act;
 		}
-		
+
 		void setPulseWidth(float pulseWidth) {
 			const float pwMin = 0.01f;
 			pw = clamp(pulseWidth, pwMin, 1.0f - pwMin);
@@ -135,7 +135,7 @@ class Boscillator {
 				// Adjust pitch slew
 				if (++pitchSlewIndex > 32.0f) {
 					const float pitchSlewTau = 100.0f; // Time constant for leaky integrator in seconds
-					pitchSlew += (randomNormal() - pitchSlew / pitchSlewTau) / engineGetSampleRate();
+					pitchSlew += (random::normal() - pitchSlew / pitchSlewTau) / APP->engine->getSampleRate();
 					pitchSlewIndex = 0.0f;
 				}
 			}
@@ -186,14 +186,14 @@ class Boscillator {
 				else {
 					sinBuffer[i] = fastSin(2.f*M_PI * phase);
 				}
-				
+
 				if(analog) {
 					sinsinBuffer[i] = (2.0f * Sine(phase) + 1.0f * fastSin(4.0f * M_PI * phase)) / 2.5f;
 				}
 				else {
 					sinsinBuffer[i] = (2.0f * Sine(phase) + 1.0f * fastSin(4.0f * M_PI * phase)) / 2.5f;
 				}
-				
+
 				if(Tri_isAct) {
 					if (analog) {
 						triBuffer[i] = 1.25f * interpolateLinear(triTable, phase * 2047.f);
@@ -202,7 +202,7 @@ class Boscillator {
 						triBuffer[i] = ((phase < 0.5) * (4.0 * phase - 1.0)) + ((phase >= 0.5) * (1.0 - 4.0 * (phase - 0.5)));
 					}
 				}
-				
+
 				if(Saw_isAct) {
 					if (analog) {
 						sawBuffer[i] = 1.66f * interpolateLinear(sawTable, phase * 2047.f);
@@ -214,7 +214,7 @@ class Boscillator {
 							sawBuffer[i] = -2.f + 2.f * phase;
 					}
 				}
-				
+
 				if(Sqr_isAct) {
 					sqrBuffer[i] = (phase < pw) ? 1.f : -1.f;
 					if (analog) {
@@ -223,7 +223,7 @@ class Boscillator {
 						sqrBuffer[i] = 1.05f * sqrFilter.highpass();
 					}
 				}
-				
+
 				if(H_isAct) {
 					if (analog) {
 						if (phase < 0.5f)
@@ -236,19 +236,19 @@ class Boscillator {
 						halfBuffer[i] = (phase < 0.5f ? 2.0f * fastSin(2.0f * M_PI * phase) - 2.0f / M_PI : - 2.0f / M_PI) - 0.3f;
 					}
 				}
-				
+
 				if(F_isAct) {
 					if (analog) {
 						if (phase < 0.25f)
 							fullBuffer[i] = ((1.0f * fastSin(M_PI * phase) - 2.0f / M_PI) + 0.2f) * 1.5f;
-						else 
+						else
 							fullBuffer[i] = ((1.0f * fastSin(M_PI * phase) - 2.0f / M_PI) + 0.2f) * 1.5f;
 					}
 					else {
 						fullBuffer[i] = (2.0f * fastSin(M_PI * phase) - 4.0f / M_PI) + 0.3f;
 					}
 				}
-				
+
 				if(Ramp_isAct) {
 					if (analog) {
 						rampBuffer[i] = 1.0f - (1.66f * interpolateLinear(sawTable, (1.0f - phase) * 2047.f));
@@ -260,7 +260,7 @@ class Boscillator {
 							rampBuffer[i] = 0.1f + (1.0f - (-2.f + 2.f * phase));
 					}
 				}
-				
+
 				if (analog) {
 					// Quadratic approximation of sine, slightly richer harmonics
 					if (phase < 0.5f)
@@ -272,13 +272,13 @@ class Boscillator {
 				else {
 					cosBuffer[i] = cosf(2.f*M_PI * phase);
 				}
-				
-					
-				
-				
+
+
+
+
 				// Advance phase
 				phase += deltaPhase / OVERSAMPLE;
-				phase = eucmod(phase, 1.0f);
+				phase = math::eucMod(phase, 1.0f);
 			}
 		}
 
@@ -312,7 +312,7 @@ class Boscillator {
 		inline float light() {
 			return sinf(2*M_PI * phase);
 		}
-	
+
 	private:
 		float lastSyncValue = 0.0f;
 		float phase = 0.0f;
@@ -323,17 +323,17 @@ class Boscillator {
 		float pitchSlew = 0.0f;
 		int pitchSlewIndex = 0.0f;
 
-		Decimator<OVERSAMPLE, QUALITY> sinDecimator;
-		Decimator<OVERSAMPLE, QUALITY> cosDecimator;
-		Decimator<OVERSAMPLE, QUALITY> rampDecimator;
-		Decimator<OVERSAMPLE, QUALITY> triDecimator;
-		Decimator<OVERSAMPLE, QUALITY> sawDecimator;
-		Decimator<OVERSAMPLE, QUALITY> sqrDecimator;
-		Decimator<OVERSAMPLE, QUALITY> halfDecimator;
-		Decimator<OVERSAMPLE, QUALITY> fullDecimator;
-		Decimator<OVERSAMPLE, QUALITY> sinsinDecimator;
-		RCFilter sqrFilter;
-	
+		dsp::Decimator<OVERSAMPLE, QUALITY> sinDecimator;
+		dsp::Decimator<OVERSAMPLE, QUALITY> cosDecimator;
+		dsp::Decimator<OVERSAMPLE, QUALITY> rampDecimator;
+		dsp::Decimator<OVERSAMPLE, QUALITY> triDecimator;
+		dsp::Decimator<OVERSAMPLE, QUALITY> sawDecimator;
+		dsp::Decimator<OVERSAMPLE, QUALITY> sqrDecimator;
+		dsp::Decimator<OVERSAMPLE, QUALITY> halfDecimator;
+		dsp::Decimator<OVERSAMPLE, QUALITY> fullDecimator;
+		dsp::Decimator<OVERSAMPLE, QUALITY> sinsinDecimator;
+		dsp::RCFilter sqrFilter;
+
 		float sinBuffer[OVERSAMPLE] = {};
 		float cosBuffer[OVERSAMPLE] = {};
 		float rampBuffer[OVERSAMPLE] = {};
@@ -415,60 +415,84 @@ struct VCO : Module {
 		FOLD_OUTPUT,
 		NUM_OUTPUTS
 	};
-	
+
 	//Oscillators
 	Boscillator<2, 4> oscillator1;
 	Boscillator<2, 4> oscillator2;
-	
+
 	//Folder
 	OSiXFold folder;
-	
+
 	// Panel Theme
 	int Theme = 0;
-	
+
 	bool LFOMODE1 = 1;
 	bool LFOMODE2 = 1;
 	bool easteregg = 0;
-	
-	VCO() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS) {}
-	void step() override;
-	
+
+	VCO() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS);
+		configParam(VCO::EASTEREGG_PARAM, 0.0, 1.0, 0.0, "");
+		configParam(VCO::MODE1_PARAM, 0.0, 1.0, 1.0, "");
+		configParam(VCO::SYNCSWITCHA_PARAM, 0.0, 1.0, 0.0, "");
+		configParam(VCO::SYNCSWITCHB_PARAM, 0.0, 1.0, 0.0, "");
+		configParam(VCO::LFOMODE1_PARAM, 0.0, 1.0, 1.0, "");
+		configParam(VCO::LFOMODE2_PARAM, 0.0, 1.0, 1.0, "");
+		configParam(VCO::FREQ_1_PARAM, -54.0, 54.0, 0.0, "");
+		configParam(VCO::FINE_1_PARAM, -1.0, 1.0, 0.0, "");
+		configParam(VCO::FREQ_2_PARAM, -54.0, 54.0, 0.0, "");
+		configParam(VCO::FINE_2_PARAM, -1.0, 1.0, 0.0, "");
+		configParam(VCO::FMLIN_1_PARAM, -1.0, 1.0, 0.0, "");
+		configParam(VCO::FMLIN_2_PARAM, -1.0, 1.0, 0.0, "");
+		configParam(VCO::FMEXP_1_PARAM, -1.0, 1.0, 0.0, "");
+		configParam(VCO::FMEXP_2_PARAM, -1.0, 1.0, 0.0, "");
+		configParam(VCO::PW_2_PARAM, 0.0, 1.0, 0.5, "");
+		configParam(VCO::FMBUS_PARAM, 0.0, 1.0, 0.0, "");
+		configParam(VCO::INPUT_GAIN_PARAM, 0.0, 1.0, 0.0, "");
+		configParam(VCO::SHAPE_1_PARAM, 0.0, 1.0, 0.0, "");
+		configParam(VCO::SHAPE_CV_PARAM, -1.0, 1.0, 0.0, "");
+		configParam(VCO::UP_PARAM, 0.0, 1.0, 0.0, "");
+		configParam(VCO::DOWN_PARAM, 0.0, 1.0, 0.0, "");
+	}
+
+	void process(const ProcessArgs& args) override;
+
 	//Json for Panel Theme
-	json_t *toJson() override	{
+	json_t *dataToJson() override	{
 		json_t *rootJ = json_object();
 		json_object_set_new(rootJ, "Theme", json_integer(Theme));
 		return rootJ;
 	}
-	void fromJson(json_t *rootJ) override	{
+	void dataFromJson(json_t *rootJ) override	{
 		json_t *ThemeJ = json_object_get(rootJ, "Theme");
 		if (ThemeJ)
 			Theme = json_integer_value(ThemeJ);
-	}		
-	
+	}
+
 };
 
 
-void VCO::step() {
+void VCO::process(const ProcessArgs& args) {
 
 	// OSC1
 	float pitchFine1, pitchFine2, pitchCv1, pitchCv2;
-	
+
 	oscillator1.analog = params[MODE1_PARAM].value > 0.0f;
-	
-	pitchFine1 = 3.0f * quadraticBipolar(params[FINE_1_PARAM].value);
+
+	pitchFine1 = 3.0f * dsp::quadraticBipolar(params[FINE_1_PARAM].value);
 	pitchCv1 = (12.0f * inputs[VOCT_1_INPUT].value);
-	
+
 	if(inputs[LIN_1_INPUT].active) {
-		pitchCv1 += (quadraticBipolar(params[FMLIN_1_PARAM].value) * 12.0f * inputs[LIN_1_INPUT].value) * (params[FMBUS_PARAM].value + inputs[FMBUS_INPUT].value);
+		pitchCv1 += (dsp::quadraticBipolar(params[FMLIN_1_PARAM].value) * 12.0f * inputs[LIN_1_INPUT].value) * (params[FMBUS_PARAM].value + inputs[FMBUS_INPUT].value);
 	}
 	else {
 		if(easteregg) {
-			pitchCv1 += (quadraticBipolar(params[FMLIN_1_PARAM].value) * 12.0f * (5.0f * oscillator2.sinsin())) * (params[FMBUS_PARAM].value + inputs[FMBUS_INPUT].value);
+			pitchCv1 += (dsp::quadraticBipolar(params[FMLIN_1_PARAM].value) * 12.0f * (5.0f * oscillator2.sinsin())) * (params[FMBUS_PARAM].value + inputs[FMBUS_INPUT].value);
 		}
 		else {
-			pitchCv1 += (quadraticBipolar(params[FMLIN_1_PARAM].value) * 12.0f * (5.0f * oscillator2.sin())) * (params[FMBUS_PARAM].value + inputs[FMBUS_INPUT].value);
+			pitchCv1 += (dsp::quadraticBipolar(params[FMLIN_1_PARAM].value) * 12.0f * (5.0f * oscillator2.sin())) * (params[FMBUS_PARAM].value + inputs[FMBUS_INPUT].value);
 		}
-	}	
+	}
 	float FM1 = params[FMEXP_1_PARAM].value * 12.0f * inputs[EXP_1_INPUT].value;
 	const float expBase = 25.0f;
 	if(inputs[EXP_1_INPUT].active) {
@@ -482,13 +506,13 @@ void VCO::step() {
 			pitchCv1 += (rescale(powf(expBase, clamp(params[FMEXP_1_PARAM].value * 12.0f *(5.0f * oscillator2.sin()) / 10.0f, 0.0f, 2.0f)), 1.0f, expBase, 0.0f, 1.0f)) * (params[FMBUS_PARAM].value + inputs[FMBUS_INPUT].value);
 		}
 	}
-	
+
 	LFOMODE1 = params[LFOMODE1_PARAM].value;
-	
+
 	oscillator1.setPitch(params[FREQ_1_PARAM].value, pitchCv1 + pitchFine1, LFOMODE1);
-	
+
 	easteregg = params[EASTEREGG_PARAM].value;
-	
+
 	if(easteregg == 1) {
 		oscillator1.H_Active(outputs[TRI_OUTPUT].active);
 		oscillator1.F_Active(outputs[SAW_OUTPUT].active);
@@ -497,19 +521,19 @@ void VCO::step() {
 		oscillator1.Tri_Active(outputs[TRI_OUTPUT].active);
 		oscillator1.Saw_Active(outputs[SAW_OUTPUT].active);
 	}
-	
+
 	char SYNCA = params[SYNCSWITCHA_PARAM].value + inputs[SYNCSWITCHA_CV_INPUT].value > 0.0f;
 	switch(SYNCA) {
 		case 1:
 		oscillator1.syncEnabled = true;
-		oscillator1.process(1.0f / engineGetSampleRate(), (5.0f  * oscillator2.sin()));
+		oscillator1.process(1.0f / args.sampleRate, (5.0f  * oscillator2.sin()));
 		break;
 		default:
 		oscillator1.syncEnabled = inputs[SYNC1_INPUT].active;
-		oscillator1.process(1.0f / engineGetSampleRate(), inputs[SYNC1_INPUT].value);
+		oscillator1.process(1.0f / args.sampleRate, inputs[SYNC1_INPUT].value);
 		break;
 	}
-	
+
 	if(easteregg == 1) {
 		if (outputs[SIN_OUTPUT].active) {
 			outputs[SIN_OUTPUT].value = 6.0f * oscillator1.sinsin();
@@ -532,19 +556,19 @@ void VCO::step() {
 			outputs[SAW_OUTPUT].value = 6.0f * oscillator1.saw();
 		}
 	}
-	
+
 	// OSC2
-	
+
 	oscillator2.analog = params[MODE1_PARAM].value > 0.0f;
 
-	pitchFine2 = 3.0f * quadraticBipolar(params[FINE_2_PARAM].value);
+	pitchFine2 = 3.0f * dsp::quadraticBipolar(params[FINE_2_PARAM].value);
 	pitchCv2 = 12.0f * inputs[VOCT_2_INPUT].value;
-	
+
 	if(inputs[LIN_2_INPUT].active) {
-		pitchCv2 += (quadraticBipolar(params[FMLIN_2_PARAM].value) * 12.0f * inputs[LIN_2_INPUT].value) * (params[FMBUS_PARAM].value + inputs[FMBUS_INPUT].value);
+		pitchCv2 += (dsp::quadraticBipolar(params[FMLIN_2_PARAM].value) * 12.0f * inputs[LIN_2_INPUT].value) * (params[FMBUS_PARAM].value + inputs[FMBUS_INPUT].value);
 	}
 	else {
-		pitchCv2 += (quadraticBipolar(params[FMLIN_2_PARAM].value) * 12.0f * (5.0f * oscillator1.sin())) * (params[FMBUS_PARAM].value + inputs[FMBUS_INPUT].value);
+		pitchCv2 += (dsp::quadraticBipolar(params[FMLIN_2_PARAM].value) * 12.0f * (5.0f * oscillator1.sin())) * (params[FMBUS_PARAM].value + inputs[FMBUS_INPUT].value);
 	}
 	float FM2 = params[FMEXP_2_PARAM].value * 12.0f * inputs[EXP_2_INPUT].value;
 	const float expBase1 = 25.0f;
@@ -554,58 +578,58 @@ void VCO::step() {
 	else {
 		pitchCv2 += (rescale(powf(expBase1, clamp((params[FMEXP_2_PARAM].value * 12.0f * (5.0f * oscillator1.sin())) / 10.0f, 0.0f, 2.0f)), 1.0f, expBase1, 0.0f, 1.0f)) * (params[FMBUS_PARAM].value + inputs[FMBUS_INPUT].value);
 	}
-	
+
 	LFOMODE2 = params[LFOMODE2_PARAM].value;
 
 	oscillator2.setPitch(params[FREQ_2_PARAM].value, pitchCv2 + pitchFine2, LFOMODE2);
-		
+
 	oscillator2.setPulseWidth(params[PW_2_PARAM].value + inputs[PW_2_INPUT].value / 10.0f);
-	
+
 	char SYNCB = params[SYNCSWITCHB_PARAM].value + inputs[SYNCSWITCHB_CV_INPUT].value > 0.0f;
 	switch(SYNCB) {
 		case 1:
 		oscillator2.syncEnabled = true;
-		oscillator2.process(1.0f / engineGetSampleRate(), (5.0f * oscillator1.sin()));
+		oscillator2.process(1.0f / args.sampleRate, (5.0f * oscillator1.sin()));
 		break;
 		default:
 		oscillator2.syncEnabled = inputs[SYNC2_INPUT].active;
-		oscillator2.process(1.0f / engineGetSampleRate(), inputs[SYNC2_INPUT].value);
+		oscillator2.process(1.0f / args.sampleRate, inputs[SYNC2_INPUT].value);
 		break;
 	}
-	
+
 	oscillator2.Sqr_Active(outputs[SQR_2_OUTPUT].active);
-	
+
 	if (outputs[SIN_2_OUTPUT].active) {
 		outputs[SIN_2_OUTPUT].value = 6.0f * oscillator2.sin();
 	}
 	if (outputs[SQR_2_OUTPUT].active) {
 		outputs[SQR_2_OUTPUT].value = 6.0f * oscillator2.sqr();
 	}
-	
-	
+
+
 	// SHAPER
-	
+
 	float IN_1;
-	
+
 	if(inputs[EXT_SRC_INPUT].active) {
 		IN_1 = inputs[EXT_SRC_INPUT].value;
 	}
 	else {
 		IN_1 = 6.0f * oscillator2.sin();
 	}
-	
+
 	float SHAPE_MOD = params[SHAPE_1_PARAM].value;
-	
+
 	float SHAPE_CV = inputs[SHAPE_CV_INPUT].value * params[SHAPE_CV_PARAM].value;
-	
+
 	float upW = clamp(params[UP_PARAM].value + inputs[UP_INPUT].value, 0.0f, 4.0f);
-	
+
 	float downW = clamp(params[DOWN_PARAM].value + inputs[DOWN_INPUT].value, 0.0f, 4.0f);
-	
+
 	folder.Shape(IN_1, SHAPE_MOD, SHAPE_CV, upW, downW, outputs[FOLD_OUTPUT].active);
-	
+
 	folder.process();
-	
+
 	float CrossfadeA = clamp(params[INPUT_GAIN_PARAM].value + inputs[SHAPE_1_CV_INPUT].value, 0.0f, 1.0f);
 	float IN_1F = 0.0f;
 	float IN_2F = folder.Output();
@@ -614,111 +638,15 @@ void VCO::step() {
 	if(CrossfadeA < 0.5f) {
 		OutA = crossfade(IN_1F, IN_1F, CrossfadeA);
 	}
-	else(CrossfadeA > 1.0f); 
+	else(CrossfadeA > 1.0f);
 		OutA = crossfade(IN_1F, IN_2F, CrossfadeA);
-		
+
 	outputs[FOLD_OUTPUT].value = saturate(OutA / 1.5f);
-	
 };
-
-
-struct VCOWidget : ModuleWidget {
-	// Panel Themes
-	SVGPanel *panelClassic;
-	SVGPanel *panelNightMode;
-
-	VCOWidget(VCO *module);
-	void step() override;
-	
-	Menu* createContextMenu() override;
-};
-
-
-VCOWidget::VCOWidget(VCO *module) : ModuleWidget(module) {
-	box.size = Vec(27 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
-	// Classic Theme
-	panelClassic = new SVGPanel();
-	panelClassic->box.size = box.size;
-	panelClassic->setBackground(SVG::load(assetPlugin(plugin, "res/Panels/VCO.svg")));
-	addChild(panelClassic);
-	// Night Mode Theme
-	panelNightMode = new SVGPanel();
-	panelNightMode->box.size = box.size;
-	panelNightMode->setBackground(SVG::load(assetPlugin(plugin, "res/Panels/VCO-Dark.svg")));
-	addChild(panelNightMode);
-	
-	addChild(Widget::create<MScrewA>(Vec(15, 0)));
-	addChild(Widget::create<MScrewC>(Vec(box.size.x-30, 0)));
-	addChild(Widget::create<MScrewD>(Vec(15, 365)));
-	addChild(Widget::create<MScrewA>(Vec(box.size.x-30, 365)));
-
-	addParam(ParamWidget::create<OSCiXEGG>(Vec(125, 259.5), module, VCO::EASTEREGG_PARAM, 0.0, 1.0, 0.0));
-
-	addParam(ParamWidget::create<VioMSwitch>(Vec(152.5, 30), module, VCO::MODE1_PARAM, 0.0, 1.0, 1.0));
-	addParam(ParamWidget::create<VioMSwitch>(Vec(152.5, 80), module, VCO::SYNCSWITCHA_PARAM, 0.0, 1.0, 0.0));
-	addParam(ParamWidget::create<VioMSwitch>(Vec(152.5, 130), module, VCO::SYNCSWITCHB_PARAM, 0.0, 1.0, 0.0));
-	addParam(ParamWidget::create<VioM2Switch>(Vec(16, 109), module, VCO::LFOMODE1_PARAM, 0.0, 1.0, 1.0));
-	addParam(ParamWidget::create<VioM2Switch>(Vec(289, 109), module, VCO::LFOMODE2_PARAM, 0.0, 1.0, 1.0));
-	
-	addParam(ParamWidget::create<RedLargeKnob>(Vec(43, 94.5), module, VCO::FREQ_1_PARAM, -54.0, 54.0, 0.0));
-	addParam(ParamWidget::create<RedSmallKnob>(Vec(97, 131), module, VCO::FINE_1_PARAM, -1.0, 1.0, 0.0));
-	
-	addParam(ParamWidget::create<RedLargeKnob>(Vec(230, 94.5), module, VCO::FREQ_2_PARAM, -54.0, 54.0, 0.0));
-	addParam(ParamWidget::create<RedSmallKnob>(Vec(192, 131), module, VCO::FINE_2_PARAM, -1.0, 1.0, 0.0));
-	
-	addParam(ParamWidget::create<BlueSmallKnob>(Vec(63.5, 183.5), module, VCO::FMLIN_1_PARAM, -1.0, 1.0, 0.0));
-	addParam(ParamWidget::create<BlueSmallKnob>(Vec(225.5, 183.5), module, VCO::FMLIN_2_PARAM, -1.0, 1.0, 0.0));
-	addParam(ParamWidget::create<BlueSmallKnob>(Vec(32, 231), module, VCO::FMEXP_1_PARAM, -1.0, 1.0, 0.0));
-	addParam(ParamWidget::create<BlueSmallKnob>(Vec(257.5, 231), module, VCO::FMEXP_2_PARAM, -1.0, 1.0, 0.0));
-	addParam(ParamWidget::create<BlueSmallKnob>(Vec(272, 158), module, VCO::PW_2_PARAM, 0.0, 1.0, 0.5));
-	addParam(ParamWidget::create<GreenSmallKnob>(Vec(144.5, 183.5), module, VCO::FMBUS_PARAM, 0.0, 1.0, 0.0));	
-	
-	addParam(ParamWidget::create<GreenSmallKnob>(Vec(349, 202), module, VCO::INPUT_GAIN_PARAM, 0.0, 1.0, 0.0));
-	addParam(ParamWidget::create<RedLargeKnob>(Vec(341, 35), module, VCO::SHAPE_1_PARAM, 0.0, 1.0, 0.0));
-	addParam(ParamWidget::create<GreenSmallKnob>(Vec(349, 154), module, VCO::SHAPE_CV_PARAM, -1.0, 1.0, 0.0));
-	addParam(ParamWidget::create<GreenSmallKnob>(Vec(332, 105), module, VCO::UP_PARAM, 0.0, 1.0, 0.0));
-	addParam(ParamWidget::create<GreenSmallKnob>(Vec(367, 105), module, VCO::DOWN_PARAM, 0.0, 1.0, 0.0));
-	
-	addInput(Port::create<SilverSixPortA>(Vec(55, 327.5), Port::INPUT, module, VCO::EXP_1_INPUT));
-	addInput(Port::create<SilverSixPortA>(Vec(14, 289.5), Port::INPUT, module, VCO::VOCT_1_INPUT));
-	addInput(Port::create<SilverSixPortD>(Vec(14, 327.5), Port::INPUT, module, VCO::SYNC1_INPUT));
-	addInput(Port::create<SilverSixPortC>(Vec(200.5, 289.5), Port::INPUT, module, VCO::VOCT_2_INPUT));
-	addInput(Port::create<SilverSixPort>(Vec(281.5, 327.5), Port::INPUT, module, VCO::SYNC2_INPUT));
-	addInput(Port::create<SilverSixPort>(Vec(55, 289.5), Port::INPUT, module, VCO::LIN_1_INPUT));
-	addInput(Port::create<SilverSixPortC>(Vec(240.5, 289.5), Port::INPUT, module, VCO::LIN_2_INPUT));	
-	addInput(Port::create<SilverSixPortE>(Vec(240.5, 327.5), Port::INPUT, module, VCO::EXP_2_INPUT));
-	addInput(Port::create<SilverSixPortC>(Vec(281.5, 289.5), Port::INPUT, module, VCO::PW_2_INPUT));
-	addInput(Port::create<SilverSixPortA>(Vec(352, 327.5), Port::INPUT, module, VCO::EXT_SRC_INPUT));
-	addInput(Port::create<SilverSixPortB>(Vec(332, 289.5), Port::INPUT, module, VCO::SHAPE_1_CV_INPUT));
-	addInput(Port::create<SilverSixPort>(Vec(332, 249.5), Port::INPUT, module, VCO::SHAPE_CV_INPUT));
-	addInput(Port::create<SilverSixPortD>(Vec(95, 289.5), Port::INPUT, module, VCO::FMBUS_INPUT));
-	addInput(Port::create<SilverSixPortA>(Vec(95, 327.5), Port::INPUT, module, VCO::SYNCSWITCHA_CV_INPUT));
-	addInput(Port::create<SilverSixPortE>(Vec(200.5, 327.5), Port::INPUT, module, VCO::SYNCSWITCHB_CV_INPUT));
-	addInput(Port::create<SilverSixPortA>(Vec(372, 249.5), Port::INPUT, module, VCO::UP_INPUT));
-	addInput(Port::create<SilverSixPortC>(Vec(372, 289.5), Port::INPUT, module, VCO::DOWN_INPUT));
-	
-	addOutput(Port::create<SilverSixPortA>(Vec(14, 29), Port::OUTPUT, module, VCO::SIN_OUTPUT));
-	addOutput(Port::create<SilverSixPort>(Vec(55, 29), Port::OUTPUT, module, VCO::TRI_OUTPUT));
-	addOutput(Port::create<SilverSixPortD>(Vec(95, 29), Port::OUTPUT, module, VCO::SAW_OUTPUT));
-	addOutput(Port::create<SilverSixPortC>(Vec(200, 29), Port::OUTPUT, module, VCO::SIN_2_OUTPUT));
-	addOutput(Port::create<SilverSixPortB>(Vec(240.5, 29), Port::OUTPUT, module, VCO::SQR_2_OUTPUT));
-	addOutput(Port::create<SilverSixPort>(Vec(281.5, 29), Port::OUTPUT, module, VCO::FOLD_OUTPUT));
-	
-};
-
-void VCOWidget::step() {
-	VCO *vco = dynamic_cast<VCO*>(module);
-	assert(vco);
-	
-	panelClassic->visible = (vco->Theme == 0);
-	panelNightMode->visible = (vco->Theme == 1);
-	
-	ModuleWidget::step();
-}
 
 struct VCOClassicMenu : MenuItem {
 	VCO *vco;
-	void onAction(EventAction &e) override {
+	void onAction(const event::Action &e) override {
 		vco->Theme = 0;
 	}
 	void step() override {
@@ -729,7 +657,7 @@ struct VCOClassicMenu : MenuItem {
 
 struct VCONightModeMenu : MenuItem {
 	VCO *vco;
-	void onAction(EventAction &e) override {
+	void onAction(const event::Action &e) override {
 		vco->Theme = 1;
 	}
 	void step() override {
@@ -738,23 +666,115 @@ struct VCONightModeMenu : MenuItem {
 	}
 };
 
-Menu* VCOWidget::createContextMenu() {
-	Menu* menu = ModuleWidget::createContextMenu();
-	VCO *vco = dynamic_cast<VCO*>(module);
-	assert(vco);
-	menu->addChild(construct<MenuEntry>());
-	menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Theme"));
-	menu->addChild(construct<VCOClassicMenu>(&VCOClassicMenu::text, "Classic (default)", &VCOClassicMenu::vco, vco));
-	menu->addChild(construct<VCONightModeMenu>(&VCONightModeMenu::text, "Night Mode", &VCONightModeMenu::vco, vco));
-	return menu;
+struct VCOWidget : ModuleWidget {
+	// Panel Themes
+	SvgPanel *panelClassic;
+	SvgPanel *panelNightMode;
+
+	void appendContextMenu(Menu *menu) override {
+		VCO *vco = dynamic_cast<VCO*>(module);
+		assert(vco);
+		menu->addChild(construct<MenuEntry>());
+		menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Theme"));
+		menu->addChild(construct<VCOClassicMenu>(&VCOClassicMenu::text, "Classic (default)", &VCOClassicMenu::vco, vco));
+		menu->addChild(construct<VCONightModeMenu>(&VCONightModeMenu::text, "Night Mode", &VCONightModeMenu::vco, vco));
+	}
+
+	VCOWidget(VCO *module);
+	void step() override;
+};
+
+
+VCOWidget::VCOWidget(VCO *module) {
+	setModule(module);
+	box.size = Vec(27 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
+	// Classic Theme
+	panelClassic = new SvgPanel();
+	panelClassic->box.size = box.size;
+	panelClassic->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/VCO.svg")));
+	addChild(panelClassic);
+	// Night Mode Theme
+	panelNightMode = new SvgPanel();
+	panelNightMode->box.size = box.size;
+	panelNightMode->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/VCO-Dark.svg")));
+	addChild(panelNightMode);
+
+	addChild(createWidget<MScrewA>(Vec(15, 0)));
+	addChild(createWidget<MScrewC>(Vec(box.size.x-30, 0)));
+	addChild(createWidget<MScrewD>(Vec(15, 365)));
+	addChild(createWidget<MScrewA>(Vec(box.size.x-30, 365)));
+
+	addParam(createParam<OSCiXEGG>(Vec(125, 259.5), module, VCO::EASTEREGG_PARAM));
+
+	addParam(createParam<VioMSwitch>(Vec(152.5, 30), module, VCO::MODE1_PARAM));
+	addParam(createParam<VioMSwitch>(Vec(152.5, 80), module, VCO::SYNCSWITCHA_PARAM));
+	addParam(createParam<VioMSwitch>(Vec(152.5, 130), module, VCO::SYNCSWITCHB_PARAM));
+	addParam(createParam<VioM2Switch>(Vec(16, 109), module, VCO::LFOMODE1_PARAM));
+	addParam(createParam<VioM2Switch>(Vec(289, 109), module, VCO::LFOMODE2_PARAM));
+
+	addParam(createParam<RedLargeKnob>(Vec(43, 94.5), module, VCO::FREQ_1_PARAM));
+	addParam(createParam<RedSmallKnob>(Vec(97, 131), module, VCO::FINE_1_PARAM));
+
+	addParam(createParam<RedLargeKnob>(Vec(230, 94.5), module, VCO::FREQ_2_PARAM));
+	addParam(createParam<RedSmallKnob>(Vec(192, 131), module, VCO::FINE_2_PARAM));
+
+	addParam(createParam<BlueSmallKnob>(Vec(63.5, 183.5), module, VCO::FMLIN_1_PARAM));
+	addParam(createParam<BlueSmallKnob>(Vec(225.5, 183.5), module, VCO::FMLIN_2_PARAM));
+	addParam(createParam<BlueSmallKnob>(Vec(32, 231), module, VCO::FMEXP_1_PARAM));
+	addParam(createParam<BlueSmallKnob>(Vec(257.5, 231), module, VCO::FMEXP_2_PARAM));
+	addParam(createParam<BlueSmallKnob>(Vec(272, 158), module, VCO::PW_2_PARAM));
+	addParam(createParam<GreenSmallKnob>(Vec(144.5, 183.5), module, VCO::FMBUS_PARAM));
+
+	addParam(createParam<GreenSmallKnob>(Vec(349, 202), module, VCO::INPUT_GAIN_PARAM));
+	addParam(createParam<RedLargeKnob>(Vec(341, 35), module, VCO::SHAPE_1_PARAM));
+	addParam(createParam<GreenSmallKnob>(Vec(349, 154), module, VCO::SHAPE_CV_PARAM));
+	addParam(createParam<GreenSmallKnob>(Vec(332, 105), module, VCO::UP_PARAM));
+	addParam(createParam<GreenSmallKnob>(Vec(367, 105), module, VCO::DOWN_PARAM));
+
+	addInput(createInput<SilverSixPortA>(Vec(55, 327.5), module, VCO::EXP_1_INPUT));
+	addInput(createInput<SilverSixPortA>(Vec(14, 289.5), module, VCO::VOCT_1_INPUT));
+	addInput(createInput<SilverSixPortD>(Vec(14, 327.5), module, VCO::SYNC1_INPUT));
+	addInput(createInput<SilverSixPortC>(Vec(200.5, 289.5), module, VCO::VOCT_2_INPUT));
+	addInput(createInput<SilverSixPort>(Vec(281.5, 327.5), module, VCO::SYNC2_INPUT));
+	addInput(createInput<SilverSixPort>(Vec(55, 289.5), module, VCO::LIN_1_INPUT));
+	addInput(createInput<SilverSixPortC>(Vec(240.5, 289.5), module, VCO::LIN_2_INPUT));
+	addInput(createInput<SilverSixPortE>(Vec(240.5, 327.5), module, VCO::EXP_2_INPUT));
+	addInput(createInput<SilverSixPortC>(Vec(281.5, 289.5), module, VCO::PW_2_INPUT));
+	addInput(createInput<SilverSixPortA>(Vec(352, 327.5), module, VCO::EXT_SRC_INPUT));
+	addInput(createInput<SilverSixPortB>(Vec(332, 289.5), module, VCO::SHAPE_1_CV_INPUT));
+	addInput(createInput<SilverSixPort>(Vec(332, 249.5), module, VCO::SHAPE_CV_INPUT));
+	addInput(createInput<SilverSixPortD>(Vec(95, 289.5), module, VCO::FMBUS_INPUT));
+	addInput(createInput<SilverSixPortA>(Vec(95, 327.5), module, VCO::SYNCSWITCHA_CV_INPUT));
+	addInput(createInput<SilverSixPortE>(Vec(200.5, 327.5), module, VCO::SYNCSWITCHB_CV_INPUT));
+	addInput(createInput<SilverSixPortA>(Vec(372, 249.5), module, VCO::UP_INPUT));
+	addInput(createInput<SilverSixPortC>(Vec(372, 289.5), module, VCO::DOWN_INPUT));
+
+	addOutput(createOutput<SilverSixPortA>(Vec(14, 29), module, VCO::SIN_OUTPUT));
+	addOutput(createOutput<SilverSixPort>(Vec(55, 29), module, VCO::TRI_OUTPUT));
+	addOutput(createOutput<SilverSixPortD>(Vec(95, 29), module, VCO::SAW_OUTPUT));
+	addOutput(createOutput<SilverSixPortC>(Vec(200, 29), module, VCO::SIN_2_OUTPUT));
+	addOutput(createOutput<SilverSixPortB>(Vec(240.5, 29), module, VCO::SQR_2_OUTPUT));
+	addOutput(createOutput<SilverSixPort>(Vec(281.5, 29), module, VCO::FOLD_OUTPUT));
+
+};
+
+void VCOWidget::step() {
+	if (module) {
+		VCO *vco = dynamic_cast<VCO*>(module);
+		assert(vco);
+
+		panelClassic->visible = (vco->Theme == 0);
+		panelNightMode->visible = (vco->Theme == 1);
+	}
+
+	ModuleWidget::step();
 }
 
-
-Model *modelVCO = Model::create<VCO, VCOWidget>("MSM", "OSCiX", "OSCiX", OSCILLATOR_TAG);
+Model *modelVCO = createModel<VCO, VCOWidget>("OSCiX");
 
 
 struct BVCO : Module {
-	
+
 	enum ParamIds {
 		FREQ_PARAM,
 		FINE_PARAM,
@@ -765,7 +785,7 @@ struct BVCO : Module {
 		LFOMODE1_PARAM,
 		NUM_PARAMS
 	};
-	
+
 	enum InputIds {
 		SYNC_INPUT,
 		VOCT_INPUT,
@@ -774,7 +794,7 @@ struct BVCO : Module {
 		PW_INPUT,
 		NUM_INPUTS
 	};
-	
+
 	enum OutputIds {
 		SIN_OUTPUT,
 		RAMP_OUTPUT,
@@ -785,59 +805,69 @@ struct BVCO : Module {
 		FULL_OUTPUT,
 		NUM_OUTPUTS
 	};
-	
+
 	Boscillator<2, 4> oscillator;
-	
+
 	// Panel Theme
 	int Theme = 0;
-	
+
 	bool LFOMOD = 1;
-		
-	BVCO() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS) {}
-	void step() override;
-	
+
+	BVCO() {
+		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS);
+		configParam(BVCO::MODE1_PARAM, 0.0, 1.0, 1.0, "");
+		configParam(BVCO::LFOMODE1_PARAM, 0.0, 1.0, 1.0, "");
+		configParam(BVCO::FREQ_PARAM, -54.0, 54.0, 0.0, "");
+		configParam(BVCO::FINE_PARAM, -1.0, 1.0, 0.0, "");
+		configParam(BVCO::FMLIN_PARAM, 0.0, 1.0, 0.0, "");
+		configParam(BVCO::FMEXP_PARAM, 0.0, 1.0, 0.0, "");
+		configParam(BVCO::PW_PARAM, 0.0, 1.0, 0.5, "");
+	}
+
+	void process(const ProcessArgs& args) override;
+
 	//Json for Panel Theme
-	json_t *toJson() override	{
+	json_t *dataToJson() override	{
 		json_t *rootJ = json_object();
 		json_object_set_new(rootJ, "Theme", json_integer(Theme));
 		return rootJ;
 	}
-	void fromJson(json_t *rootJ) override	{
+	void dataFromJson(json_t *rootJ) override	{
 		json_t *ThemeJ = json_object_get(rootJ, "Theme");
 		if (ThemeJ)
 			Theme = json_integer_value(ThemeJ);
-	}		
-	
+	}
+
 };
 
-void BVCO::step() {
-	
+void BVCO::process(const ProcessArgs& args) {
+
 	float pitchFine, pitchCv;
-	
+
 	oscillator.analog = params[MODE1_PARAM].value > 0.0f;
-		
-	pitchFine = 3.0f * quadraticBipolar(params[FINE_PARAM].value);
+
+	pitchFine = 3.0f * dsp::quadraticBipolar(params[FINE_PARAM].value);
 	pitchCv = 12.0f * inputs[VOCT_INPUT].value;
-		
+
 	if(inputs[LIN_INPUT].active) {
-		pitchCv += quadraticBipolar(params[FMLIN_PARAM].value) * 12.0f * inputs[LIN_INPUT].value;
+		pitchCv += dsp::quadraticBipolar(params[FMLIN_PARAM].value) * 12.0f * inputs[LIN_INPUT].value;
 	}
-	
+
 	float FM = params[FMEXP_PARAM].value * 12.0f * inputs[EXP_INPUT].value;
 	const float expBase = 50.0f;
 	if(inputs[EXP_INPUT].active) {
 		pitchCv += rescale(powf(expBase, clamp(FM / 10.0f, 0.0f, 2.0f)), 1.0, expBase, 0.0f, 1.0f);
 	}
 
-	
+
 	LFOMOD = params[LFOMODE1_PARAM].value;
-	
+
 	oscillator.setPitch(params[FREQ_PARAM].value, pitchCv + pitchFine, LFOMOD);
 
-	
+
 	oscillator.setPulseWidth(params[PW_PARAM].value + inputs[PW_INPUT].value / 10.0f);
 	oscillator.syncEnabled = inputs[SYNC_INPUT].active;
-	oscillator.process(1.0f / engineGetSampleRate(), inputs[SYNC_INPUT].value);
+	oscillator.process(1.0f / args.sampleRate, inputs[SYNC_INPUT].value);
 
 	oscillator.Tri_Active(outputs[TRI_OUTPUT].active);
 	oscillator.Saw_Active(outputs[SAW_OUTPUT].active);
@@ -845,7 +875,7 @@ void BVCO::step() {
 	oscillator.H_Active(outputs[HALF_OUTPUT].active);
 	oscillator.F_Active(outputs[FULL_OUTPUT].active);
 	oscillator.Ramp_Active(outputs[RAMP_OUTPUT].active);
-	
+
 	if (outputs[SIN_OUTPUT].active)
 		outputs[SIN_OUTPUT].value = 6.0f * oscillator.sin();
 	if (outputs[RAMP_OUTPUT].active)
@@ -859,76 +889,13 @@ void BVCO::step() {
 	if (outputs[HALF_OUTPUT].active)
 		outputs[HALF_OUTPUT].value = 6.0f * oscillator.half();
 	if (outputs[FULL_OUTPUT].active)
-		outputs[FULL_OUTPUT].value = 6.0f * oscillator.full();	
-	
+		outputs[FULL_OUTPUT].value = 6.0f * oscillator.full();
+
 };
-
-struct BVCOWidget : ModuleWidget {
-	// Panel Themes
-	SVGPanel *pClassic;
-	SVGPanel *pNightMode;
-	
-	BVCOWidget(BVCO *module);
-	void step() override;
-	
-	Menu* createContextMenu() override;
-};
-
-BVCOWidget::BVCOWidget(BVCO *module) : ModuleWidget(module) {
-	box.size = Vec(9 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
-	
-	pClassic = new SVGPanel();
-	pClassic->box.size = box.size;
-	pClassic->setBackground(SVG::load(assetPlugin(plugin, "res/Panels/BVCO.svg")));
-	addChild(pClassic);
-	
-	pNightMode = new SVGPanel();
-	pNightMode->box.size = box.size;
-	pNightMode->setBackground(SVG::load(assetPlugin(plugin, "res/Panels/BVCO-Dark.svg")));
-	addChild(pNightMode);
-	
-	addChild(Widget::create<MScrewA>(Vec(15, 0)));
-	addChild(Widget::create<MScrewC>(Vec(box.size.x-30, 0)));
-	addChild(Widget::create<MScrewD>(Vec(15, 365)));
-	addChild(Widget::create<MScrewB>(Vec(box.size.x-30, 365)));
-	
-	addParam(ParamWidget::create<VioMSwitch>(Vec(16, 65), module, BVCO::MODE1_PARAM, 0.0, 1.0, 1.0));
-	addParam(ParamWidget::create<VioM2Switch>(Vec(106, 65), module, BVCO::LFOMODE1_PARAM, 0.0, 1.0, 1.0));
-	
-	addParam(ParamWidget::create<RedLargeKnob>(Vec(45, 50), module, BVCO::FREQ_PARAM, -54.0, 54.0, 0.0));
-	addParam(ParamWidget::create<RedSmallKnob>(Vec(53, 115), module, BVCO::FINE_PARAM, -1.0, 1.0, 0.0));
-	addParam(ParamWidget::create<BlueSmallKnob>(Vec(12, 167), module, BVCO::FMLIN_PARAM, 0.0, 1.0, 0.0));
-	addParam(ParamWidget::create<BlueSmallKnob>(Vec(53, 167), module, BVCO::FMEXP_PARAM, 0.0, 1.0, 0.0));
-	addParam(ParamWidget::create<BlueSmallKnob>(Vec(93, 167), module, BVCO::PW_PARAM, 0.0, 1.0, 0.5));
-
-		
-	addInput(Port::create<SilverSixPortA>(Vec(14, 213.5), Port::INPUT, module, BVCO::VOCT_INPUT));
-	addInput(Port::create<SilverSixPortD>(Vec(55, 213.5), Port::INPUT, module, BVCO::SYNC_INPUT));
-	addInput(Port::create<SilverSixPort>(Vec(95, 213.5), Port::INPUT, module, BVCO::PW_INPUT));
-	addInput(Port::create<SilverSixPortB>(Vec(14, 251.5), Port::INPUT, module, BVCO::LIN_INPUT));
-	addInput(Port::create<SilverSixPortC>(Vec(55, 251.5), Port::INPUT, module, BVCO::EXP_INPUT));
-	addOutput(Port::create<SilverSixPortC>(Vec(95, 251.5), Port::OUTPUT, module, BVCO::RAMP_OUTPUT));
-	
-	addOutput(Port::create<SilverSixPortA>(Vec(14, 289.5), Port::OUTPUT, module, BVCO::SIN_OUTPUT));
-	addOutput(Port::create<SilverSixPort>(Vec(55, 289.5), Port::OUTPUT, module, BVCO::TRI_OUTPUT));
-	addOutput(Port::create<SilverSixPortD>(Vec(95, 289.5), Port::OUTPUT, module, BVCO::SAW_OUTPUT));
-	addOutput(Port::create<SilverSixPortE>(Vec(14, 327.5), Port::OUTPUT, module, BVCO::SQR_OUTPUT));
-	addOutput(Port::create<SilverSixPort>(Vec(55, 327.5), Port::OUTPUT, module, BVCO::HALF_OUTPUT));
-	addOutput(Port::create<SilverSixPortD>(Vec(95, 327.5), Port::OUTPUT, module, BVCO::FULL_OUTPUT));	
-	
-};
-
-void BVCOWidget::step() {
-	BVCO *bvco = dynamic_cast<BVCO*>(module);
-	assert(bvco);
-	pClassic->visible = (bvco->Theme == 0);
-	pNightMode->visible = (bvco->Theme == 1);
-	ModuleWidget::step();
-}
 
 struct BVCOClassicMenu : MenuItem {
 	BVCO *bvco;
-	void onAction(EventAction &e) override {
+	void onAction(const event::Action &e) override {
 		bvco->Theme = 0;
 	}
 	void step() override {
@@ -939,7 +906,7 @@ struct BVCOClassicMenu : MenuItem {
 
 struct BVCONightModeMenu : MenuItem {
 	BVCO *bvco;
-	void onAction(EventAction &e) override {
+	void onAction(const event::Action &e) override {
 		bvco->Theme = 1;
 	}
 	void step() override {
@@ -948,16 +915,78 @@ struct BVCONightModeMenu : MenuItem {
 	}
 };
 
-Menu* BVCOWidget::createContextMenu() {
-	Menu* menu = ModuleWidget::createContextMenu();
-	BVCO *bvco = dynamic_cast<BVCO*>(module);
-	assert(bvco);
-	menu->addChild(construct<MenuEntry>());
-	menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Theme"));
-	menu->addChild(construct<BVCOClassicMenu>(&BVCOClassicMenu::text, "Classic (default)", &BVCOClassicMenu::bvco, bvco));
-	menu->addChild(construct<BVCONightModeMenu>(&BVCONightModeMenu::text, "Night Mode", &BVCONightModeMenu::bvco, bvco));
-	return menu;
+struct BVCOWidget : ModuleWidget {
+	// Panel Themes
+	SvgPanel *pClassic;
+	SvgPanel *pNightMode;
+
+	void appendContextMenu(Menu *menu) override {
+		BVCO *bvco = dynamic_cast<BVCO*>(module);
+		assert(bvco);
+		menu->addChild(construct<MenuEntry>());
+		menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Theme"));
+		menu->addChild(construct<BVCOClassicMenu>(&BVCOClassicMenu::text, "Classic (default)", &BVCOClassicMenu::bvco, bvco));
+		menu->addChild(construct<BVCONightModeMenu>(&BVCONightModeMenu::text, "Night Mode", &BVCONightModeMenu::bvco, bvco));
+	}
+
+	BVCOWidget(BVCO *module);
+	void step() override;
+};
+
+BVCOWidget::BVCOWidget(BVCO *module) {
+	setModule(module);
+	box.size = Vec(9 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
+
+	pClassic = new SvgPanel();
+	pClassic->box.size = box.size;
+	pClassic->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/BVCO.svg")));
+	addChild(pClassic);
+
+	pNightMode = new SvgPanel();
+	pNightMode->box.size = box.size;
+	pNightMode->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/BVCO-Dark.svg")));
+	addChild(pNightMode);
+
+	addChild(createWidget<MScrewA>(Vec(15, 0)));
+	addChild(createWidget<MScrewC>(Vec(box.size.x-30, 0)));
+	addChild(createWidget<MScrewD>(Vec(15, 365)));
+	addChild(createWidget<MScrewB>(Vec(box.size.x-30, 365)));
+
+	addParam(createParam<VioMSwitch>(Vec(16, 65), module, BVCO::MODE1_PARAM));
+	addParam(createParam<VioM2Switch>(Vec(106, 65), module, BVCO::LFOMODE1_PARAM));
+
+	addParam(createParam<RedLargeKnob>(Vec(45, 50), module, BVCO::FREQ_PARAM));
+	addParam(createParam<RedSmallKnob>(Vec(53, 115), module, BVCO::FINE_PARAM));
+	addParam(createParam<BlueSmallKnob>(Vec(12, 167), module, BVCO::FMLIN_PARAM));
+	addParam(createParam<BlueSmallKnob>(Vec(53, 167), module, BVCO::FMEXP_PARAM));
+	addParam(createParam<BlueSmallKnob>(Vec(93, 167), module, BVCO::PW_PARAM));
+
+
+	addInput(createInput<SilverSixPortA>(Vec(14, 213.5), module, BVCO::VOCT_INPUT));
+	addInput(createInput<SilverSixPortD>(Vec(55, 213.5), module, BVCO::SYNC_INPUT));
+	addInput(createInput<SilverSixPort>(Vec(95, 213.5), module, BVCO::PW_INPUT));
+	addInput(createInput<SilverSixPortB>(Vec(14, 251.5), module, BVCO::LIN_INPUT));
+	addInput(createInput<SilverSixPortC>(Vec(55, 251.5), module, BVCO::EXP_INPUT));
+	addOutput(createOutput<SilverSixPortC>(Vec(95, 251.5), module, BVCO::RAMP_OUTPUT));
+
+	addOutput(createOutput<SilverSixPortA>(Vec(14, 289.5), module, BVCO::SIN_OUTPUT));
+	addOutput(createOutput<SilverSixPort>(Vec(55, 289.5), module, BVCO::TRI_OUTPUT));
+	addOutput(createOutput<SilverSixPortD>(Vec(95, 289.5), module, BVCO::SAW_OUTPUT));
+	addOutput(createOutput<SilverSixPortE>(Vec(14, 327.5), module, BVCO::SQR_OUTPUT));
+	addOutput(createOutput<SilverSixPort>(Vec(55, 327.5), module, BVCO::HALF_OUTPUT));
+	addOutput(createOutput<SilverSixPortD>(Vec(95, 327.5), module, BVCO::FULL_OUTPUT));
+
+};
+
+void BVCOWidget::step() {
+	if (module) {
+		BVCO *bvco = dynamic_cast<BVCO*>(module);
+		assert(bvco);
+		pClassic->visible = (bvco->Theme == 0);
+		pNightMode->visible = (bvco->Theme == 1);
+	}
+
+	ModuleWidget::step();
 }
 
-
-Model *modelBVCO = Model::create<BVCO, BVCOWidget>("MSM", "Rogue", "Rogue", OSCILLATOR_TAG);
+Model *modelBVCO = createModel<BVCO, BVCOWidget>("Rogue");

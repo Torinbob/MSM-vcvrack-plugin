@@ -1,8 +1,6 @@
 #pragma once
 
 #include "rack.hpp"
-#include "asset.hpp"
-#include "widgets.hpp"
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -27,35 +25,35 @@ struct MSMLargeKnob : SVGKnob {
 struct GreyLargeKnob : MSMLargeKnob {
 	GreyLargeKnob() {
 		box.size = Vec(47, 47);
-		setSVG(SVG::load(assetPlugin(plugin, "res/Knobs/GreyLargeKnob.svg")));
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Knobs/GreyLargeKnob.svg")));
 	}
 };
 
 struct BlueLargeKnob : MSMLargeKnob {
 	BlueLargeKnob() {
 		box.size = Vec(47, 47);
-		setSVG(SVG::load(assetPlugin(plugin, "res/Knobs/BlueLargeKnob.svg")));
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Knobs/BlueLargeKnob.svg")));
 	}
 };
 
 struct GreenLargeKnob : MSMLargeKnob {
 	GreenLargeKnob() {
 		box.size = Vec(47, 47);
-		setSVG(SVG::load(assetPlugin(plugin, "res/Knobs/GreenLargeKnob.svg")));
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Knobs/GreenLargeKnob.svg")));
 	}
 };
 
 struct RedLargeKnob : MSMLargeKnob {
 	RedLargeKnob() {
 		box.size = Vec(47, 47);
-		setSVG(SVG::load(assetPlugin(plugin, "res/Knobs/RedLargeKnob.svg")));
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Knobs/RedLargeKnob.svg")));
 	}
 };
 
 struct VioLargeKnob : MSMLargeKnob {
 	VioLargeKnob() {
 		box.size = Vec(47, 47);
-		setSVG(SVG::load(assetPlugin(plugin, "res/Knobs/VioLargeKnob.svg")));
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Knobs/VioLargeKnob.svg")));
 	}
 };
 
@@ -71,44 +69,44 @@ struct MSMSmallKnob : SVGKnob {
 struct GreySmallKnob : MSMSmallKnob {
 	GreySmallKnob() {
 		box.size = Vec(32, 32);
-		setSVG(SVG::load(assetPlugin(plugin, "res/Knobs/GreySmallKnob.svg")));
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Knobs/GreySmallKnob.svg")));
 	}
-}; 
+};
 
 struct BlueSmallKnob : MSMSmallKnob {
 	BlueSmallKnob() {
 		box.size = Vec(32, 32);
-		setSVG(SVG::load(assetPlugin(plugin, "res/Knobs/BlueSmallKnob.svg")));
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Knobs/BlueSmallKnob.svg")));
 	}
-}; 
+};
 
 struct GreenSmallKnob : MSMSmallKnob {
 	GreenSmallKnob() {
 		box.size = Vec(32, 32);
-		setSVG(SVG::load(assetPlugin(plugin, "res/Knobs/GreenSmallKnob.svg")));
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Knobs/GreenSmallKnob.svg")));
 	}
-}; 
+};
 
 struct RedSmallKnob : MSMSmallKnob {
 	RedSmallKnob() {
 		box.size = Vec(32, 32);
-		setSVG(SVG::load(assetPlugin(plugin, "res/Knobs/RedSmallKnob.svg")));
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Knobs/RedSmallKnob.svg")));
 	}
-}; 
+};
 
 struct YellowSmallKnob : MSMSmallKnob {
 	YellowSmallKnob() {
 		box.size = Vec(32, 32);
-		setSVG(SVG::load(assetPlugin(plugin, "res/Knobs/YellowSmallKnob.svg")));
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Knobs/YellowSmallKnob.svg")));
 	}
 };
 
 struct GreenTinyKnob : MSMSmallKnob {
 	GreenTinyKnob() {
 		box.size = Vec(25, 25);
-		setSVG(SVG::load(assetPlugin(plugin, "res/Knobs/GreenTinyKnob.svg")));
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Knobs/GreenTinyKnob.svg")));
 	}
-}; 
+};
 
 struct MSMToggleKnob : SVGKnob {
 	MSMToggleKnob() {
@@ -117,26 +115,26 @@ struct MSMToggleKnob : SVGKnob {
 		shadow->blurRadius = 2.5;
 		shadow->opacity = 1.0;
 	}
-	
-	void onChange(EventChange &e) override {
-        value = round(value);
-        SVGKnob::onChange(e);
-    }
+
+	void onChange(const event::Change &e) override {
+    paramQuantity->setValue(roundf(paramQuantity->getValue()));
+    SVGKnob::onChange(e);
+  }
 };
 
 struct GreenToggleKnobSmall : MSMToggleKnob {
-	GreenToggleKnobSmall() {			
+	GreenToggleKnobSmall() {
 		box.size = Vec(32, 32);
-		setSVG(SVG::load(assetPlugin(plugin, "res/Knobs/GreenSmallKnob.svg")));
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Knobs/GreenSmallKnob.svg")));
 		snap = true;
 		smooth = false;
 	}
 };
 
 struct RedSmallToggleKnob : MSMToggleKnob {
-	RedSmallToggleKnob() {			
+	RedSmallToggleKnob() {
 		box.size = Vec(32, 32);
-		setSVG(SVG::load(assetPlugin(plugin, "res/Knobs/RedSmallKnob.svg")));
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Knobs/RedSmallKnob.svg")));
 		snap = true;
 		smooth = false;
 	}
@@ -152,17 +150,17 @@ struct MSMToggle2Knob : SVGKnob {
 		smooth = false;
 	}
 
-	void onChange(EventChange &e) override {
-        value = round(value);
-        SVGKnob::onChange(e);
-    }
+	void onChange(const event::Change &e) override {
+    paramQuantity->setValue(roundf(paramQuantity->getValue()));
+    SVGKnob::onChange(e);
+  }
 };
 
 
 struct RedLargeToggleKnob : MSMToggle2Knob {
 	RedLargeToggleKnob() {
 		box.size = Vec(47, 47);
-		setSVG(SVG::load(assetPlugin(plugin, "res/Knobs/RedLargeKnob.svg")));
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Knobs/RedLargeKnob.svg")));
 		shadow->blurRadius = 4.0;
 		shadow->opacity = 0.8;
 	}
@@ -177,11 +175,11 @@ struct MSMSlider : SVGSlider {
 		Vec margin = Vec(3.6, 3.6);
 		maxHandlePos = Vec(11, 0.0).plus(margin);
 		minHandlePos = Vec(11, 140).plus(margin);
-		background->svg = SVG::load(assetPlugin(plugin,"res/Slider/slider.svg"));
+		background->svg = APP->window->loadSvg(asset::plugin(pluginInstance,"res/Slider/slider.svg"));
 		background->wrap();
 		background->box.pos = margin;
 		box.size = background->box.size.plus(margin.mult(2));
-		handle->svg = SVG::load(assetPlugin(plugin, "res/Slider/sliderhandle.svg"));
+		handle->svg = APP->window->loadSvg(asset::plugin(pluginInstance, "res/Slider/sliderhandle.svg"));
 		handle->wrap();
 	}
 };
@@ -191,11 +189,11 @@ struct MSMSlidePot : SVGSlider {
 		Vec margin = Vec(4, 4);
 		maxHandlePos = Vec(0.0, -5.0).plus(margin);
 		minHandlePos = Vec(0.0, 90.0).plus(margin);
-		background->svg = SVG::load(assetPlugin(plugin,"res/Slider/SlidePot.svg"));
+		background->svg = APP->window->loadSvg(asset::plugin(pluginInstance,"res/Slider/SlidePot.svg"));
 		background->wrap();
 		background->box.pos = margin;
 		box.size = background->box.size.plus(margin.mult(2));
-		handle->svg = SVG::load(assetPlugin(plugin, "res/Slider/SlidePotHandle.svg"));
+		handle->svg = APP->window->loadSvg(asset::plugin(pluginInstance, "res/Slider/SlidePotHandle.svg"));
 		handle->wrap();
 	}
 };
@@ -211,154 +209,120 @@ struct MSMPort : SVGPort {
 
 struct SilverSixPort : MSMPort {
 	SilverSixPort() {
-		background->svg = SVG::load(assetPlugin(plugin, "res/Port/SilverSixPort.svg"));
-		background->wrap();
-		box.size = background->box.size;
-		
-		shadow->box.size = background->box.size;
-		shadow->box.pos = Vec(0, background->box.size.y * 0.1);
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Port/SilverSixPort.svg")));
 		shadow->blurRadius = 5.0;
 		shadow->opacity = 0.75;
 	}
-	
+
 };
 
 struct SilverSixPortA : MSMPort {
 	SilverSixPortA() {
-		background->svg = SVG::load(assetPlugin(plugin, "res/Port/SilverSixPortA.svg"));
-		background->wrap();
-		box.size = background->box.size;
-		
-		shadow->box.size = background->box.size;
-		shadow->box.pos = Vec(0, background->box.size.y * 0.1);
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Port/SilverSixPortA.svg")));
 		shadow->blurRadius = 5.0;
 		shadow->opacity = 0.75;
 	}
-	
+
 };
 
 struct SilverSixPortB : MSMPort {
 	SilverSixPortB() {
-		background->svg = SVG::load(assetPlugin(plugin, "res/Port/SilverSixPortB.svg"));
-		background->wrap();
-		box.size = background->box.size;
-		
-		shadow->box.size = background->box.size;
-		shadow->box.pos = Vec(0, background->box.size.y * 0.1);
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Port/SilverSixPortB.svg")));
 		shadow->blurRadius = 5.0;
 		shadow->opacity = 0.75;
 	}
-	
+
 };
 
 struct SilverSixPortC : MSMPort {
 	SilverSixPortC() {
-		background->svg = SVG::load(assetPlugin(plugin, "res/Port/SilverSixPortC.svg"));
-		background->wrap();
-		box.size = background->box.size;
-		
-		shadow->box.size = background->box.size;
-		shadow->box.pos = Vec(0, background->box.size.y * 0.1);
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Port/SilverSixPortC.svg")));
 		shadow->blurRadius = 5.0;
 		shadow->opacity = 0.75;
 	}
-	
+
 };
 
 struct SilverSixPortD : MSMPort {
 	SilverSixPortD() {
-		background->svg = SVG::load(assetPlugin(plugin, "res/Port/SilverSixPortD.svg"));
-		background->wrap();
-		box.size = background->box.size;
-	
-		shadow->box.size = background->box.size;
-		shadow->box.pos = Vec(0, background->box.size.y * 0.1);
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Port/SilverSixPortD.svg")));
 		shadow->blurRadius = 5.0;
 		shadow->opacity = 0.75;
 	}
-	
+
 };
 
 struct SilverSixPortE : MSMPort {
 	SilverSixPortE() {
-		background->svg = SVG::load(assetPlugin(plugin, "res/Port/SilverSixPortE.svg"));
-		background->wrap();
-		box.size = background->box.size;
-		
-		shadow->box.size = background->box.size;
-		shadow->box.pos = Vec(0, background->box.size.y * 0.1);
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Port/SilverSixPortE.svg")));
 		shadow->blurRadius = 5.0;
 		shadow->opacity = 0.75;
 	}
-	
+
 };
 
 /////////////////////////
-// Switch 
+// Switch
 /////////////////////////
 
-struct ToggleMe : SVGSwitch, ToggleSwitch {
-	ToggleMe() 
+struct ToggleMe : SVGSwitch {
+	ToggleMe()
 	{
-		
+
 	}
 };
 
-struct ToggleMe2 : SVGSwitch, ToggleSwitch {
+struct ToggleMe2 : SVGSwitch {
 	ToggleMe2()
 	{
-	
+
 	}
-	
-	void onChange(EventChange &e) override {
-		randomizable = false; 
-		SVGSwitch::onChange(e);
-	}
+	void randomize() override {}
 };
 
 struct MThree : ToggleMe {
 	MThree() {
-		addFrame(SVG::load(assetPlugin(plugin, "res/Switch/CKSSThree_2.svg")));
-		addFrame(SVG::load(assetPlugin(plugin, "res/Switch/CKSSThree_1.svg")));
-		addFrame(SVG::load(assetPlugin(plugin, "res/Switch/CKSSThree_0.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Switch/CKSSThree_2.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Switch/CKSSThree_1.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Switch/CKSSThree_0.svg")));
 	}
 };
 
 struct MThree2 : ToggleMe2 {
 	MThree2() {
-		addFrame(SVG::load(assetPlugin(plugin, "res/Switch/CKSSThree_2.svg")));
-		addFrame(SVG::load(assetPlugin(plugin, "res/Switch/CKSSThree_1.svg")));
-		addFrame(SVG::load(assetPlugin(plugin, "res/Switch/CKSSThree_0.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Switch/CKSSThree_2.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Switch/CKSSThree_1.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Switch/CKSSThree_0.svg")));
 	}
 };
 
 struct VioMSwitch : ToggleMe {
 	VioMSwitch() {
-		addFrame(SVG::load(assetPlugin(plugin, "res/Switch/VioMSwitch_0.svg")));
-		addFrame(SVG::load(assetPlugin(plugin, "res/Switch/VioMSwitch_1.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Switch/VioMSwitch_0.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Switch/VioMSwitch_1.svg")));
 	}
 };
 
 struct VioMVertSwitch : ToggleMe2 {
 	VioMVertSwitch() {
-		addFrame(SVG::load(assetPlugin(plugin, "res/Switch/VioMSwitchVert_0.svg")));
-		addFrame(SVG::load(assetPlugin(plugin, "res/Switch/VioMSwitchVert_1.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Switch/VioMSwitchVert_0.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Switch/VioMSwitchVert_1.svg")));
 	}
 };
 
 struct VioM2Switch : ToggleMe2 {
 	VioM2Switch() {
-		addFrame(SVG::load(assetPlugin(plugin, "res/Switch/VioMSwitch_0.svg")));
-		addFrame(SVG::load(assetPlugin(plugin, "res/Switch/VioMSwitch_1.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Switch/VioMSwitch_0.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Switch/VioMSwitch_1.svg")));
 	}
 };
 
 struct FMSM : ToggleMe {
 	FMSM() {
-		addFrame(SVG::load(assetPlugin(plugin, "res/Switch/FMSM_0.svg")));
-		addFrame(SVG::load(assetPlugin(plugin, "res/Switch/FMSM_1.svg")));
-		addFrame(SVG::load(assetPlugin(plugin, "res/Switch/FMSM_2.svg")));
-		addFrame(SVG::load(assetPlugin(plugin, "res/Switch/FMSM_3.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Switch/FMSM_0.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Switch/FMSM_1.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Switch/FMSM_2.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Switch/FMSM_3.svg")));
 	}
 };
 
@@ -366,67 +330,69 @@ struct FMSM : ToggleMe {
 // Button
 /////////////////////////
 
-struct MSwitchGrey : SVGSwitch, MomentarySwitch {
+struct MSwitchGrey : SVGSwitch {
 	MSwitchGrey() {
-		addFrame(SVG::load(assetPlugin(plugin, "res/Button/GreyRoundButton_0.svg")));
-		addFrame(SVG::load(assetPlugin(plugin, "res/Button/GreyRoundButton_1.svg")));
+		momentary = true;
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/GreyRoundButton_0.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/GreyRoundButton_1.svg")));
 	}
 };
 
-struct MSwitchGrey2 : SVGSwitch, MomentarySwitch {
+struct MSwitchGrey2 : SVGSwitch {
 	MSwitchGrey2() {
-		addFrame(SVG::load(assetPlugin(plugin, "res/Button/GreyRoundButtonBlue_0.svg")));
-		addFrame(SVG::load(assetPlugin(plugin, "res/Button/GreyRoundButtonBlue_1.svg")));
+		momentary = true;
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/GreyRoundButtonBlue_0.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/GreyRoundButtonBlue_1.svg")));
 	}
 };
 
-struct MToggleGrey : SVGSwitch, ToggleSwitch {
+struct MToggleGrey : SVGSwitch {
 	MToggleGrey() {
-		addFrame(SVG::load(assetPlugin(plugin, "res/Button/GreyRoundToggle_0.svg")));
-		addFrame(SVG::load(assetPlugin(plugin, "res/Button/GreyRoundToggle_1.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/GreyRoundToggle_0.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/GreyRoundToggle_1.svg")));
 	}
 };
 
-struct OSCiXEGG : SVGSwitch, ToggleSwitch {
+struct OSCiXEGG : SVGSwitch {
 	OSCiXEGG() {
-		addFrame(SVG::load(assetPlugin(plugin, "res/Button/Easteregg_0.svg")));
-		addFrame(SVG::load(assetPlugin(plugin, "res/Button/Easteregg_1.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/Easteregg_0.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/Easteregg_1.svg")));
 	}
 };
 
-struct MButton : SVGSwitch, ToggleSwitch {
+struct MButton : SVGSwitch {
 	MButton() {
-		addFrame(SVG::load(assetPlugin(plugin, "res/Button/ButtonGreen0.svg")));
-		addFrame(SVG::load(assetPlugin(plugin, "res/Button/ButtonGreen1.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/ButtonGreen0.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/ButtonGreen1.svg")));
 	}
 };
 
-struct ThreeColorButton : SVGSwitch, ToggleSwitch {
+struct ThreeColorButton : SVGSwitch {
 	ThreeColorButton() {
-		addFrame(SVG::load(assetPlugin(plugin, "res/Button/ColorButton0.svg")));
-		addFrame(SVG::load(assetPlugin(plugin, "res/Button/ColorButton1.svg")));
-		addFrame(SVG::load(assetPlugin(plugin, "res/Button/ColorButton2.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/ColorButton0.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/ColorButton1.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/ColorButton2.svg")));
 	}
 };
 
-struct FiveColorButton : SVGSwitch, ToggleSwitch {
+struct FiveColorButton : SVGSwitch {
 	FiveColorButton() {
-		addFrame(SVG::load(assetPlugin(plugin, "res/Button/ColorButton0.svg")));
-		addFrame(SVG::load(assetPlugin(plugin, "res/Button/ColorButton1.svg")));
-		addFrame(SVG::load(assetPlugin(plugin, "res/Button/ColorButton2.svg")));
-		addFrame(SVG::load(assetPlugin(plugin, "res/Button/ColorButton3.svg")));
-		addFrame(SVG::load(assetPlugin(plugin, "res/Button/ColorButton4.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/ColorButton0.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/ColorButton1.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/ColorButton2.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/ColorButton3.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/ColorButton4.svg")));
 	}
 };
 
-struct SixColorButton : SVGSwitch, ToggleSwitch {
+struct SixColorButton : SVGSwitch {
 	SixColorButton() {
-		addFrame(SVG::load(assetPlugin(plugin, "res/Button/ColorButton0.svg")));
-		addFrame(SVG::load(assetPlugin(plugin, "res/Button/ColorButton1.svg")));
-		addFrame(SVG::load(assetPlugin(plugin, "res/Button/ColorButton2.svg")));
-		addFrame(SVG::load(assetPlugin(plugin, "res/Button/ColorButton3.svg")));
-		addFrame(SVG::load(assetPlugin(plugin, "res/Button/ColorButton4.svg")));
-		addFrame(SVG::load(assetPlugin(plugin, "res/Button/ColorButton5.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/ColorButton0.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/ColorButton1.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/ColorButton2.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/ColorButton3.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/ColorButton4.svg")));
+		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/ColorButton5.svg")));
 	}
 };
 
@@ -436,28 +402,28 @@ struct SixColorButton : SVGSwitch, ToggleSwitch {
 
 struct MScrewA : SVGScrew {
 		MScrewA() {
-		sw->setSVG(SVG::load(assetPlugin(plugin, "res/Screws/MScrewA.svg")));
+		sw->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Screws/MScrewA.svg")));
 		box.size = sw->box.size;
 	}
 };
 
 struct MScrewB : SVGScrew {
 		MScrewB() {
-		sw->setSVG(SVG::load(assetPlugin(plugin, "res/Screws/MScrewB.svg")));
+		sw->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Screws/MScrewB.svg")));
 		box.size = sw->box.size;
 	}
 };
 
 struct MScrewC : SVGScrew {
 		MScrewC() {
-		sw->setSVG(SVG::load(assetPlugin(plugin, "res/Screws/MScrewC.svg")));
+		sw->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Screws/MScrewC.svg")));
 		box.size = sw->box.size;
 	}
 };
 
 struct MScrewD : SVGScrew {
 		MScrewD() {
-		sw->setSVG(SVG::load(assetPlugin(plugin, "res/Screws/MScrewD.svg")));
+		sw->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Screws/MScrewD.svg")));
 		box.size = sw->box.size;
 	}
 };

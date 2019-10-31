@@ -3,23 +3,23 @@
 // 2 PI
 #define TWO_PI (6.28318530717958647692528676655900576)
 
-// Round 
+// Round
 #define ROUND(f) ((float) ((f > 0.0) ? floor(f+0.5) : ceil(f-0.5)))
 
 // Buffer sizes
 #define HISTORY_SIZE_A (1<<21)
 #define HISTORY_SIZE_B (1<<21)
 
-// Divisions 
+// Divisions
 #define DIVISIONS 25
 
 // SampleRate
-#define SR (engineGetSampleRate())
+#define SR (APP->engine->getSampleRate())
 
 // Saturate X
 #define _limitX 15.0f
 
-// Saturate 
+// Saturate
 #define _limit 10.0f
 
 // Saturate2

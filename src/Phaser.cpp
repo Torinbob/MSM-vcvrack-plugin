@@ -5,10 +5,10 @@ template <int OVERSAMPLE, int QUALITY>
 class Phaser {
 public:
     Phaser()  //initialise to some usefull defaults...
-        : _fb(0.5f), 
+        : _fb(0.5f),
 		_lfoPhase(0.0f),
         _depth(1.0f),
-		_stage(0.0f), 
+		_stage(0.0f),
         _zm1(0.0f),
 		_pw(0.5f),
 		dlfo(0.0f),
@@ -24,7 +24,7 @@ public:
         _dmin = fMin / (SR / 2.0f);
         _dmax = fMax / (SR / 2.0f);
     }
-	
+
     void Rate(float rate)	{ // calculate phaser rate/speed
 		_lfoInc = 2.0f * M_PI * (rate / SR);
     }
@@ -36,28 +36,28 @@ public:
     void Depth(float depth)	{  // 0 -> 1.
         _depth = depth;
     }
-	
+
 	void LFODepth(float lfodepth) {
 		_lfodepth = lfodepth;
 	}
-	
+
 	void Stage(int stage) {
 		_stage = stage;
 	}
-	
+
 	void Pulsewidth(float pw) {
 		_pw = pw;
 	}
-	
+
     float Update(float inSamp, int type)	{
-		in = inSamp;		
+		in = inSamp;
 		for (int i = 0; i < OVERSAMPLE; i++) {
 			//calculate and update phaser sweep lfo...
 			float sine = ((sin(_lfoPhase) + 1.0f)/2.0f);
 			float triangle = 2.0f * fabs(_lfoPhase / ( 2.0f * M_PI) - 0.5f);
 			float saw = _lfoPhase / (2.0f * M_PI);
 			float square = std::isless((_lfoPhase / (2.0f * M_PI)),_pw);
-			
+
 			switch(type) {
 				case 3:
 					dlfo  = _dmin + square * (_dmax - _dmin);
@@ -72,14 +72,14 @@ public:
 					dlfo  = _dmin + sine * (_dmax - _dmin);
 				break;
 			}
-			
+
 			dlfo *= _lfodepth;
-			
+
 			_lfoPhase += _lfoInc;
-			
+
 			if(_lfoPhase >= M_PI * 2.0f)
 			   _lfoPhase -= M_PI * 2.0f;
-					
+
 			switch(_stage) {
 				case 18:
 					//update filter coeffs
@@ -339,7 +339,7 @@ public:
 								_allpass[4].Update(
 								_allpass[5].Update(
 								_allpass[6].Update(
-								_allpass[7].Update(in + _zm1 * _fb ))))))));			
+								_allpass[7].Update(in + _zm1 * _fb ))))))));
 				break;
 				case 5:
 					//update filter coeffs
@@ -352,7 +352,7 @@ public:
 								_allpass[3].Update(
 								_allpass[4].Update(
 								_allpass[5].Update(
-								_allpass[6].Update(in + _zm1 * _fb )))))));			
+								_allpass[6].Update(in + _zm1 * _fb )))))));
 				break;
 				case 4:
 					//update filter coeffs
@@ -364,7 +364,7 @@ public:
 								_allpass[2].Update(
 								_allpass[3].Update(
 								_allpass[4].Update(
-								_allpass[5].Update(in + _zm1 * _fb ))))));			
+								_allpass[5].Update(in + _zm1 * _fb ))))));
 				break;
 				case 3:
 					//update filter coeffs
@@ -375,7 +375,7 @@ public:
 								_allpass[1].Update(
 								_allpass[2].Update(
 								_allpass[3].Update(
-								_allpass[4].Update(in + _zm1 * _fb )))));			
+								_allpass[4].Update(in + _zm1 * _fb )))));
 				break;
 				case 2:
 					//update filter coeffs
@@ -408,10 +408,10 @@ public:
 			_zm1 = y;
 			return PhaserBuffer[i] = in + y * _depth;
 		}
-		
+
 		return PhaserBuffer[7];
     };
-	
+
 	inline float Output() {
 		return PhaserDecimator.process(PhaserBuffer);
 	}
@@ -422,7 +422,7 @@ public:
 				_a1(0.0f),
 				_zm1(0.0f)
 				{
-					
+
 				}
 
 			void Delay(float delay)	{ //sample delay time
@@ -435,16 +435,16 @@ public:
 
 				return y;
 			}
-			
+
 		private:
 			float _a1, _zm1;
 		};
 
     AllpassDelay _allpass[20];
-	
+
 	float PhaserBuffer[OVERSAMPLE] = {};
-	Decimator<OVERSAMPLE, QUALITY> PhaserDecimator;
-	
+	dsp::Decimator<OVERSAMPLE, QUALITY> PhaserDecimator;
+
     float _dmin, _dmax; //range
     float _fb; //feedback
     float _lfoPhase;
@@ -460,7 +460,7 @@ public:
 };
 
 struct PhaserModule : Module {
-	
+
 	enum ParamIds {
 		RANGE_LOW,
 		RANGE_HIGH,
@@ -473,7 +473,7 @@ struct PhaserModule : Module {
 		PW_PARAM,
 		NUM_PARAMS
 	};
-	
+
 	enum InputIds {
 		LFODEPTH_INPUT,
 		LOW_INPUT,
@@ -481,14 +481,14 @@ struct PhaserModule : Module {
 		INPUT,
 		NUM_INPUTS
 	};
-	
+
 	enum OutputIds {
 		OUTPUT,
 		NUM_OUTPUTS
 	};
 
 	int Theme = 0;
-	
+
 	float rate = 0.0f;
 	float feedback = 0.0f;
 	float depth = 0.0f;
@@ -501,133 +501,78 @@ struct PhaserModule : Module {
 	float high = 0.0f;
 	float lfodepth = 0.0f;
 	float PW = 0.0f;
-	
+
 	Phaser<8, 8> pha;
 
-	PhaserModule() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS)
-	{
-		
-	}
+	PhaserModule() {
+    config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS);
+    configParam(PhaserModule::TYPE, 0.0, 3.0, 0.0, "");
+    configParam(PhaserModule::RANGE_LOW, 0.0, 1.0, 0.2, "");
+    configParam(PhaserModule::RANGE_HIGH, 0.0, 1.0, 0.4, "");
+    configParam(PhaserModule::RATE_PARAM, 0.0, 1.0, 0.05, "");
+    configParam(PhaserModule::FEEDBACK_PARAM, 0.0, 0.95, 0.475, "");
+    configParam(PhaserModule::STAGE_PARAM, 0.0, 18.0, 1.0, "");
+    configParam(PhaserModule::LFODEPTH, 0.0, 1.0, 0.1, "");
+    configParam(PhaserModule::PW_PARAM, 0.0, 1.0, 0.5, "");
+    configParam(PhaserModule::DEPTH_PARAM, 0.0, 1.0, 0.5, "");
+  }
 
-	void step() override;
-	
+	void process(const ProcessArgs& args) override;
+
 	//Json for Panel Theme
-	json_t *toJson() override	{
+	json_t *dataToJson() override	{
 		json_t *rootJ = json_object();
 		json_object_set_new(rootJ, "Theme", json_integer(Theme));
 		return rootJ;
 	}
-	void fromJson(json_t *rootJ) override	{
+	void dataFromJson(json_t *rootJ) override	{
 		json_t *ThemeJ = json_object_get(rootJ, "Theme");
 		if (ThemeJ)
 			Theme = json_integer_value(ThemeJ);
 	}
-
-	void reset() override {}
-
 };
 
-void PhaserModule::step() {
-	
+void PhaserModule::process(const ProcessArgs& args) {
+
 	rate = params[RATE_PARAM].value;
 	rate *= 7.0f;
-	
+
 	lfodepth = clamp(params[LFODEPTH].value + inputs[LFODEPTH_INPUT].value / 10.0f, 0.0f, 1.0f);
-	
+
 	type = params[TYPE].value;
-	
+
 	feedback = params[FEEDBACK_PARAM].value;
 	depth = params[DEPTH_PARAM].value;
 
 	stage = params[STAGE_PARAM].value;
-	
+
 	input = inputs[INPUT].value / 5.0f;
 
 	PW = params[PW_PARAM].value;
-	
+
 	low = clamp(params[RANGE_LOW].value + inputs[LOW_INPUT].value / 10.0f, 0.0f, 1.0f);
 	low *= 20000.0f;
 	high = clamp(params[RANGE_HIGH].value + inputs[HIGH_INPUT].value / 10.0f, 0.0f, 1.0f);
 	high *= 20000.0f;
-	
+
 		pha.Rate(rate);
 		pha.Range(low, high);
 		pha.LFODepth(lfodepth);
 		pha.Pulsewidth(PW);
-			
+
 		pha.Feedback(feedback);
 		pha.Depth(depth);
-		
+
 		pha.Stage(stage);
-		
+
 	out = saturate(2.5f * (pha.Update(input, type)));
 
 	outputs[OUTPUT].value = out;
-
 };
-
-struct PhaserModuleWidget : ModuleWidget {
-	// Panel Themes
-	SVGPanel *panelClassic;
-	SVGPanel *panelNightMode;
-	
-	PhaserModuleWidget(PhaserModule *module);
-	void step() override;
-	
-	Menu* createContextMenu() override;
-}; 
-    
-PhaserModuleWidget::PhaserModuleWidget(PhaserModule *module) : ModuleWidget(module) {
-	box.size = Vec(6 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
-	panelClassic = new SVGPanel();
-	panelClassic->box.size = box.size;
-	panelClassic->setBackground(SVG::load(assetPlugin(plugin, "res/Panels/Phaser.svg")));
-	addChild(panelClassic);
-	
-	panelNightMode = new SVGPanel();
-	panelNightMode->box.size = box.size;
-	panelNightMode->setBackground(SVG::load(assetPlugin(plugin, "res/Panels/Phaser-Dark.svg")));
-	addChild(panelNightMode);	
-
-	addChild(Widget::create<MScrewA>(Vec(0, 0)));
-	addChild(Widget::create<MScrewC>(Vec(box.size.x-15, 0)));
-	addChild(Widget::create<MScrewD>(Vec(0, 365)));
-	addChild(Widget::create<MScrewA>(Vec(box.size.x-15, 365)));
-    
-	
-	addParam(ParamWidget::create<FMSM>(Vec(14, 258), module, PhaserModule::TYPE, 0.0, 3.0, 0.0));
-	
-	addParam(ParamWidget::create<GreenSmallKnob>(Vec(9, 48), module, PhaserModule::RANGE_LOW, 0.0, 1.0, 0.2));
-	addParam(ParamWidget::create<GreenSmallKnob>(Vec(50, 48), module, PhaserModule::RANGE_HIGH, 0.0, 1.0, 0.4));
-		
-	addParam(ParamWidget::create<GreenSmallKnob>(Vec(9, 98), module, PhaserModule::RATE_PARAM, 0.0, 1.0, 0.05));
-	addParam(ParamWidget::create<GreenSmallKnob>(Vec(50, 98), module, PhaserModule::FEEDBACK_PARAM, 0.0, 0.95, 0.475));
-	
-	addParam(ParamWidget::create<BlueSmallKnob>(Vec(9, 148), module, PhaserModule::STAGE_PARAM, 0.0, 18.0, 1.0));
-	addParam(ParamWidget::create<GreenSmallKnob>(Vec(50, 148), module, PhaserModule::LFODEPTH, 0.0, 1.0, 0.1));	
-	
-	addParam(ParamWidget::create<BlueSmallKnob>(Vec(50, 208), module, PhaserModule::PW_PARAM, 0.0, 1.0, 0.5));
-	addParam(ParamWidget::create<BlueSmallKnob>(Vec(3, 208), module, PhaserModule::DEPTH_PARAM, 0.0, 1.0, 0.5));
-	
-	addInput(Port::create<SilverSixPort>(Vec(5, 290), Port::INPUT, module, PhaserModule::LOW_INPUT));
-	addInput(Port::create<SilverSixPortD>(Vec(33, 290), Port::INPUT, module, PhaserModule::HIGH_INPUT));
-	addInput(Port::create<SilverSixPortE>(Vec(60, 290), Port::INPUT, module, PhaserModule::LFODEPTH_INPUT));
-		
-	addInput(Port::create<SilverSixPortA>(Vec(5, 328), Port::INPUT, module, PhaserModule::INPUT));
-	addOutput(Port::create<SilverSixPortB>(Vec(60, 328), Port::OUTPUT, module, PhaserModule::OUTPUT));	
-};
-
-void PhaserModuleWidget::step() {
-	PhaserModule *phasermodule = dynamic_cast<PhaserModule*>(module);
-	assert(phasermodule);
-	panelClassic->visible = (phasermodule->Theme == 0);
-	panelNightMode->visible = (phasermodule->Theme == 1);
-	ModuleWidget::step();
-}
 
 struct PhaserClassicMenu : MenuItem {
 	PhaserModule *phasermodule;
-	void onAction(EventAction &e) override {
+	void onAction(const event::Action &e) override {
 		phasermodule->Theme = 0;
 	}
 	void step() override {
@@ -638,7 +583,7 @@ struct PhaserClassicMenu : MenuItem {
 
 struct PhaserNightModeMenu : MenuItem {
 	PhaserModule *phasermodule;
-	void onAction(EventAction &e) override {
+	void onAction(const event::Action &e) override {
 		phasermodule->Theme = 1;
 	}
 	void step() override {
@@ -647,15 +592,74 @@ struct PhaserNightModeMenu : MenuItem {
 	}
 };
 
-Menu* PhaserModuleWidget::createContextMenu() {
-	Menu* menu = ModuleWidget::createContextMenu();
-	PhaserModule *phasermodule = dynamic_cast<PhaserModule*>(module);
-	assert(phasermodule);
-	menu->addChild(construct<MenuEntry>());
-	menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Theme"));
-	menu->addChild(construct<PhaserClassicMenu>(&PhaserClassicMenu::text, "Classic (default)", &PhaserClassicMenu::phasermodule, phasermodule));
-	menu->addChild(construct<PhaserNightModeMenu>(&PhaserNightModeMenu::text, "Night Mode", &PhaserNightModeMenu::phasermodule, phasermodule));
-	return menu;
+struct PhaserModuleWidget : ModuleWidget {
+	// Panel Themes
+	SvgPanel *panelClassic;
+	SvgPanel *panelNightMode;
+
+  void appendContextMenu(Menu* menu) override {
+  	PhaserModule *phasermodule = dynamic_cast<PhaserModule*>(module);
+  	assert(phasermodule);
+  	menu->addChild(construct<MenuEntry>());
+  	menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Theme"));
+  	menu->addChild(construct<PhaserClassicMenu>(&PhaserClassicMenu::text, "Classic (default)", &PhaserClassicMenu::phasermodule, phasermodule));
+  	menu->addChild(construct<PhaserNightModeMenu>(&PhaserNightModeMenu::text, "Night Mode", &PhaserNightModeMenu::phasermodule, phasermodule));
+  }
+
+	PhaserModuleWidget(PhaserModule *module);
+	void step() override;
+};
+
+PhaserModuleWidget::PhaserModuleWidget(PhaserModule *module) {
+	setModule(module);
+	box.size = Vec(6 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
+	panelClassic = new SvgPanel();
+	panelClassic->box.size = box.size;
+	panelClassic->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/Phaser.svg")));
+	addChild(panelClassic);
+
+	panelNightMode = new SvgPanel();
+	panelNightMode->box.size = box.size;
+	panelNightMode->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/Phaser-Dark.svg")));
+	addChild(panelNightMode);
+
+	addChild(createWidget<MScrewA>(Vec(0, 0)));
+	addChild(createWidget<MScrewC>(Vec(box.size.x-15, 0)));
+	addChild(createWidget<MScrewD>(Vec(0, 365)));
+	addChild(createWidget<MScrewA>(Vec(box.size.x-15, 365)));
+
+
+	addParam(createParam<FMSM>(Vec(14, 258), module, PhaserModule::TYPE));
+
+	addParam(createParam<GreenSmallKnob>(Vec(9, 48), module, PhaserModule::RANGE_LOW));
+	addParam(createParam<GreenSmallKnob>(Vec(50, 48), module, PhaserModule::RANGE_HIGH));
+
+	addParam(createParam<GreenSmallKnob>(Vec(9, 98), module, PhaserModule::RATE_PARAM));
+	addParam(createParam<GreenSmallKnob>(Vec(50, 98), module, PhaserModule::FEEDBACK_PARAM));
+
+	addParam(createParam<BlueSmallKnob>(Vec(9, 148), module, PhaserModule::STAGE_PARAM));
+	addParam(createParam<GreenSmallKnob>(Vec(50, 148), module, PhaserModule::LFODEPTH));
+
+	addParam(createParam<BlueSmallKnob>(Vec(50, 208), module, PhaserModule::PW_PARAM));
+	addParam(createParam<BlueSmallKnob>(Vec(3, 208), module, PhaserModule::DEPTH_PARAM));
+
+	addInput(createInput<SilverSixPort>(Vec(5, 290), module, PhaserModule::LOW_INPUT));
+	addInput(createInput<SilverSixPortD>(Vec(33, 290), module, PhaserModule::HIGH_INPUT));
+	addInput(createInput<SilverSixPortE>(Vec(60, 290), module, PhaserModule::LFODEPTH_INPUT));
+
+	addInput(createInput<SilverSixPortA>(Vec(5, 328), module, PhaserModule::INPUT));
+	addOutput(createOutput<SilverSixPortB>(Vec(60, 328), module, PhaserModule::OUTPUT));
+};
+
+void PhaserModuleWidget::step() {
+  if (module) {
+  	PhaserModule *phasermodule = dynamic_cast<PhaserModule*>(module);
+  	assert(phasermodule);
+  	panelClassic->visible = (phasermodule->Theme == 0);
+  	panelNightMode->visible = (phasermodule->Theme == 1);
+  }
+
+	ModuleWidget::step();
 }
 
-Model *modelPhaserModule = Model::create<PhaserModule, PhaserModuleWidget>("MSM", "Phaser", "Phaser", EFFECT_TAG);
+Model *modelPhaserModule = createModel<PhaserModule, PhaserModuleWidget>("Phaser");
