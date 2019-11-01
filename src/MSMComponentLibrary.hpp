@@ -454,4 +454,50 @@ struct MBlueLight : MGrayModuleLightWidget {
 	}
 };
 
+/////////////////////////////////////////////
+// Panel
+// Panel widget forward ported from Rack 0.6
+// Widget was eliminated in v1
+/////////////////////////////////////////////
+
+struct MSMPanel : TransparentWidget {
+  NVGcolor backgroundColor;
+  std::shared_ptr<Image> backgroundImage;
+	void draw(const DrawArgs &args) override {
+	  nvgBeginPath(args.vg);
+	  nvgRect(args.vg, 0.0, 0.0, box.size.x, box.size.y);
+
+	  // Background color
+	  if (backgroundColor.a > 0) {
+	    nvgFillColor(args.vg, backgroundColor);
+	    nvgFill(args.vg);
+	  }
+
+	  // Background image
+	  if (backgroundImage) {
+	    int width, height;
+	    nvgImageSize(args.vg, backgroundImage->handle, &width, &height);
+	    NVGpaint paint = nvgImagePattern(args.vg, 0.0, 0.0, width, height, 0.0, backgroundImage->handle, 1.0);
+	    nvgFillPaint(args.vg, paint);
+	    nvgFill(args.vg);
+	  }
+
+	  // Border
+	  NVGcolor borderColor = nvgRGBAf(0.5, 0.5, 0.5, 0.5);
+	  nvgBeginPath(args.vg);
+	  nvgRect(args.vg, 0.5, 0.5, box.size.x - 1.0, box.size.y - 1.0);
+	  nvgStrokeColor(args.vg, borderColor);
+	  nvgStrokeWidth(args.vg, 1.0);
+	  nvgStroke(args.vg);
+
+	  Widget::draw(args);
+	}
+};
+
+struct MSMLightPanel : MSMPanel {
+  MSMLightPanel() {
+    backgroundColor = componentlibrary::SCHEME_LIGHT_GRAY;
+  }
+};
+
 /////////////////////////////////////////////////////////////////////////////////////

@@ -188,9 +188,9 @@ struct ExperimentalVCOWidget : ModuleWidget {
 	SvgPanel *pNightMode;
 
 	SvgPanel *pEspenFront;
-	//XXX Panel *pEspenBack;
+	MSMPanel *pEspenBack;
 
-	//XXX Panel *pOmriBack;
+	MSMPanel *pOmriBack;
 	SvgPanel *pOmriFront;
 
 	void appendContextMenu(Menu *menu) override {
@@ -215,31 +215,37 @@ ExperimentalVCOWidget::ExperimentalVCOWidget(ExperimentalVCO *module) {
 	pClassic = new SvgPanel();
 	pClassic->box.size = box.size;
 	pClassic->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/MSVCO.svg")));
+	pClassic->visible = true;
 	addChild(pClassic);
 
 	pNightMode = new SvgPanel();
 	pNightMode->box.size = box.size;
 	pNightMode->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/MSVCO-Dark.svg")));
+	pNightMode->visible = false;
 	addChild(pNightMode);
 
-	//XXX pEspenBack = new LightPanel();
-	//XXX pEspenBack->box.size = box.size;
-	//XXX pEspenBack->backgroundImage = (APP->window->loadImage(asset::plugin(pluginInstance, "res/Panels/MSVCO-Espen-Back.png")));
-	//XXX addChild(pEspenBack);
+	pEspenBack = new MSMLightPanel();
+	pEspenBack->box.size = box.size;
+	pEspenBack->backgroundImage = (APP->window->loadImage(asset::plugin(pluginInstance, "res/Panels/MSVCO-Espen-Back.png")));
+	pEspenBack->visible = false;
+	addChild(pEspenBack);
 
 	pEspenFront = new SvgPanel();
 	pEspenFront->box.size = box.size;
 	pEspenFront->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/MSVCO-Espen-Front.svg")));
+	pEspenFront->visible = false;
 	addChild(pEspenFront);
 
-	//XXX pOmriBack = new LightPanel();
-	//XXX pOmriBack->box.size = box.size;
-	//XXX pOmriBack->backgroundImage = (APP->window->loadImage(asset::plugin(pluginInstance, "res/Panels/MSVCO-Omri-Back.png")));
-	//XXX addChild(pOmriBack);
+	pOmriBack = new MSMLightPanel();
+	pOmriBack->box.size = box.size;
+	pOmriBack->backgroundImage = (APP->window->loadImage(asset::plugin(pluginInstance, "res/Panels/MSVCO-Omri-Back.png")));
+	pOmriBack->visible = false;
+	addChild(pOmriBack);
 
 	pOmriFront = new SvgPanel();
 	pOmriFront->box.size = box.size;
 	pOmriFront->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/MSVCO-Omri-Front.svg")));
+	pOmriFront->visible = false;
 	addChild(pOmriFront);
 
 
@@ -288,10 +294,10 @@ void ExperimentalVCOWidget::step() {
 		pClassic->visible = (experimentalvco->Theme == 0);
 		pNightMode->visible = (experimentalvco->Theme == 1);
 
-		//XXX pEspenBack->visible = (experimentalvco->Theme == 2);
+		pEspenBack->visible = (experimentalvco->Theme == 2);
 		pEspenFront->visible = (experimentalvco->Theme == 2);
 
-		//XXX pOmriBack->visible = (experimentalvco->Theme == 3);
+		pOmriBack->visible = (experimentalvco->Theme == 3);
 		pOmriFront->visible = (experimentalvco->Theme == 3);
 	}
 
