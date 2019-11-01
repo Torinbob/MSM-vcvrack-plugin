@@ -71,61 +71,61 @@ void Mult::process(const ProcessArgs& args) {
 
 	double IN_1, IN_2, IN_3;
 
-	char IN_1Mode = params[MODE1_PARAM].value > 0.0;
-	char IN_2Mode = params[MODE2_PARAM].value > 0.0;
-	char IN_3Mode = params[MODE3_PARAM].value > 0.0;
+	char IN_1Mode = params[MODE1_PARAM].getValue() > 0.0;
+	char IN_2Mode = params[MODE2_PARAM].getValue() > 0.0;
+	char IN_3Mode = params[MODE3_PARAM].getValue() > 0.0;
 
 	switch(IN_1Mode) {
 		case 1:
-		IN_1 = inputs[IN_1_INPUT].value + inputs[IN_2_INPUT].value;
+		IN_1 = inputs[IN_1_INPUT].getVoltage() + inputs[IN_2_INPUT].getVoltage();
 		break;
 		default:
-		IN_1 = inputs[IN_1_INPUT].value - inputs[IN_2_INPUT].value;
+		IN_1 = inputs[IN_1_INPUT].getVoltage() - inputs[IN_2_INPUT].getVoltage();
 		break;
 	}
 
 	switch(IN_2Mode) {
 		case 1:
-		IN_2 = inputs[IN_3_INPUT].value + inputs[IN_4_INPUT].value;
+		IN_2 = inputs[IN_3_INPUT].getVoltage() + inputs[IN_4_INPUT].getVoltage();
 		break;
 		default:
-		IN_2 = inputs[IN_3_INPUT].value - inputs[IN_4_INPUT].value;
+		IN_2 = inputs[IN_3_INPUT].getVoltage() - inputs[IN_4_INPUT].getVoltage();
 		break;
 	}
 	switch(IN_3Mode) {
 		case 1:
-		IN_3 = inputs[IN_5_INPUT].value + inputs[IN_6_INPUT].value;
+		IN_3 = inputs[IN_5_INPUT].getVoltage() + inputs[IN_6_INPUT].getVoltage();
 		break;
 		default:
-		IN_3 = inputs[IN_5_INPUT].value - inputs[IN_6_INPUT].value;
+		IN_3 = inputs[IN_5_INPUT].getVoltage() - inputs[IN_6_INPUT].getVoltage();
 		break;
 	}
 
 
 
 	//Mult1
-	outputs[OUT_11_OUTPUT].value = IN_1;
-	outputs[OUT_12_OUTPUT].value = IN_1;
-	outputs[OUT_13_OUTPUT].value = IN_1;
-	outputs[OUT_14_OUTPUT].value = IN_1;
-	outputs[OUT_15_OUTPUT].value = IN_1;
-	outputs[OUT_16_OUTPUT].value = IN_1;
+	outputs[OUT_11_OUTPUT].setVoltage(IN_1);
+	outputs[OUT_12_OUTPUT].setVoltage(IN_1);
+	outputs[OUT_13_OUTPUT].setVoltage(IN_1);
+	outputs[OUT_14_OUTPUT].setVoltage(IN_1);
+	outputs[OUT_15_OUTPUT].setVoltage(IN_1);
+	outputs[OUT_16_OUTPUT].setVoltage(IN_1);
 
 	//Mult2
-	outputs[OUT_21_OUTPUT].value = IN_2;
-	outputs[OUT_22_OUTPUT].value = IN_2;
-	outputs[OUT_23_OUTPUT].value = IN_2;
-	outputs[OUT_24_OUTPUT].value = IN_2;
-	outputs[OUT_25_OUTPUT].value = IN_2;
-	outputs[OUT_26_OUTPUT].value = IN_2;
+	outputs[OUT_21_OUTPUT].setVoltage(IN_2);
+	outputs[OUT_22_OUTPUT].setVoltage(IN_2);
+	outputs[OUT_23_OUTPUT].setVoltage(IN_2);
+	outputs[OUT_24_OUTPUT].setVoltage(IN_2);
+	outputs[OUT_25_OUTPUT].setVoltage(IN_2);
+	outputs[OUT_26_OUTPUT].setVoltage(IN_2);
 
 	//Mult3
-	outputs[OUT_31_OUTPUT].value = IN_3;
-	outputs[OUT_32_OUTPUT].value = IN_3;
-	outputs[OUT_33_OUTPUT].value = IN_3;
-	outputs[OUT_34_OUTPUT].value = IN_3;
-	outputs[OUT_35_OUTPUT].value = IN_3;
-	outputs[OUT_36_OUTPUT].value = IN_3;
+	outputs[OUT_31_OUTPUT].setVoltage(IN_3);
+	outputs[OUT_32_OUTPUT].setVoltage(IN_3);
+	outputs[OUT_33_OUTPUT].setVoltage(IN_3);
+	outputs[OUT_34_OUTPUT].setVoltage(IN_3);
+	outputs[OUT_35_OUTPUT].setVoltage(IN_3);
+	outputs[OUT_36_OUTPUT].setVoltage(IN_3);
 };
 
 struct MultClassicMenu : MenuItem {

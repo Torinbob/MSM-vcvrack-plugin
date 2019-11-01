@@ -87,20 +87,20 @@ struct Morpher : Module
 
 void Morpher::process(const ProcessArgs& args) {
 
-	In1 = inputs[INPUT1].active ? inputs[INPUT1].value : 0.0f;
-	In2 = inputs[INPUT2].active ? inputs[INPUT2].value : 0.0f;
-	In3 = inputs[INPUT3].active ? inputs[INPUT3].value : 0.0f;
-	In4 = inputs[INPUT4].active ? inputs[INPUT4].value : 0.0f;
-	In5 = inputs[INPUT5].active ? inputs[INPUT5].value : 0.0f;
-	In6 = inputs[INPUT6].active ? inputs[INPUT6].value : 0.0f;
-	In7 = inputs[INPUT7].active ? inputs[INPUT7].value : 0.0f;
-	In8 = inputs[INPUT8].active ? inputs[INPUT8].value : 0.0f;
+	In1 = inputs[INPUT1].isConnected() ? inputs[INPUT1].getVoltage() : 0.0f;
+	In2 = inputs[INPUT2].isConnected() ? inputs[INPUT2].getVoltage() : 0.0f;
+	In3 = inputs[INPUT3].isConnected() ? inputs[INPUT3].getVoltage() : 0.0f;
+	In4 = inputs[INPUT4].isConnected() ? inputs[INPUT4].getVoltage() : 0.0f;
+	In5 = inputs[INPUT5].isConnected() ? inputs[INPUT5].getVoltage() : 0.0f;
+	In6 = inputs[INPUT6].isConnected() ? inputs[INPUT6].getVoltage() : 0.0f;
+	In7 = inputs[INPUT7].isConnected() ? inputs[INPUT7].getVoltage() : 0.0f;
+	In8 = inputs[INPUT8].isConnected() ? inputs[INPUT8].getVoltage() : 0.0f;
 
-	switchcount = params[SWITCHCOUNT].value;
+	switchcount = params[SWITCHCOUNT].getValue();
 
 	switch(switchcount) {
 		case 6:
-		Crossfader = clamp(params[MORPH_PARAM].value + inputs[MORPH_CV].value / 10.0f, 0.0f, 7.0f);
+		Crossfader = clamp(params[MORPH_PARAM].getValue() + inputs[MORPH_CV].getVoltage() / 10.0f, 0.0f, 7.0f);
 		Crossfader *= 7.0f;
 
 			if(Crossfader < 1.0f)
@@ -117,19 +117,19 @@ void Morpher::process(const ProcessArgs& args) {
 				Out = crossfade(In6, In7, Crossfader - 5.0f);
 			else
 				Out = crossfade(In7, In8, Crossfader - 6.0f);
-			outputs[OUTPUT].value = Out;
+			outputs[OUTPUT].setVoltage(Out);
 
-			lights[LIGHT_1].value = 1.0f;
-			lights[LIGHT_2].value = 1.0f;
-			lights[LIGHT_3].value = 1.0f;
-			lights[LIGHT_4].value = 1.0f;
-			lights[LIGHT_5].value = 1.0f;
-			lights[LIGHT_6].value = 1.0f;
-			lights[LIGHT_7].value = 1.0f;
-			lights[LIGHT_8].value = 1.0f;
+			lights[LIGHT_1].setBrightness(1.0f);
+			lights[LIGHT_2].setBrightness(1.0f);
+			lights[LIGHT_3].setBrightness(1.0f);
+			lights[LIGHT_4].setBrightness(1.0f);
+			lights[LIGHT_5].setBrightness(1.0f);
+			lights[LIGHT_6].setBrightness(1.0f);
+			lights[LIGHT_7].setBrightness(1.0f);
+			lights[LIGHT_8].setBrightness(1.0f);
 		break;
 		case 5:
-		Crossfader = clamp(params[MORPH_PARAM].value + inputs[MORPH_CV].value / 10.0f, 0.0f, 6.0f);
+		Crossfader = clamp(params[MORPH_PARAM].getValue() + inputs[MORPH_CV].getVoltage() / 10.0f, 0.0f, 6.0f);
 		Crossfader *= 6.0f;
 
 			if(Crossfader < 1.0f)
@@ -144,19 +144,19 @@ void Morpher::process(const ProcessArgs& args) {
 				Out = crossfade(In5, In6, Crossfader - 4.0f);
 			else
 				Out = crossfade(In6, In7, Crossfader - 5.0f);
-			outputs[OUTPUT].value = Out;
+			outputs[OUTPUT].setVoltage(Out);
 
-			lights[LIGHT_1].value = 1.0f;
-			lights[LIGHT_2].value = 1.0f;
-			lights[LIGHT_3].value = 1.0f;
-			lights[LIGHT_4].value = 1.0f;
-			lights[LIGHT_5].value = 1.0f;
-			lights[LIGHT_6].value = 1.0f;
-			lights[LIGHT_7].value = 1.0f;
-			lights[LIGHT_8].value = 0.0f;
+			lights[LIGHT_1].setBrightness(1.0f);
+			lights[LIGHT_2].setBrightness(1.0f);
+			lights[LIGHT_3].setBrightness(1.0f);
+			lights[LIGHT_4].setBrightness(1.0f);
+			lights[LIGHT_5].setBrightness(1.0f);
+			lights[LIGHT_6].setBrightness(1.0f);
+			lights[LIGHT_7].setBrightness(1.0f);
+			lights[LIGHT_8].setBrightness(0.0f);
 		break;
 		case 4:
-		Crossfader = clamp(params[MORPH_PARAM].value + inputs[MORPH_CV].value / 10.0f, 0.0f, 5.0f);
+		Crossfader = clamp(params[MORPH_PARAM].getValue() + inputs[MORPH_CV].getVoltage() / 10.0f, 0.0f, 5.0f);
 		Crossfader *= 5.0f;
 
 			if(Crossfader < 1.0f)
@@ -169,19 +169,19 @@ void Morpher::process(const ProcessArgs& args) {
 				Out = crossfade(In4, In5, Crossfader - 3.0f);
 			else
 				Out = crossfade(In5, In6, Crossfader - 4.0f);
-			outputs[OUTPUT].value = Out;
+			outputs[OUTPUT].setVoltage(Out);
 
-			lights[LIGHT_1].value = 1.0f;
-			lights[LIGHT_2].value = 1.0f;
-			lights[LIGHT_3].value = 1.0f;
-			lights[LIGHT_4].value = 1.0f;
-			lights[LIGHT_5].value = 1.0f;
-			lights[LIGHT_6].value = 1.0f;
-			lights[LIGHT_7].value = 0.0f;
-			lights[LIGHT_8].value = 0.0f;
+      lights[LIGHT_1].setBrightness(1.0f);
+			lights[LIGHT_2].setBrightness(1.0f);
+			lights[LIGHT_3].setBrightness(1.0f);
+			lights[LIGHT_4].setBrightness(1.0f);
+			lights[LIGHT_5].setBrightness(1.0f);
+			lights[LIGHT_6].setBrightness(1.0f);
+			lights[LIGHT_7].setBrightness(0.0f);
+			lights[LIGHT_8].setBrightness(0.0f);
 		break;;
 		case 3:
-		Crossfader = clamp(params[MORPH_PARAM].value + inputs[MORPH_CV].value / 10.0f, 0.0f, 4.0f);
+		Crossfader = clamp(params[MORPH_PARAM].getValue() + inputs[MORPH_CV].getVoltage() / 10.0f, 0.0f, 4.0f);
 		Crossfader *= 4.0f;
 
 			if(Crossfader < 1.0f)
@@ -192,19 +192,19 @@ void Morpher::process(const ProcessArgs& args) {
 				Out = crossfade(In3, In4, Crossfader - 2.0f);
 			else
 				Out = crossfade(In4, In5, Crossfader - 3.0f);
-			outputs[OUTPUT].value = Out;
+			outputs[OUTPUT].setVoltage(Out);
 
-			lights[LIGHT_1].value = 1.0f;
-			lights[LIGHT_2].value = 1.0f;
-			lights[LIGHT_3].value = 1.0f;
-			lights[LIGHT_4].value = 1.0f;
-			lights[LIGHT_5].value = 1.0f;
-			lights[LIGHT_6].value = 0.0f;
-			lights[LIGHT_7].value = 0.0f;
-			lights[LIGHT_8].value = 0.0f;
+			lights[LIGHT_1].setBrightness(1.0f);
+			lights[LIGHT_2].setBrightness(1.0f);
+			lights[LIGHT_3].setBrightness(1.0f);
+			lights[LIGHT_4].setBrightness(1.0f);
+			lights[LIGHT_5].setBrightness(1.0f);
+			lights[LIGHT_6].setBrightness(0.0f);
+			lights[LIGHT_7].setBrightness(0.0f);
+			lights[LIGHT_8].setBrightness(0.0f);
 		break;
 		case 2:
-		Crossfader = clamp(params[MORPH_PARAM].value + inputs[MORPH_CV].value / 10.0f, 0.0f, 3.0f);
+		Crossfader = clamp(params[MORPH_PARAM].getValue() + inputs[MORPH_CV].getVoltage() / 10.0f, 0.0f, 3.0f);
 		Crossfader *= 3.0f;
 
 			if(Crossfader < 1.0f)
@@ -213,50 +213,50 @@ void Morpher::process(const ProcessArgs& args) {
 				Out = crossfade(In2, In3, Crossfader - 1.0f);
 			else
 				Out = crossfade(In3, In4, Crossfader - 2.0f);
-			outputs[OUTPUT].value = Out;
+			outputs[OUTPUT].setVoltage(Out);
 
-			lights[LIGHT_1].value = 1.0f;
-			lights[LIGHT_2].value = 1.0f;
-			lights[LIGHT_3].value = 1.0f;
-			lights[LIGHT_4].value = 1.0f;
-			lights[LIGHT_5].value = 0.0f;
-			lights[LIGHT_6].value = 0.0f;
-			lights[LIGHT_7].value = 0.0f;
-			lights[LIGHT_8].value = 0.0f;
+			lights[LIGHT_1].setBrightness(1.0f);
+			lights[LIGHT_2].setBrightness(1.0f);
+			lights[LIGHT_3].setBrightness(1.0f);
+			lights[LIGHT_4].setBrightness(1.0f);
+			lights[LIGHT_5].setBrightness(0.0f);
+			lights[LIGHT_6].setBrightness(0.0f);
+			lights[LIGHT_7].setBrightness(0.0f);
+			lights[LIGHT_8].setBrightness(0.0f);
 		break;
 		case 1:
-		Crossfader = clamp(params[MORPH_PARAM].value + inputs[MORPH_CV].value / 10.0f, 0.0f, 2.0f);
+		Crossfader = clamp(params[MORPH_PARAM].getValue() + inputs[MORPH_CV].getVoltage() / 10.0f, 0.0f, 2.0f);
 		Crossfader *= 2.0f;
 
 			if(Crossfader < 1.0f)
 				Out = crossfade(In1, In2, Crossfader);
 			else
 				Out = crossfade(In2, In3, Crossfader - 1.0f);
-			outputs[OUTPUT].value = Out;
+			outputs[OUTPUT].setVoltage(Out);
 
-			lights[LIGHT_1].value = 1.0f;
-			lights[LIGHT_2].value = 1.0f;
-			lights[LIGHT_3].value = 1.0f;
-			lights[LIGHT_4].value = 0.0f;
-			lights[LIGHT_5].value = 0.0f;
-			lights[LIGHT_6].value = 0.0f;
-			lights[LIGHT_7].value = 0.0f;
-			lights[LIGHT_8].value = 0.0f;
+			lights[LIGHT_1].setBrightness(1.0f);
+			lights[LIGHT_2].setBrightness(1.0f);
+			lights[LIGHT_3].setBrightness(1.0f);
+			lights[LIGHT_4].setBrightness(0.0f);
+			lights[LIGHT_5].setBrightness(0.0f);
+			lights[LIGHT_6].setBrightness(0.0f);
+			lights[LIGHT_7].setBrightness(0.0f);
+			lights[LIGHT_8].setBrightness(0.0f);
 		break;
 		case 0:
-		Crossfader = clamp(params[MORPH_PARAM].value + inputs[MORPH_CV].value / 10.0f, 0.0f, 1.0f);
+		Crossfader = clamp(params[MORPH_PARAM].getValue() + inputs[MORPH_CV].getVoltage() / 10.0f, 0.0f, 1.0f);
 		Crossfader *= 1.0f;
 			Out = crossfade(In1, In2, Crossfader);
-			outputs[OUTPUT].value = Out;
+			outputs[OUTPUT].setVoltage(Out);
 
-			lights[LIGHT_1].value = 1.0f;
-			lights[LIGHT_2].value = 1.0f;
-			lights[LIGHT_3].value = 0.0f;
-			lights[LIGHT_4].value = 0.0f;
-			lights[LIGHT_5].value = 0.0f;
-			lights[LIGHT_6].value = 0.0f;
-			lights[LIGHT_7].value = 0.0f;
-			lights[LIGHT_8].value = 0.0f;
+			lights[LIGHT_1].setBrightness(1.0f);
+			lights[LIGHT_2].setBrightness(1.0f);
+			lights[LIGHT_3].setBrightness(0.0f);
+			lights[LIGHT_4].setBrightness(0.0f);
+			lights[LIGHT_5].setBrightness(0.0f);
+			lights[LIGHT_6].setBrightness(0.0f);
+			lights[LIGHT_7].setBrightness(0.0f);
+			lights[LIGHT_8].setBrightness(0.0f);
 		break;
 	}
 

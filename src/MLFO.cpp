@@ -98,21 +98,21 @@ void LFO::process(const ProcessArgs& args)
 	float noise2 = 2.0f * random::normal();
 
 	//LFO 1
-	oscillator.setPitch(params[FREQ_PARAM].value + inputs[FM_1_INPUT].value * params[FM_PARAM].value);
-	oscillator.setPulseWidth(params[PW_1_PARAM].value + inputs[PW_1_INPUT].value);
-	oscillator.Settings(params[OFFSET_1_PARAM].value > 0.0f, params[INVERT_1_PARAM].value <= 0.0f);
+	oscillator.setPitch(params[FREQ_PARAM].getValue() + inputs[FM_1_INPUT].getVoltage() * params[FM_PARAM].getValue());
+	oscillator.setPulseWidth(params[PW_1_PARAM].getValue() + inputs[PW_1_INPUT].getVoltage());
+	oscillator.Settings(params[OFFSET_1_PARAM].getValue() > 0.0f, params[INVERT_1_PARAM].getValue() <= 0.0f);
 	oscillator.step(1.0f / args.sampleRate);
-	oscillator.setReset(inputs[RESET_INPUT].value);
+	oscillator.setReset(inputs[RESET_INPUT].getVoltage());
 
-	outputs[SIN_OUTPUT].value = 5.0f * oscillator.sin();
-	outputs[TRI_OUTPUT].value = 5.0f * oscillator.tri();
-	outputs[SAW_OUTPUT].value = 5.0f * oscillator.saw();
-	outputs[SQR_OUTPUT].value = 5.0f * oscillator.sqr();
+	outputs[SIN_OUTPUT].setVoltage(5.0f * oscillator.sin());
+	outputs[TRI_OUTPUT].setVoltage(5.0f * oscillator.tri());
+	outputs[SAW_OUTPUT].setVoltage(5.0f * oscillator.saw());
+	outputs[SQR_OUTPUT].setVoltage(5.0f * oscillator.sqr());
 
 	//sample and hold
-	 float Switch = params[OFFSET_1_PARAM].value;
+	 float Switch = params[OFFSET_1_PARAM].getValue();
 
-	if (trigger1.process(outputs[SQR_OUTPUT].value)) {
+	if (trigger1.process(outputs[SQR_OUTPUT].getVoltage())) {
 		if(Switch > 0.0f) {
 		sample1 = noise1 + 5.0f;
 		}
@@ -124,9 +124,9 @@ void LFO::process(const ProcessArgs& args)
 	float SHOut1 = sample1 / 5.0f;
 
 	//Output
-	outputs[SH_OUTPUT].value = 5.0f * SHOut1;
+	outputs[SH_OUTPUT].setVoltage(5.0f * SHOut1);
 
-	float WAVE_A = params[WAVE_A_PARAM].value + inputs[WAVE_A_INPUT].value;
+	float WAVE_A = params[WAVE_A_PARAM].getValue() + inputs[WAVE_A_INPUT].getVoltage();
 	WAVE_A = clamp(WAVE_A, 0.0f, 3.0f);
 	float WAVE_1_OUT;
 	if (WAVE_A < 1.0f)
@@ -135,24 +135,24 @@ void LFO::process(const ProcessArgs& args)
 		WAVE_1_OUT = crossfade(oscillator.tri(), oscillator.saw(), WAVE_A - 1.0f);
 	else
 		WAVE_1_OUT = crossfade(oscillator.sqr(), SHOut1, WAVE_A - 2.0f);
-	outputs[LFO_A_OUTPUT].value = 5.0f * WAVE_1_OUT;
+	outputs[LFO_A_OUTPUT].setVoltage(5.0f * WAVE_1_OUT);
 
 
 	//LFO 2
 
-	oscillatorB.setPitch(params[FREQ_PARAM].value + inputs[FM_2_INPUT].value * params[FM_2_PARAM].value);
-	oscillatorB.setPulseWidth(params[PW_2_PARAM].value + inputs[PW_2_INPUT].value);
-	oscillatorB.Settings(params[OFFSET_2_PARAM].value > 0.0f, params[INVERT_2_PARAM].value <= 0.0f);
+	oscillatorB.setPitch(params[FREQ_PARAM].getValue() + inputs[FM_2_INPUT].getVoltage() * params[FM_2_PARAM].getValue());
+	oscillatorB.setPulseWidth(params[PW_2_PARAM].getValue() + inputs[PW_2_INPUT].getVoltage());
+	oscillatorB.Settings(params[OFFSET_2_PARAM].getValue() > 0.0f, params[INVERT_2_PARAM].getValue() <= 0.0f);
 	oscillatorB.step(1.0f / args.sampleRate);
-	oscillatorB.setReset(inputs[RESET_INPUT].value);
+	oscillatorB.setReset(inputs[RESET_INPUT].getVoltage());
 
-	outputs[SIN_2_OUTPUT].value = 5.0f * oscillatorB.sin();
-	outputs[TRI_2_OUTPUT].value = 5.0f * oscillatorB.tri();
-	outputs[SAW_2_OUTPUT].value = 5.0f * oscillatorB.saw();
-	outputs[SQR_2_OUTPUT].value = 5.0f * oscillatorB.sqr();
+	outputs[SIN_2_OUTPUT].setVoltage(5.0f * oscillatorB.sin());
+	outputs[TRI_2_OUTPUT].setVoltage(5.0f * oscillatorB.tri());
+	outputs[SAW_2_OUTPUT].setVoltage(5.0f * oscillatorB.saw());
+	outputs[SQR_2_OUTPUT].setVoltage(5.0f * oscillatorB.sqr());
 
 	//sample and hold
-	if (trigger2.process(outputs[SQR_2_OUTPUT].value)) {
+	if (trigger2.process(outputs[SQR_2_OUTPUT].getVoltage())) {
 		if(Switch > 0.0f) {
 		sample2 = noise1 + 5.0f;
 		}
@@ -164,9 +164,9 @@ void LFO::process(const ProcessArgs& args)
 	float SHOut2 = sample2 / 5.0f;
 
 	//Output
-	outputs[SH_2_OUTPUT].value = 5.0f * SHOut2;
+	outputs[SH_2_OUTPUT].setVoltage(5.0f * SHOut2);
 
-	float WAVE_B = params[WAVE_B_PARAM].value + inputs[WAVE_B_INPUT].value;
+	float WAVE_B = params[WAVE_B_PARAM].getValue() + inputs[WAVE_B_INPUT].getVoltage();
 	WAVE_B = clamp(WAVE_B, 0.0f, 3.0f);
 	float WAVE_2_OUT;
 	if (WAVE_B < 1.0f)
@@ -175,13 +175,13 @@ void LFO::process(const ProcessArgs& args)
 		WAVE_2_OUT = crossfade(oscillatorB.tri(), oscillatorB.saw(), WAVE_B - 1.0f);
 	else
 		WAVE_2_OUT = crossfade(oscillatorB.sqr(), SHOut2, WAVE_B - 2.0f);
-	outputs[LFO_B_OUTPUT].value = 5.0f * WAVE_2_OUT;
+	outputs[LFO_B_OUTPUT].setVoltage(5.0f * WAVE_2_OUT);
 
 
 	//MIX LFO 1 & LFO 2
-	float CrossfadeMix = clamp(params[MIX_PARAM].value + inputs[CV_MIX_INPUT].value, 0.0f, 1.0f);
-	float MIX_IN_1 = outputs[LFO_A_OUTPUT].value;
-	float MIX_IN_2 = outputs[LFO_B_OUTPUT].value;
+	float CrossfadeMix = clamp(params[MIX_PARAM].getValue() + inputs[CV_MIX_INPUT].getVoltage(), 0.0f, 1.0f);
+	float MIX_IN_1 = outputs[LFO_A_OUTPUT].getVoltage();
+	float MIX_IN_2 = outputs[LFO_B_OUTPUT].getVoltage();
 	float OutMix;
 
 	if(CrossfadeMix < 0.5f) {
@@ -189,7 +189,7 @@ void LFO::process(const ProcessArgs& args)
 	}
 	else(CrossfadeMix > 1.0f);
 		OutMix = crossfade(MIX_IN_1, MIX_IN_2, CrossfadeMix);
-	outputs[OUT_MIX_OUTPUT].value = OutMix;
+	outputs[OUT_MIX_OUTPUT].setVoltage(OutMix);
 };
 
 struct LClassicMenu : MenuItem {

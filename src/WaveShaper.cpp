@@ -77,34 +77,34 @@ struct WaveShaper : Module {
 
 void WaveShaper::process(const ProcessArgs& args)
 {
-	IN_M = inputs[MASTER_INPUT].active ? inputs[MASTER_INPUT].value : 0.0f;
-	IN_A = inputs[IN_A_INPUT].active ? inputs[IN_A_INPUT].value : 0.0f;
-	IN_B = inputs[IN_B_INPUT].active ? inputs[IN_B_INPUT].value : 0.0f;
-	IN_C = inputs[IN_C_INPUT].active ? inputs[IN_C_INPUT].value : 0.0f;
+	IN_M = inputs[MASTER_INPUT].isConnected() ? inputs[MASTER_INPUT].getVoltage() : 0.0f;
+	IN_A = inputs[IN_A_INPUT].isConnected() ? inputs[IN_A_INPUT].getVoltage() : 0.0f;
+	IN_B = inputs[IN_B_INPUT].isConnected() ? inputs[IN_B_INPUT].getVoltage() : 0.0f;
+	IN_C = inputs[IN_C_INPUT].isConnected() ? inputs[IN_C_INPUT].getVoltage() : 0.0f;
 
-	SHAPE_MOD1 = params[SHAPE_1_PARAM].value;
-	SHAPE_MOD2 = params[SHAPE_2_PARAM].value;
-	SHAPE_MOD3 = params[SHAPE_3_PARAM].value;
+	SHAPE_MOD1 = params[SHAPE_1_PARAM].getValue();
+	SHAPE_MOD2 = params[SHAPE_2_PARAM].getValue();
+	SHAPE_MOD3 = params[SHAPE_3_PARAM].getValue();
 
-	SHAPE_CV1 = (inputs[SHAPE_1_CV_INPUT].value * params[SHAPE_1_CV_PARAM].value);
-	SHAPE_CV2 = (inputs[SHAPE_2_CV_INPUT].value * params[SHAPE_2_CV_PARAM].value);
-	SHAPE_CV3 = (inputs[SHAPE_3_CV_INPUT].value * params[SHAPE_3_CV_PARAM].value);
+	SHAPE_CV1 = (inputs[SHAPE_1_CV_INPUT].getVoltage() * params[SHAPE_1_CV_PARAM].getValue());
+	SHAPE_CV2 = (inputs[SHAPE_2_CV_INPUT].getVoltage() * params[SHAPE_2_CV_PARAM].getValue());
+	SHAPE_CV3 = (inputs[SHAPE_3_CV_INPUT].getVoltage() * params[SHAPE_3_CV_PARAM].getValue());
 
 	waveS.process();
 
-	waveS.Shape1(IN_M + IN_A,SHAPE_MOD1,SHAPE_CV1, outputs[OUT_OUTPUT].active);
-	waveS.Shape2(IN_M + IN_B,SHAPE_MOD2,SHAPE_CV2, outputs[OUT_OUTPUT].active);
-	waveS.Shape3(IN_M + IN_C,SHAPE_MOD3,SHAPE_CV3, outputs[OUT_OUTPUT].active);
+	waveS.Shape1(IN_M + IN_A,SHAPE_MOD1,SHAPE_CV1, outputs[OUT_OUTPUT].isConnected());
+	waveS.Shape2(IN_M + IN_B,SHAPE_MOD2,SHAPE_CV2, outputs[OUT_OUTPUT].isConnected());
+	waveS.Shape3(IN_M + IN_C,SHAPE_MOD3,SHAPE_CV3, outputs[OUT_OUTPUT].isConnected());
 
-	double mix = params[MIX_PARAM].value;
-		OUT = waveS.MasterOutput() *  params[OUTPUT_GAIN_PARAM].value;
+	double mix = params[MIX_PARAM].getValue();
+		OUT = waveS.MasterOutput() *  params[OUTPUT_GAIN_PARAM].getValue();
 	double MixOUT = crossfade((IN_M + IN_A + IN_B + IN_C), OUT, mix);
 
-	if(outputs[OUT_OUTPUT].active) {
-		outputs[OUT_OUTPUT].value = saturate(MixOUT);
+	if(outputs[OUT_OUTPUT].isConnected()) {
+		outputs[OUT_OUTPUT].setVoltage(saturate(MixOUT));
 	}
 	else {
-		outputs[OUT_OUTPUT].value = 0.0f;
+		outputs[OUT_OUTPUT].setVoltage(0.0f);
 	}
 
 }

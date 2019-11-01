@@ -191,14 +191,14 @@ struct Delay : Module {
 		switch(SYNCa) {
 			case 0:
 				// Free Mode
-				delayA = 1e-3 * powf(10.0f / 1e-3, clamp(params[TIME_A_PARAM].value + clamp(inputs[TIME_A_INPUT].value / 10.0f, 0.0f, 1.0f), 0.0f, 1.0f));
+				delayA = 1e-3 * powf(10.0f / 1e-3, clamp(params[TIME_A_PARAM].getValue() + clamp(inputs[TIME_A_INPUT].getVoltage() / 10.0f, 0.0f, 1.0f), 0.0f, 1.0f));
 				lcd_tempoA = std::round(delayA*1000);
 			break;
 			case 1:
 				// Synced
 				timeA += 1.0f / APP->engine->getSampleRate();
-				if(inputs[CLOCK_INPUT].active) {
-					if(clockTriggerA.process(inputs[CLOCK_INPUT].value)) {
+				if(inputs[CLOCK_INPUT].isConnected()) {
+					if(clockTriggerA.process(inputs[CLOCK_INPUT].getVoltage())) {
 						if(ClockInputA) {
 							durationA = timeA;
 						}
@@ -207,7 +207,7 @@ struct Delay : Module {
 					}
 				}
 
-				float divisionfreqA = clamp(params[TIME_A_PARAM].value + inputs[TIME_A_INPUT].value / 10.0f, 0.0f, 1.0f); // * DIVISIONS;
+				float divisionfreqA = clamp(params[TIME_A_PARAM].getValue() + inputs[TIME_A_INPUT].getVoltage() / 10.0f, 0.0f, 1.0f); // * DIVISIONS;
 					divisionfreqA *= 25.0f;
 						divisionfreqA = clamp(divisionfreqA,0.0f,24.0f);
 							divisionA = int(divisionfreqA);
@@ -225,14 +225,14 @@ struct Delay : Module {
 		switch(SYNCb) {
 			case 0:
 				// Free Mode
-				delayB = 1e-3 * powf(10.0f / 1e-3, clamp(params[TIME_B_PARAM].value + clamp(inputs[TIME_B_INPUT].value / 10.0f, 0.0f, 1.0f), 0.0f, 1.0f));
+				delayB = 1e-3 * powf(10.0f / 1e-3, clamp(params[TIME_B_PARAM].getValue() + clamp(inputs[TIME_B_INPUT].getVoltage() / 10.0f, 0.0f, 1.0f), 0.0f, 1.0f));
 				lcd_tempoB = std::round(delayB*1000);
 			break;
 			case 1:
 				// Synced
 				timeB += 1.0f / APP->engine->getSampleRate();
-				if(inputs[CLOCK_INPUT].active) {
-					if(clockTriggerB.process(inputs[CLOCK_INPUT].value)) {
+				if(inputs[CLOCK_INPUT].isConnected()) {
+					if(clockTriggerB.process(inputs[CLOCK_INPUT].getVoltage())) {
 						if(ClockInputB) {
 							durationB = timeB;
 						}
@@ -241,7 +241,7 @@ struct Delay : Module {
 					}
 				}
 
-				float divisionfreqB = clamp(params[TIME_B_PARAM].value + inputs[TIME_B_INPUT].value / 10.0f, 0.0f, 1.0f);
+				float divisionfreqB = clamp(params[TIME_B_PARAM].getValue() + inputs[TIME_B_INPUT].getVoltage() / 10.0f, 0.0f, 1.0f);
 					divisionfreqB *= 25.0f;
 						divisionfreqB = clamp(divisionfreqB,0.0f,24.0f);
 							divisionB = int(divisionfreqB);
@@ -280,8 +280,8 @@ struct Delay : Module {
 
 void Delay::process(const ProcessArgs& args) {
 
-	float inA = inputs[IN_A_INPUT].value * params[CROSSFEED_B].value;
-	float inB = inputs[IN_B_INPUT].value * params[CROSSFEED_A].value;
+	float inA = inputs[IN_A_INPUT].getVoltage() * params[CROSSFEED_B].getValue();
+	float inB = inputs[IN_B_INPUT].getVoltage() * params[CROSSFEED_A].getValue();
 
 	// DELAY A
 
@@ -289,11 +289,11 @@ void Delay::process(const ProcessArgs& args) {
 
 	// Get input to delay block
 
-	float IA = ((inputs[IN_A_INPUT].active ? inputs[IN_A_INPUT].value : 0.0f) * (params[LEVEL_A].value)) + inB;
-	float feedbackA = clamp(params[FEEDBACK_A_PARAM].value + inputs[FEEDBACK_A_INPUT].value / 10.0f, -1.0f, 1.0f);
+	float IA = ((inputs[IN_A_INPUT].isConnected() ? inputs[IN_A_INPUT].getVoltage() : 0.0f) * (params[LEVEL_A].getValue())) + inB;
+	float feedbackA = clamp(params[FEEDBACK_A_PARAM].getValue() + inputs[FEEDBACK_A_INPUT].getVoltage() / 10.0f, -1.0f, 1.0f);
 	float dryA = IA + lastWetA * feedbackA;
 
-	SYNCa = params[SYNCA_PARAM].value;
+	SYNCa = params[SYNCA_PARAM].getValue();
 
 	if((int)SYNCa == 1.0f) {
 		DISPLAYA = 1.0f;
@@ -339,7 +339,7 @@ void Delay::process(const ProcessArgs& args) {
 
     }
 
-	if(clear_a.process(clamp(params[CLEAR_A].value + inputs[CLEAR_A_INPUT].value / 10.0f, 0.0f, 1.0f))) {
+	if(clear_a.process(clamp(params[CLEAR_A].getValue() + inputs[CLEAR_A_INPUT].getVoltage() / 10.0f, 0.0f, 1.0f))) {
 		historyBufferA.clear();
 	}
 
@@ -351,12 +351,12 @@ void Delay::process(const ProcessArgs& args) {
 	}
 
 	// Apply LP/HP filter to Wet Output
-	float LPA = clamp(params[LP_A_PARAM].value + inputs[LP_A_INPUT].value / 10.0f, 0.0f, 1.0f);
+	float LPA = clamp(params[LP_A_PARAM].getValue() + inputs[LP_A_INPUT].getVoltage() / 10.0f, 0.0f, 1.0f);
 	float lowpassFreqA = 1000.0f * powf(10.0f, clamp(2.0f*LPA, 0.0f, 1.0f));
 	lowpassFilterA.setCutoff(lowpassFreqA / args.sampleRate);
 	lowpassFilterA.process(wetfiltA);
 	wetfiltA = lowpassFilterA.lowpass();
-	float HPA = clamp(params[HP_A_PARAM].value + inputs[HP_A_INPUT].value / 10.0f, 0.0f, 1.0f);
+	float HPA = clamp(params[HP_A_PARAM].getValue() + inputs[HP_A_INPUT].getVoltage() / 10.0f, 0.0f, 1.0f);
 	float highpassFreqA = 1000.0f * powf(10.0f, clamp(2.0f*HPA, 0.0f, 1.0f));
 	highpassFilterA.setCutoff(highpassFreqA / args.sampleRate);
 	highpassFilterA.process(wetfiltA);
@@ -365,12 +365,12 @@ void Delay::process(const ProcessArgs& args) {
 	lastWetA = wetA;
 
 	// Wet Output
-	outputs[WET_A_OUTPUT].value = saturate(wetfiltA);
+	outputs[WET_A_OUTPUT].setVoltage(saturate(wetfiltA));
 
 	// Dry-Wet Output
-	float mixA = clamp(params[MIX_A_PARAM].value + inputs[MIX_A_INPUT].value / 10.0f, 0.0f, 1.0f);
+	float mixA = clamp(params[MIX_A_PARAM].getValue() + inputs[MIX_A_INPUT].getVoltage() / 10.0f, 0.0f, 1.0f);
 	float outA = crossfade(IA, wetfiltA, mixA);
-	outputs[OUT_A_OUTPUT].value = saturate(outA);
+	outputs[OUT_A_OUTPUT].setVoltage(saturate(outA));
 
 	///////////////////////////////////////////////////
 
@@ -381,11 +381,11 @@ void Delay::process(const ProcessArgs& args) {
 	///////////////////////////////////////////////////
 
 	// Get input to delay block
-	float IB = ((inputs[IN_B_INPUT].active ? inputs[IN_B_INPUT].value : 0.0f) * (params[LEVEL_B].value)) + inA;
-	float feedbackB = clamp(params[FEEDBACK_B_PARAM].value + inputs[FEEDBACK_B_INPUT].value / 10.0f, -1.0f, 1.0f);
+	float IB = ((inputs[IN_B_INPUT].isConnected() ? inputs[IN_B_INPUT].getVoltage() : 0.0f) * (params[LEVEL_B].getValue())) + inA;
+	float feedbackB = clamp(params[FEEDBACK_B_PARAM].getValue() + inputs[FEEDBACK_B_INPUT].getVoltage() / 10.0f, -1.0f, 1.0f);
 	float dryB = IB + lastWetB * feedbackB;
 
-	SYNCb = params[SYNCB_PARAM].value;
+	SYNCb = params[SYNCB_PARAM].getValue();
 
 	if((int)SYNCb == 1.0f) {
 		DISPLAYB = 1.0f;
@@ -432,7 +432,7 @@ void Delay::process(const ProcessArgs& args) {
 
 	}
 
-	if(clear_b.process(clamp(params[CLEAR_B].value + inputs[CLEAR_B_INPUT].value / 10.0f, 0.0f, 1.0f))) {
+	if(clear_b.process(clamp(params[CLEAR_B].getValue() + inputs[CLEAR_B_INPUT].getVoltage() / 10.0f, 0.0f, 1.0f))) {
 		historyBufferB.clear();
 	}
 
@@ -445,12 +445,12 @@ void Delay::process(const ProcessArgs& args) {
 	}
 
 	// Apply LP/HP filter to Wet Output
-	float LPB = clamp(params[LP_B_PARAM].value + inputs[LP_B_INPUT].value / 10.0f, 0.0f, 1.0f);
+	float LPB = clamp(params[LP_B_PARAM].getValue() + inputs[LP_B_INPUT].getVoltage() / 10.0f, 0.0f, 1.0f);
 	float lowpassFreqB = 1000.0f * powf(10.0f, clamp(2.0f*LPB, 0.0f, 1.0f));
 	lowpassFilterB.setCutoff(lowpassFreqB / args.sampleRate);
 	lowpassFilterB.process(wetfiltB);
 	wetfiltB = lowpassFilterB.lowpass();
-	float HPB = clamp(params[HP_B_PARAM].value + inputs[HP_B_INPUT].value / 10.0f, 0.0f, 1.0f);
+	float HPB = clamp(params[HP_B_PARAM].getValue() + inputs[HP_B_INPUT].getVoltage() / 10.0f, 0.0f, 1.0f);
 	float highpassFreqB = 1000.0f * powf(10.0f, clamp(2.0f*HPB, 0.0f, 1.0f));
 	highpassFilterB.setCutoff(highpassFreqB / args.sampleRate);
 	highpassFilterB.process(wetfiltB);
@@ -459,12 +459,12 @@ void Delay::process(const ProcessArgs& args) {
 	lastWetB = wetB;
 
 	// Wet Output
-	outputs[WET_B_OUTPUT].value = saturate(wetfiltB);
+	outputs[WET_B_OUTPUT].setVoltage(saturate(wetfiltB));
 
 	// Dry-Wet Output
-	float mixB = clamp(params[MIX_B_PARAM].value + inputs[MIX_B_INPUT].value / 10.0f, 0.0f, 1.0f);
+	float mixB = clamp(params[MIX_B_PARAM].getValue() + inputs[MIX_B_INPUT].getVoltage() / 10.0f, 0.0f, 1.0f);
 	float outB = crossfade(IB, wetfiltB, mixB);
-	outputs[OUT_B_OUTPUT].value = saturate(outB);
+	outputs[OUT_B_OUTPUT].setVoltage(saturate(outB));
 
 };
 

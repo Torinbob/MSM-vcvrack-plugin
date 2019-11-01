@@ -113,55 +113,55 @@ void ADSR::process(const ProcessArgs& args) {
 	if (_modulationStep >= modulationSteps) {
 		_modulationStep = 0;
 
-		_envelope.setAttack(params[ATTACK_PARAM].value + clamp(inputs[ATTACK_INPUT].value / 10.0f, 0.0f, 1.0f));
-		_envelope.setDecay(params[DECAY_PARAM].value + clamp(inputs[DECAY_INPUT].value / 10.0f, 0.0f, 1.0f));
-		_envelope.setSustain(params[SUSTAIN_PARAM].value, inputs[SUSTAIN_INPUT].value);
-		_envelope.setRelease(params[RELEASE_PARAM].value + clamp(inputs[RELEASE_INPUT].value / 10.0f, 0.0f, 1.0f));
+		_envelope.setAttack(params[ATTACK_PARAM].getValue() + clamp(inputs[ATTACK_INPUT].getVoltage() / 10.0f, 0.0f, 1.0f));
+		_envelope.setDecay(params[DECAY_PARAM].getValue() + clamp(inputs[DECAY_INPUT].getVoltage() / 10.0f, 0.0f, 1.0f));
+		_envelope.setSustain(params[SUSTAIN_PARAM].getValue(), inputs[SUSTAIN_INPUT].getVoltage());
+		_envelope.setRelease(params[RELEASE_PARAM].getValue() + clamp(inputs[RELEASE_INPUT].getVoltage() / 10.0f, 0.0f, 1.0f));
 		/*
-		_envelope.setAttack(powf(params[ATTACK_PARAM].value + clamp(inputs[ATTACK_INPUT].value / 10.0f, 0.0f, 1.0f), 2.0f) * 10.f);
-		_envelope.setDecay(powf(params[DECAY_PARAM].value + clamp(inputs[DECAY_INPUT].value / 10.0f, 0.0f, 1.0f), 2.0f) * 10.f);
-		_envelope.setSustain(params[SUSTAIN_PARAM].value + clamp(inputs[SUSTAIN_INPUT].value / 10.0f, 0.0f, 1.0f));
-		_envelope.setRelease(powf(params[RELEASE_PARAM].value + clamp(inputs[RELEASE_INPUT].value / 10.0f, 0.0f, 1.0f), 2.0f) * 10.f);
+		_envelope.setAttack(powf(params[ATTACK_PARAM].getValue() + clamp(inputs[ATTACK_INPUT].getVoltage() / 10.0f, 0.0f, 1.0f), 2.0f) * 10.f);
+		_envelope.setDecay(powf(params[DECAY_PARAM].getValue() + clamp(inputs[DECAY_INPUT].getVoltage() / 10.0f, 0.0f, 1.0f), 2.0f) * 10.f);
+		_envelope.setSustain(params[SUSTAIN_PARAM].getValue() + clamp(inputs[SUSTAIN_INPUT].getVoltage() / 10.0f, 0.0f, 1.0f));
+		_envelope.setRelease(powf(params[RELEASE_PARAM].getValue() + clamp(inputs[RELEASE_INPUT].getVoltage() / 10.0f, 0.0f, 1.0f), 2.0f) * 10.f);
 		*/
 
-		attackshape = clamp(params[ATT_SHAPE].value, 0.1f, 4.0f);
-		decayshape = clamp(params[DEC_SHAPE].value + inputs[DEC_SHAPE_CV].value, 0.1f, 4.0f);
-		releaseshape = clamp(params[REL_SHAPE].value, 0.1f, 4.0f);
+		attackshape = clamp(params[ATT_SHAPE].getValue(), 0.1f, 4.0f);
+		decayshape = clamp(params[DEC_SHAPE].getValue() + inputs[DEC_SHAPE_CV].getVoltage(), 0.1f, 4.0f);
+		releaseshape = clamp(params[REL_SHAPE].getValue(), 0.1f, 4.0f);
 		_envelope.setShapes(attackshape, decayshape, releaseshape);
 	}
 
-	_gateTrigger.process(inputs[GATE_INPUT].value);
-	_retrigTrigger.process(inputs[TRIG_INPUT].value);
+	_gateTrigger.process(inputs[GATE_INPUT].getVoltage());
+	_retrigTrigger.process(inputs[TRIG_INPUT].getVoltage());
 	_envelope.setGate(_gateTrigger.isHigh(), _retrigTrigger.isHigh());
 
 
-	outputs[ENVELOPE_OUTPUT].value = _envelope.next() * 10.0f;
-	outputs[INV_OUTPUT].value = 1.0f - (_envelope.next() * 10.0f) + 9.0f;
+	outputs[ENVELOPE_OUTPUT].setVoltage(_envelope.next() * 10.0f);
+	outputs[INV_OUTPUT].setVoltage(1.0f - (_envelope.next() * 10.0f) + 9.0f);
 
 
-	lights[ATTACK_LIGHT].value = _envelope.isStage(EnvelopeGen::ATTACK_STAGE);
+	lights[ATTACK_LIGHT].setBrightness(_envelope.isStage(EnvelopeGen::ATTACK_STAGE));
 	if(!_envelope.isStage(EnvelopeGen::ATTACK_STAGE)) {
 		_triggerAttack.trigger(0.01f);
 	}
-	outputs[EOA].value = _triggerAttack.process(1.0f / args.sampleRate) ? 10.0 : 0.0;
+	outputs[EOA].setVoltage(_triggerAttack.process(1.0f / args.sampleRate) ? 10.0 : 0.0);
 
-	lights[DECAY_LIGHT].value = _envelope.isStage(EnvelopeGen::DECAY_STAGE);
+	lights[DECAY_LIGHT].setBrightness(_envelope.isStage(EnvelopeGen::DECAY_STAGE));
 	if(!_envelope.isStage(EnvelopeGen::DECAY_STAGE)) {
 		_triggerDecay.trigger(0.01f);
 	}
-	outputs[EOD].value = _triggerDecay.process(1.0f / args.sampleRate) ? 10.0 : 0.0;
+	outputs[EOD].setVoltage(_triggerDecay.process(1.0f / args.sampleRate) ? 10.0 : 0.0);
 
-	lights[SUSTAIN_LIGHT].value = _envelope.isStage(EnvelopeGen::SUSTAIN_STAGE);
+	lights[SUSTAIN_LIGHT].setBrightness(_envelope.isStage(EnvelopeGen::SUSTAIN_STAGE));
 	if(!_envelope.isStage(EnvelopeGen::SUSTAIN_STAGE)) {
 		_triggerSustain.trigger(0.01f);
 	}
-	outputs[EOS].value = _triggerSustain.process(1.0f / args.sampleRate) ? 10.0 : 0.0;
+	outputs[EOS].setVoltage(_triggerSustain.process(1.0f / args.sampleRate) ? 10.0 : 0.0);
 
-	lights[RELEASE_LIGHT].value = _envelope.isStage(EnvelopeGen::RELEASE_STAGE);
+	lights[RELEASE_LIGHT].setBrightness(_envelope.isStage(EnvelopeGen::RELEASE_STAGE));
 	if(!_envelope.isStage(EnvelopeGen::RELEASE_STAGE)) {
 		_triggerRelease.trigger(0.01f);
 	}
-	outputs[EOR].value = _triggerRelease.process(1.0f / args.sampleRate) ? 10.0 : 0.0;
+	outputs[EOR].setVoltage(_triggerRelease.process(1.0f / args.sampleRate) ? 10.0 : 0.0);
 };
 
 struct ADSRClassicMenu : MenuItem {

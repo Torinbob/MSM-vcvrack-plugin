@@ -100,14 +100,14 @@ struct Bitcrusher : Module {
 
 void Bitcrusher::process(const ProcessArgs& args) {
 
-	float in = inputs[INPUT].value / 5.0f;
-	long int bits = params[BITS_PARAM].value + inputs[CV_BITS].value;
-	float qd = params[QD_PARAM].value;
-	float sr = params[SR_PARAM].value;
+	float in = inputs[INPUT].getVoltage() / 5.0f;
+	long int bits = params[BITS_PARAM].getValue() + inputs[CV_BITS].getVoltage();
+	float qd = params[QD_PARAM].getValue();
+	float sr = params[SR_PARAM].getValue();
 
 	out = 5.0f * BitC.process(in, bits, qd, sr);
 
-	outputs[OUTPUT].value = saturate(out);
+	outputs[OUTPUT].setVoltage(saturate(out));
 
 };
 

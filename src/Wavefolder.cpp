@@ -85,18 +85,18 @@ struct Wavefolder : Module {
 
 void Wavefolder::process(const ProcessArgs& args) {
 
-	type = params[TYPESWITCH].value;
+	type = params[TYPESWITCH].getValue();
 
-	IN_1 = inputs[IN_INPUT].active ? inputs[IN_INPUT].value : 0.0f;
-	UP = clamp(params[UP_PARAM].value + inputs[UP_INPUT].value, 0.0f, 4.0f);
-	DOWN = clamp(params[DOWN_PARAM].value + inputs[DOWN_INPUT].value, 0.0f, 4.0f);
+	IN_1 = inputs[IN_INPUT].isConnected() ? inputs[IN_INPUT].getVoltage() : 0.0f;
+	UP = clamp(params[UP_PARAM].getValue() + inputs[UP_INPUT].getVoltage(), 0.0f, 4.0f);
+	DOWN = clamp(params[DOWN_PARAM].getValue() + inputs[DOWN_INPUT].getVoltage(), 0.0f, 4.0f);
 
-		SHAPE_MOD = params[SHAPE_PARAM].value;
+		SHAPE_MOD = params[SHAPE_PARAM].getValue();
 
-	SHAPE_CV = (inputs[SHAPE_CV_INPUT].value * params[SHAPE_CV_PARAM].value) / 5.0f;
-	SHAPE_SYM = clamp(params[SYM_PARAM].value, -10.0f, 10.0f);
+	SHAPE_CV = (inputs[SHAPE_CV_INPUT].getVoltage() * params[SHAPE_CV_PARAM].getValue()) / 5.0f;
+	SHAPE_SYM = clamp(params[SYM_PARAM].getValue(), -10.0f, 10.0f);
 
-	wavefold.Shape(IN_1, SHAPE_MOD, SHAPE_CV, SHAPE_SYM, params[RANGE].value, UP, DOWN, outputs[OUT_OUTPUT].active);
+	wavefold.Shape(IN_1, SHAPE_MOD, SHAPE_CV, SHAPE_SYM, params[RANGE].getValue(), UP, DOWN, outputs[OUT_OUTPUT].isConnected());
 
 	switch(type) {
 		case 1:
@@ -109,14 +109,14 @@ void Wavefolder::process(const ProcessArgs& args) {
 
 	FOLD = saturate(wavefold.Output());
 
-	double mix = params[GAIN_PARAM].value + clamp(params[GAIN_CV_PARAM].value * inputs[GAIN_INPUT].value / 5.0f,0.0f,1.0f);
-	//if (inputs[GAIN_INPUT].active) {
-	//	mix *= clamp(params[GAIN_CV_PARAM].value + inputs[GAIN_INPUT].value / 5.0f, 0.0f, 1.0f);
+	double mix = params[GAIN_PARAM].getValue() + clamp(params[GAIN_CV_PARAM].getValue() * inputs[GAIN_INPUT].getVoltage() / 5.0f,0.0f,1.0f);
+	//if (inputs[GAIN_INPUT].isConnected()) {
+	//	mix *= clamp(params[GAIN_CV_PARAM].getValue() + inputs[GAIN_INPUT].getVoltage() / 5.0f, 0.0f, 1.0f);
 	//}
 	double OUT = crossfade(IN_1, FOLD, mix);
 
-	if(outputs[OUT_OUTPUT].active) {
-		outputs[OUT_OUTPUT].value = OUT;
+	if(outputs[OUT_OUTPUT].isConnected()) {
+		outputs[OUT_OUTPUT].setVoltage(OUT);
 	}
 };
 

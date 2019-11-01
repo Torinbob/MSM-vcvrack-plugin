@@ -143,7 +143,7 @@ void CrazyMult::process(const ProcessArgs& args) {
 	switch(Type) {
 		case 0:
 			for(int i = 0; i < 8; i++) {
-				ParamsA = clamp((params[AorB_1_PARAM+i].value + dsp::quadraticBipolar(inputs[CV_1_INPUT+i].value) / 10.0f), -1.0f, 1.0f);
+				ParamsA = clamp((params[AorB_1_PARAM+i].getValue() + dsp::quadraticBipolar(inputs[CV_1_INPUT+i].getVoltage()) / 10.0f), -1.0f, 1.0f);
 
 				if(ParamsA == -1.0f) {
 						Out_A += inputs[IN_1_INPUT+i].getNormalVoltage(0.0f);
@@ -152,21 +152,21 @@ void CrazyMult::process(const ProcessArgs& args) {
 			}
 			for(int i = 0; i < 8; i++) {
 				if (1 && countA[i] > 0)
-					if(params[AorB_1_PARAM+i].value == -1.0f) Out_A *= (0.8 * countA[i]);
+					if(params[AorB_1_PARAM+i].getValue() == -1.0f) Out_A *= (0.8 * countA[i]);
 
-				outputs[OUTA1_OUTPUT].value = saturate(Out_A);
-				outputs[OUTA2_OUTPUT].value = saturate(Out_A);
-				outputs[OUTA3_OUTPUT].value = saturate(Out_A);
-				outputs[OUTA4_OUTPUT].value = saturate(Out_A);
-				outputs[OUTA5_OUTPUT].value = saturate(Out_A);
-				outputs[OUTA6_OUTPUT].value = saturate(Out_A);
-				outputs[OUTA7_OUTPUT].value = saturate(Out_A);
-				outputs[OUTA8_OUTPUT].value = saturate(Out_A);
+				outputs[OUTA1_OUTPUT].setVoltage(saturate(Out_A));
+				outputs[OUTA2_OUTPUT].setVoltage(saturate(Out_A));
+				outputs[OUTA3_OUTPUT].setVoltage(saturate(Out_A));
+				outputs[OUTA4_OUTPUT].setVoltage(saturate(Out_A));
+				outputs[OUTA5_OUTPUT].setVoltage(saturate(Out_A));
+				outputs[OUTA6_OUTPUT].setVoltage(saturate(Out_A));
+				outputs[OUTA7_OUTPUT].setVoltage(saturate(Out_A));
+				outputs[OUTA8_OUTPUT].setVoltage(saturate(Out_A));
 			}
 
 			for(int i = 0; i < 8; i++) {
 
-				ParamsA = clamp((params[AorB_1_PARAM+i].value + dsp::quadraticBipolar(inputs[CV_1_INPUT+i].value) / 10.0f), -1.0f, 1.0f);
+				ParamsA = clamp((params[AorB_1_PARAM+i].getValue() + dsp::quadraticBipolar(inputs[CV_1_INPUT+i].getVoltage()) / 10.0f), -1.0f, 1.0f);
 
 				if(ParamsA == 1.0f) {
 						Out_B += inputs[IN_1_INPUT+i].getNormalVoltage(0.0f);
@@ -176,21 +176,21 @@ void CrazyMult::process(const ProcessArgs& args) {
 			}
 			for(int i = 0; i < 8; i++) {
 				if (1 && countB[i] > 0)
-					if(params[AorB_1_PARAM+i].value == 1.0f) Out_B *= (0.8 * countB[i]);
+					if(params[AorB_1_PARAM+i].getValue() == 1.0f) Out_B *= (0.8 * countB[i]);
 
-				outputs[OUTB1_OUTPUT].value = saturate(Out_B);
-				outputs[OUTB2_OUTPUT].value = saturate(Out_B);
-				outputs[OUTB3_OUTPUT].value = saturate(Out_B);
-				outputs[OUTB4_OUTPUT].value = saturate(Out_B);
-				outputs[OUTB5_OUTPUT].value = saturate(Out_B);
-				outputs[OUTB6_OUTPUT].value = saturate(Out_B);
-				outputs[OUTB7_OUTPUT].value = saturate(Out_B);
-				outputs[OUTB8_OUTPUT].value = saturate(Out_B);
+				outputs[OUTB1_OUTPUT].setVoltage(saturate(Out_B));
+				outputs[OUTB2_OUTPUT].setVoltage(saturate(Out_B));
+				outputs[OUTB3_OUTPUT].setVoltage(saturate(Out_B));
+				outputs[OUTB4_OUTPUT].setVoltage(saturate(Out_B));
+				outputs[OUTB5_OUTPUT].setVoltage(saturate(Out_B));
+				outputs[OUTB6_OUTPUT].setVoltage(saturate(Out_B));
+				outputs[OUTB7_OUTPUT].setVoltage(saturate(Out_B));
+				outputs[OUTB8_OUTPUT].setVoltage(saturate(Out_B));
 			}
 		break;
 		case 1:
 			for(int i = 0; i < 8; i++) {
-				ParamsA = clamp((params[AorB_1_PARAM+i].value + dsp::quadraticBipolar(inputs[CV_1_INPUT+i].value) / 10.0f), -1.0f, 1.0f);
+				ParamsA = clamp((params[AorB_1_PARAM+i].getValue() + dsp::quadraticBipolar(inputs[CV_1_INPUT+i].getVoltage()) / 10.0f), -1.0f, 1.0f);
 
 				if(ParamsA == -1.0f) {
 						Out_A -= inputs[IN_1_INPUT+i].getNormalVoltage(0.0f);
@@ -199,21 +199,21 @@ void CrazyMult::process(const ProcessArgs& args) {
 			}
 			for(int i = 0; i < 8; i++) {
 				if (1 && countA[i] > 0)
-					if(params[AorB_1_PARAM+i].value == -1.0f) Out_A *= (0.8 * countA[i]);
+					if(params[AorB_1_PARAM+i].getValue() == -1.0f) Out_A *= (0.8 * countA[i]);
 
-				outputs[OUTA1_OUTPUT].value = saturate(Out_A);
-				outputs[OUTA2_OUTPUT].value = saturate(Out_A);
-				outputs[OUTA3_OUTPUT].value = saturate(Out_A);
-				outputs[OUTA4_OUTPUT].value = saturate(Out_A);
-				outputs[OUTA5_OUTPUT].value = saturate(Out_A);
-				outputs[OUTA6_OUTPUT].value = saturate(Out_A);
-				outputs[OUTA7_OUTPUT].value = saturate(Out_A);
-				outputs[OUTA8_OUTPUT].value = saturate(Out_A);
+				outputs[OUTA1_OUTPUT].setVoltage(saturate(Out_A));
+				outputs[OUTA2_OUTPUT].setVoltage(saturate(Out_A));
+				outputs[OUTA3_OUTPUT].setVoltage(saturate(Out_A));
+				outputs[OUTA4_OUTPUT].setVoltage(saturate(Out_A));
+				outputs[OUTA5_OUTPUT].setVoltage(saturate(Out_A));
+				outputs[OUTA6_OUTPUT].setVoltage(saturate(Out_A));
+				outputs[OUTA7_OUTPUT].setVoltage(saturate(Out_A));
+				outputs[OUTA8_OUTPUT].setVoltage(saturate(Out_A));
 			}
 
 			for(int i = 0; i < 8; i++) {
 
-				ParamsA = clamp((params[AorB_1_PARAM+i].value + dsp::quadraticBipolar(inputs[CV_1_INPUT+i].value) / 10.0f), -1.0f, 1.0f);
+				ParamsA = clamp((params[AorB_1_PARAM+i].getValue() + dsp::quadraticBipolar(inputs[CV_1_INPUT+i].getVoltage()) / 10.0f), -1.0f, 1.0f);
 
 				if(ParamsA == 1.0f) {
 						Out_B -= inputs[IN_1_INPUT+i].getNormalVoltage(0.0f);
@@ -223,16 +223,16 @@ void CrazyMult::process(const ProcessArgs& args) {
 			}
 			for(int i = 0; i < 8; i++) {
 				if (1 && countB[i] > 0)
-					if(params[AorB_1_PARAM+i].value == 1.0f) Out_B *= (0.8 * countB[i]);
+					if(params[AorB_1_PARAM+i].getValue() == 1.0f) Out_B *= (0.8 * countB[i]);
 
-				outputs[OUTB1_OUTPUT].value = saturate(Out_B);
-				outputs[OUTB2_OUTPUT].value = saturate(Out_B);
-				outputs[OUTB3_OUTPUT].value = saturate(Out_B);
-				outputs[OUTB4_OUTPUT].value = saturate(Out_B);
-				outputs[OUTB5_OUTPUT].value = saturate(Out_B);
-				outputs[OUTB6_OUTPUT].value = saturate(Out_B);
-				outputs[OUTB7_OUTPUT].value = saturate(Out_B);
-				outputs[OUTB8_OUTPUT].value = saturate(Out_B);
+				outputs[OUTB1_OUTPUT].setVoltage(saturate(Out_B));
+				outputs[OUTB2_OUTPUT].setVoltage(saturate(Out_B));
+				outputs[OUTB3_OUTPUT].setVoltage(saturate(Out_B));
+				outputs[OUTB4_OUTPUT].setVoltage(saturate(Out_B));
+				outputs[OUTB5_OUTPUT].setVoltage(saturate(Out_B));
+				outputs[OUTB6_OUTPUT].setVoltage(saturate(Out_B));
+				outputs[OUTB7_OUTPUT].setVoltage(saturate(Out_B));
+				outputs[OUTB8_OUTPUT].setVoltage(saturate(Out_B));
 			}
 		break;
 	}

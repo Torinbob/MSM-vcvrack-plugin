@@ -46,22 +46,22 @@ struct SimpleSlider : Module {
 
 void SimpleSlider::process(const ProcessArgs& args) {
 
-	double SLIDER = clamp(params[SLIDER_PARAM].value + inputs[CV_INPUT].value, 0.0f, 1.0f);
-	double IN1 = inputs[IN1_INPUT].value;
-	double IN2 = inputs[IN2_INPUT].value;
-	double TYPE = params[TYPE_PARAM].value;
-	double OUT = outputs[MAIN_OUTPUT].value;
+	double SLIDER = clamp(params[SLIDER_PARAM].getValue() + inputs[CV_INPUT].getVoltage(), 0.0f, 1.0f);
+	double IN1 = inputs[IN1_INPUT].getVoltage();
+	double IN2 = inputs[IN2_INPUT].getVoltage();
+	double TYPE = params[TYPE_PARAM].getValue();
+	double OUT = outputs[MAIN_OUTPUT].getVoltage();
 
 	if(TYPE == 0.0f) {
 		if(SLIDER > 0.5f)
 			OUT = crossfade(IN1, IN1, SLIDER);
 		else(SLIDER < 1.0f);
 			OUT = crossfade(IN1, IN2, SLIDER);
-		outputs[MAIN_OUTPUT].value = OUT;
+		outputs[MAIN_OUTPUT].setVoltage(OUT);
 	}
 	else {
 		OUT = (IN1 + IN2) * SLIDER;
-		outputs[MAIN_OUTPUT].value = OUT;
+		outputs[MAIN_OUTPUT].setVoltage(OUT);
 	}
 
 

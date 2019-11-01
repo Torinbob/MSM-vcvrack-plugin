@@ -534,25 +534,25 @@ struct PhaserModule : Module {
 
 void PhaserModule::process(const ProcessArgs& args) {
 
-	rate = params[RATE_PARAM].value;
+	rate = params[RATE_PARAM].getValue();
 	rate *= 7.0f;
 
-	lfodepth = clamp(params[LFODEPTH].value + inputs[LFODEPTH_INPUT].value / 10.0f, 0.0f, 1.0f);
+	lfodepth = clamp(params[LFODEPTH].getValue() + inputs[LFODEPTH_INPUT].getVoltage() / 10.0f, 0.0f, 1.0f);
 
-	type = params[TYPE].value;
+	type = params[TYPE].getValue();
 
-	feedback = params[FEEDBACK_PARAM].value;
-	depth = params[DEPTH_PARAM].value;
+	feedback = params[FEEDBACK_PARAM].getValue();
+	depth = params[DEPTH_PARAM].getValue();
 
-	stage = params[STAGE_PARAM].value;
+	stage = params[STAGE_PARAM].getValue();
 
-	input = inputs[INPUT].value / 5.0f;
+	input = inputs[INPUT].getVoltage() / 5.0f;
 
-	PW = params[PW_PARAM].value;
+	PW = params[PW_PARAM].getValue();
 
-	low = clamp(params[RANGE_LOW].value + inputs[LOW_INPUT].value / 10.0f, 0.0f, 1.0f);
+	low = clamp(params[RANGE_LOW].getValue() + inputs[LOW_INPUT].getVoltage() / 10.0f, 0.0f, 1.0f);
 	low *= 20000.0f;
-	high = clamp(params[RANGE_HIGH].value + inputs[HIGH_INPUT].value / 10.0f, 0.0f, 1.0f);
+	high = clamp(params[RANGE_HIGH].getValue() + inputs[HIGH_INPUT].getVoltage() / 10.0f, 0.0f, 1.0f);
 	high *= 20000.0f;
 
 		pha.Rate(rate);
@@ -567,7 +567,7 @@ void PhaserModule::process(const ProcessArgs& args) {
 
 	out = saturate(2.5f * (pha.Update(input, type)));
 
-	outputs[OUTPUT].value = out;
+	outputs[OUTPUT].setVoltage(out);
 };
 
 struct PhaserClassicMenu : MenuItem {

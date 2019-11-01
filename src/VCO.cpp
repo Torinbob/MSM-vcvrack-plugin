@@ -477,133 +477,133 @@ void VCO::process(const ProcessArgs& args) {
 	// OSC1
 	float pitchFine1, pitchFine2, pitchCv1, pitchCv2;
 
-	oscillator1.analog = params[MODE1_PARAM].value > 0.0f;
+	oscillator1.analog = params[MODE1_PARAM].getValue() > 0.0f;
 
-	pitchFine1 = 3.0f * dsp::quadraticBipolar(params[FINE_1_PARAM].value);
-	pitchCv1 = (12.0f * inputs[VOCT_1_INPUT].value);
+	pitchFine1 = 3.0f * dsp::quadraticBipolar(params[FINE_1_PARAM].getValue());
+	pitchCv1 = (12.0f * inputs[VOCT_1_INPUT].getVoltage());
 
-	if(inputs[LIN_1_INPUT].active) {
-		pitchCv1 += (dsp::quadraticBipolar(params[FMLIN_1_PARAM].value) * 12.0f * inputs[LIN_1_INPUT].value) * (params[FMBUS_PARAM].value + inputs[FMBUS_INPUT].value);
+	if(inputs[LIN_1_INPUT].isConnected()) {
+		pitchCv1 += (dsp::quadraticBipolar(params[FMLIN_1_PARAM].getValue()) * 12.0f * inputs[LIN_1_INPUT].getVoltage()) * (params[FMBUS_PARAM].getValue() + inputs[FMBUS_INPUT].getVoltage());
 	}
 	else {
 		if(easteregg) {
-			pitchCv1 += (dsp::quadraticBipolar(params[FMLIN_1_PARAM].value) * 12.0f * (5.0f * oscillator2.sinsin())) * (params[FMBUS_PARAM].value + inputs[FMBUS_INPUT].value);
+			pitchCv1 += (dsp::quadraticBipolar(params[FMLIN_1_PARAM].getValue()) * 12.0f * (5.0f * oscillator2.sinsin())) * (params[FMBUS_PARAM].getValue() + inputs[FMBUS_INPUT].getVoltage());
 		}
 		else {
-			pitchCv1 += (dsp::quadraticBipolar(params[FMLIN_1_PARAM].value) * 12.0f * (5.0f * oscillator2.sin())) * (params[FMBUS_PARAM].value + inputs[FMBUS_INPUT].value);
+			pitchCv1 += (dsp::quadraticBipolar(params[FMLIN_1_PARAM].getValue()) * 12.0f * (5.0f * oscillator2.sin())) * (params[FMBUS_PARAM].getValue() + inputs[FMBUS_INPUT].getVoltage());
 		}
 	}
-	float FM1 = params[FMEXP_1_PARAM].value * 12.0f * inputs[EXP_1_INPUT].value;
+	float FM1 = params[FMEXP_1_PARAM].getValue() * 12.0f * inputs[EXP_1_INPUT].getVoltage();
 	const float expBase = 25.0f;
-	if(inputs[EXP_1_INPUT].active) {
-		pitchCv1 += (rescale(powf(expBase, clamp(FM1 / 10.0f, 0.0f, 2.0f)), 1.0, expBase, 0.0f, 1.0f)) * (params[FMBUS_PARAM].value + inputs[FMBUS_INPUT].value);
+	if(inputs[EXP_1_INPUT].isConnected()) {
+		pitchCv1 += (rescale(powf(expBase, clamp(FM1 / 10.0f, 0.0f, 2.0f)), 1.0, expBase, 0.0f, 1.0f)) * (params[FMBUS_PARAM].getValue() + inputs[FMBUS_INPUT].getVoltage());
 	}
 	else {
 		if(easteregg) {
-			pitchCv1 += (rescale(powf(expBase, clamp(params[FMEXP_1_PARAM].value * 12.0f *(5.0f * oscillator2.sinsin()) / 10.0f, 0.0f, 2.0f)), 1.0f, expBase, 0.0f, 1.0f)) * (params[FMBUS_PARAM].value + inputs[FMBUS_INPUT].value);
+			pitchCv1 += (rescale(powf(expBase, clamp(params[FMEXP_1_PARAM].getValue() * 12.0f *(5.0f * oscillator2.sinsin()) / 10.0f, 0.0f, 2.0f)), 1.0f, expBase, 0.0f, 1.0f)) * (params[FMBUS_PARAM].getValue() + inputs[FMBUS_INPUT].getVoltage());
 		}
 		else {
-			pitchCv1 += (rescale(powf(expBase, clamp(params[FMEXP_1_PARAM].value * 12.0f *(5.0f * oscillator2.sin()) / 10.0f, 0.0f, 2.0f)), 1.0f, expBase, 0.0f, 1.0f)) * (params[FMBUS_PARAM].value + inputs[FMBUS_INPUT].value);
+			pitchCv1 += (rescale(powf(expBase, clamp(params[FMEXP_1_PARAM].getValue() * 12.0f *(5.0f * oscillator2.sin()) / 10.0f, 0.0f, 2.0f)), 1.0f, expBase, 0.0f, 1.0f)) * (params[FMBUS_PARAM].getValue() + inputs[FMBUS_INPUT].getVoltage());
 		}
 	}
 
-	LFOMODE1 = params[LFOMODE1_PARAM].value;
+	LFOMODE1 = params[LFOMODE1_PARAM].getValue();
 
-	oscillator1.setPitch(params[FREQ_1_PARAM].value, pitchCv1 + pitchFine1, LFOMODE1);
+	oscillator1.setPitch(params[FREQ_1_PARAM].getValue(), pitchCv1 + pitchFine1, LFOMODE1);
 
-	easteregg = params[EASTEREGG_PARAM].value;
+	easteregg = params[EASTEREGG_PARAM].getValue();
 
 	if(easteregg == 1) {
-		oscillator1.H_Active(outputs[TRI_OUTPUT].active);
-		oscillator1.F_Active(outputs[SAW_OUTPUT].active);
+		oscillator1.H_Active(outputs[TRI_OUTPUT].isConnected());
+		oscillator1.F_Active(outputs[SAW_OUTPUT].isConnected());
 	}
 	else {
-		oscillator1.Tri_Active(outputs[TRI_OUTPUT].active);
-		oscillator1.Saw_Active(outputs[SAW_OUTPUT].active);
+		oscillator1.Tri_Active(outputs[TRI_OUTPUT].isConnected());
+		oscillator1.Saw_Active(outputs[SAW_OUTPUT].isConnected());
 	}
 
-	char SYNCA = params[SYNCSWITCHA_PARAM].value + inputs[SYNCSWITCHA_CV_INPUT].value > 0.0f;
+	char SYNCA = params[SYNCSWITCHA_PARAM].getValue() + inputs[SYNCSWITCHA_CV_INPUT].getVoltage() > 0.0f;
 	switch(SYNCA) {
 		case 1:
 		oscillator1.syncEnabled = true;
 		oscillator1.process(1.0f / args.sampleRate, (5.0f  * oscillator2.sin()));
 		break;
 		default:
-		oscillator1.syncEnabled = inputs[SYNC1_INPUT].active;
-		oscillator1.process(1.0f / args.sampleRate, inputs[SYNC1_INPUT].value);
+		oscillator1.syncEnabled = inputs[SYNC1_INPUT].isConnected();
+		oscillator1.process(1.0f / args.sampleRate, inputs[SYNC1_INPUT].getVoltage());
 		break;
 	}
 
 	if(easteregg == 1) {
-		if (outputs[SIN_OUTPUT].active) {
-			outputs[SIN_OUTPUT].value = 6.0f * oscillator1.sinsin();
+		if (outputs[SIN_OUTPUT].isConnected()) {
+			outputs[SIN_OUTPUT].setVoltage(6.0f * oscillator1.sinsin());
 		}
-		if (outputs[TRI_OUTPUT].active) {
-			outputs[TRI_OUTPUT].value = 6.0f * oscillator1.half() + 0.5f;
+		if (outputs[TRI_OUTPUT].isConnected()) {
+			outputs[TRI_OUTPUT].setVoltage(6.0f * oscillator1.half() + 0.5f);
 		}
-		if (outputs[SAW_OUTPUT].active) {
-			outputs[SAW_OUTPUT].value = 6.0f * oscillator1.full() - 1.0f;
+		if (outputs[SAW_OUTPUT].isConnected()) {
+			outputs[SAW_OUTPUT].setVoltage(6.0f * oscillator1.full() - 1.0f);
 		}
 	}
 	else {
-		if (outputs[SIN_OUTPUT].active) {
-			outputs[SIN_OUTPUT].value = 6.0f * oscillator1.sin();
+		if (outputs[SIN_OUTPUT].isConnected()) {
+			outputs[SIN_OUTPUT].setVoltage(6.0f * oscillator1.sin());
 		}
-		if (outputs[TRI_OUTPUT].active) {
-			outputs[TRI_OUTPUT].value = 6.0f * oscillator1.tri();
+		if (outputs[TRI_OUTPUT].isConnected()) {
+			outputs[TRI_OUTPUT].setVoltage(6.0f * oscillator1.tri());
 		}
-		if (outputs[SAW_OUTPUT].active) {
-			outputs[SAW_OUTPUT].value = 6.0f * oscillator1.saw();
+		if (outputs[SAW_OUTPUT].isConnected()) {
+			outputs[SAW_OUTPUT].setVoltage(6.0f * oscillator1.saw());
 		}
 	}
 
 	// OSC2
 
-	oscillator2.analog = params[MODE1_PARAM].value > 0.0f;
+	oscillator2.analog = params[MODE1_PARAM].getValue() > 0.0f;
 
-	pitchFine2 = 3.0f * dsp::quadraticBipolar(params[FINE_2_PARAM].value);
-	pitchCv2 = 12.0f * inputs[VOCT_2_INPUT].value;
+	pitchFine2 = 3.0f * dsp::quadraticBipolar(params[FINE_2_PARAM].getValue());
+	pitchCv2 = 12.0f * inputs[VOCT_2_INPUT].getVoltage();
 
-	if(inputs[LIN_2_INPUT].active) {
-		pitchCv2 += (dsp::quadraticBipolar(params[FMLIN_2_PARAM].value) * 12.0f * inputs[LIN_2_INPUT].value) * (params[FMBUS_PARAM].value + inputs[FMBUS_INPUT].value);
+	if(inputs[LIN_2_INPUT].isConnected()) {
+		pitchCv2 += (dsp::quadraticBipolar(params[FMLIN_2_PARAM].getValue()) * 12.0f * inputs[LIN_2_INPUT].getVoltage()) * (params[FMBUS_PARAM].getValue() + inputs[FMBUS_INPUT].getVoltage());
 	}
 	else {
-		pitchCv2 += (dsp::quadraticBipolar(params[FMLIN_2_PARAM].value) * 12.0f * (5.0f * oscillator1.sin())) * (params[FMBUS_PARAM].value + inputs[FMBUS_INPUT].value);
+		pitchCv2 += (dsp::quadraticBipolar(params[FMLIN_2_PARAM].getValue()) * 12.0f * (5.0f * oscillator1.sin())) * (params[FMBUS_PARAM].getValue() + inputs[FMBUS_INPUT].getVoltage());
 	}
-	float FM2 = params[FMEXP_2_PARAM].value * 12.0f * inputs[EXP_2_INPUT].value;
+	float FM2 = params[FMEXP_2_PARAM].getValue() * 12.0f * inputs[EXP_2_INPUT].getVoltage();
 	const float expBase1 = 25.0f;
-	if(inputs[EXP_2_INPUT].active) {
-		pitchCv2 += (rescale(powf(expBase1, clamp(FM2 / 10.0f, 0.0f, 2.0f)), 1.0f, expBase1, 0.0f, 1.0f)) * (params[FMBUS_PARAM].value + inputs[FMBUS_INPUT].value);
+	if(inputs[EXP_2_INPUT].isConnected()) {
+		pitchCv2 += (rescale(powf(expBase1, clamp(FM2 / 10.0f, 0.0f, 2.0f)), 1.0f, expBase1, 0.0f, 1.0f)) * (params[FMBUS_PARAM].getValue() + inputs[FMBUS_INPUT].getVoltage());
 	}
 	else {
-		pitchCv2 += (rescale(powf(expBase1, clamp((params[FMEXP_2_PARAM].value * 12.0f * (5.0f * oscillator1.sin())) / 10.0f, 0.0f, 2.0f)), 1.0f, expBase1, 0.0f, 1.0f)) * (params[FMBUS_PARAM].value + inputs[FMBUS_INPUT].value);
+		pitchCv2 += (rescale(powf(expBase1, clamp((params[FMEXP_2_PARAM].getValue() * 12.0f * (5.0f * oscillator1.sin())) / 10.0f, 0.0f, 2.0f)), 1.0f, expBase1, 0.0f, 1.0f)) * (params[FMBUS_PARAM].getValue() + inputs[FMBUS_INPUT].getVoltage());
 	}
 
-	LFOMODE2 = params[LFOMODE2_PARAM].value;
+	LFOMODE2 = params[LFOMODE2_PARAM].getValue();
 
-	oscillator2.setPitch(params[FREQ_2_PARAM].value, pitchCv2 + pitchFine2, LFOMODE2);
+	oscillator2.setPitch(params[FREQ_2_PARAM].getValue(), pitchCv2 + pitchFine2, LFOMODE2);
 
-	oscillator2.setPulseWidth(params[PW_2_PARAM].value + inputs[PW_2_INPUT].value / 10.0f);
+	oscillator2.setPulseWidth(params[PW_2_PARAM].getValue() + inputs[PW_2_INPUT].getVoltage() / 10.0f);
 
-	char SYNCB = params[SYNCSWITCHB_PARAM].value + inputs[SYNCSWITCHB_CV_INPUT].value > 0.0f;
+	char SYNCB = params[SYNCSWITCHB_PARAM].getValue() + inputs[SYNCSWITCHB_CV_INPUT].getVoltage() > 0.0f;
 	switch(SYNCB) {
 		case 1:
 		oscillator2.syncEnabled = true;
 		oscillator2.process(1.0f / args.sampleRate, (5.0f * oscillator1.sin()));
 		break;
 		default:
-		oscillator2.syncEnabled = inputs[SYNC2_INPUT].active;
-		oscillator2.process(1.0f / args.sampleRate, inputs[SYNC2_INPUT].value);
+		oscillator2.syncEnabled = inputs[SYNC2_INPUT].isConnected();
+		oscillator2.process(1.0f / args.sampleRate, inputs[SYNC2_INPUT].getVoltage());
 		break;
 	}
 
-	oscillator2.Sqr_Active(outputs[SQR_2_OUTPUT].active);
+	oscillator2.Sqr_Active(outputs[SQR_2_OUTPUT].isConnected());
 
-	if (outputs[SIN_2_OUTPUT].active) {
-		outputs[SIN_2_OUTPUT].value = 6.0f * oscillator2.sin();
+	if (outputs[SIN_2_OUTPUT].isConnected()) {
+		outputs[SIN_2_OUTPUT].setVoltage(6.0f * oscillator2.sin());
 	}
-	if (outputs[SQR_2_OUTPUT].active) {
-		outputs[SQR_2_OUTPUT].value = 6.0f * oscillator2.sqr();
+	if (outputs[SQR_2_OUTPUT].isConnected()) {
+		outputs[SQR_2_OUTPUT].setVoltage(6.0f * oscillator2.sqr());
 	}
 
 
@@ -611,26 +611,26 @@ void VCO::process(const ProcessArgs& args) {
 
 	float IN_1;
 
-	if(inputs[EXT_SRC_INPUT].active) {
-		IN_1 = inputs[EXT_SRC_INPUT].value;
+	if(inputs[EXT_SRC_INPUT].isConnected()) {
+		IN_1 = inputs[EXT_SRC_INPUT].getVoltage();
 	}
 	else {
 		IN_1 = 6.0f * oscillator2.sin();
 	}
 
-	float SHAPE_MOD = params[SHAPE_1_PARAM].value;
+	float SHAPE_MOD = params[SHAPE_1_PARAM].getValue();
 
-	float SHAPE_CV = inputs[SHAPE_CV_INPUT].value * params[SHAPE_CV_PARAM].value;
+	float SHAPE_CV = inputs[SHAPE_CV_INPUT].getVoltage() * params[SHAPE_CV_PARAM].getValue();
 
-	float upW = clamp(params[UP_PARAM].value + inputs[UP_INPUT].value, 0.0f, 4.0f);
+	float upW = clamp(params[UP_PARAM].getValue() + inputs[UP_INPUT].getVoltage(), 0.0f, 4.0f);
 
-	float downW = clamp(params[DOWN_PARAM].value + inputs[DOWN_INPUT].value, 0.0f, 4.0f);
+	float downW = clamp(params[DOWN_PARAM].getValue() + inputs[DOWN_INPUT].getVoltage(), 0.0f, 4.0f);
 
-	folder.Shape(IN_1, SHAPE_MOD, SHAPE_CV, upW, downW, outputs[FOLD_OUTPUT].active);
+	folder.Shape(IN_1, SHAPE_MOD, SHAPE_CV, upW, downW, outputs[FOLD_OUTPUT].isConnected());
 
 	folder.process();
 
-	float CrossfadeA = clamp(params[INPUT_GAIN_PARAM].value + inputs[SHAPE_1_CV_INPUT].value, 0.0f, 1.0f);
+	float CrossfadeA = clamp(params[INPUT_GAIN_PARAM].getValue() + inputs[SHAPE_1_CV_INPUT].getVoltage(), 0.0f, 1.0f);
 	float IN_1F = 0.0f;
 	float IN_2F = folder.Output();
 	float OutA;
@@ -641,7 +641,7 @@ void VCO::process(const ProcessArgs& args) {
 	else(CrossfadeA > 1.0f);
 		OutA = crossfade(IN_1F, IN_2F, CrossfadeA);
 
-	outputs[FOLD_OUTPUT].value = saturate(OutA / 1.5f);
+	outputs[FOLD_OUTPUT].setVoltage(saturate(OutA / 1.5f));
 };
 
 struct VCOClassicMenu : MenuItem {
@@ -844,52 +844,52 @@ void BVCO::process(const ProcessArgs& args) {
 
 	float pitchFine, pitchCv;
 
-	oscillator.analog = params[MODE1_PARAM].value > 0.0f;
+	oscillator.analog = params[MODE1_PARAM].getValue() > 0.0f;
 
-	pitchFine = 3.0f * dsp::quadraticBipolar(params[FINE_PARAM].value);
-	pitchCv = 12.0f * inputs[VOCT_INPUT].value;
+	pitchFine = 3.0f * dsp::quadraticBipolar(params[FINE_PARAM].getValue());
+	pitchCv = 12.0f * inputs[VOCT_INPUT].getVoltage();
 
-	if(inputs[LIN_INPUT].active) {
-		pitchCv += dsp::quadraticBipolar(params[FMLIN_PARAM].value) * 12.0f * inputs[LIN_INPUT].value;
+	if(inputs[LIN_INPUT].isConnected()) {
+		pitchCv += dsp::quadraticBipolar(params[FMLIN_PARAM].getValue()) * 12.0f * inputs[LIN_INPUT].getVoltage();
 	}
 
-	float FM = params[FMEXP_PARAM].value * 12.0f * inputs[EXP_INPUT].value;
+	float FM = params[FMEXP_PARAM].getValue() * 12.0f * inputs[EXP_INPUT].getVoltage();
 	const float expBase = 50.0f;
-	if(inputs[EXP_INPUT].active) {
+	if(inputs[EXP_INPUT].isConnected()) {
 		pitchCv += rescale(powf(expBase, clamp(FM / 10.0f, 0.0f, 2.0f)), 1.0, expBase, 0.0f, 1.0f);
 	}
 
 
-	LFOMOD = params[LFOMODE1_PARAM].value;
+	LFOMOD = params[LFOMODE1_PARAM].getValue();
 
-	oscillator.setPitch(params[FREQ_PARAM].value, pitchCv + pitchFine, LFOMOD);
+	oscillator.setPitch(params[FREQ_PARAM].getValue(), pitchCv + pitchFine, LFOMOD);
 
 
-	oscillator.setPulseWidth(params[PW_PARAM].value + inputs[PW_INPUT].value / 10.0f);
-	oscillator.syncEnabled = inputs[SYNC_INPUT].active;
-	oscillator.process(1.0f / args.sampleRate, inputs[SYNC_INPUT].value);
+	oscillator.setPulseWidth(params[PW_PARAM].getValue() + inputs[PW_INPUT].getVoltage() / 10.0f);
+	oscillator.syncEnabled = inputs[SYNC_INPUT].isConnected();
+	oscillator.process(1.0f / args.sampleRate, inputs[SYNC_INPUT].getVoltage());
 
-	oscillator.Tri_Active(outputs[TRI_OUTPUT].active);
-	oscillator.Saw_Active(outputs[SAW_OUTPUT].active);
-	oscillator.Sqr_Active(outputs[SQR_OUTPUT].active);
-	oscillator.H_Active(outputs[HALF_OUTPUT].active);
-	oscillator.F_Active(outputs[FULL_OUTPUT].active);
-	oscillator.Ramp_Active(outputs[RAMP_OUTPUT].active);
+	oscillator.Tri_Active(outputs[TRI_OUTPUT].isConnected());
+	oscillator.Saw_Active(outputs[SAW_OUTPUT].isConnected());
+	oscillator.Sqr_Active(outputs[SQR_OUTPUT].isConnected());
+	oscillator.H_Active(outputs[HALF_OUTPUT].isConnected());
+	oscillator.F_Active(outputs[FULL_OUTPUT].isConnected());
+	oscillator.Ramp_Active(outputs[RAMP_OUTPUT].isConnected());
 
-	if (outputs[SIN_OUTPUT].active)
-		outputs[SIN_OUTPUT].value = 6.0f * oscillator.sin();
-	if (outputs[RAMP_OUTPUT].active)
-		outputs[RAMP_OUTPUT].value = (6.0f * oscillator.ramp()) - 6.0f;
-	if (outputs[TRI_OUTPUT].active)
-		outputs[TRI_OUTPUT].value = 6.0f * oscillator.tri();
-	if (outputs[SAW_OUTPUT].active)
-		outputs[SAW_OUTPUT].value = 6.0f * oscillator.saw();
-	if (outputs[SQR_OUTPUT].active)
-		outputs[SQR_OUTPUT].value = 6.0f * oscillator.sqr();
-	if (outputs[HALF_OUTPUT].active)
-		outputs[HALF_OUTPUT].value = 6.0f * oscillator.half();
-	if (outputs[FULL_OUTPUT].active)
-		outputs[FULL_OUTPUT].value = 6.0f * oscillator.full();
+	if (outputs[SIN_OUTPUT].isConnected())
+		outputs[SIN_OUTPUT].setVoltage(6.0f * oscillator.sin());
+	if (outputs[RAMP_OUTPUT].isConnected())
+		outputs[RAMP_OUTPUT].setVoltage((6.0f * oscillator.ramp()) - 6.0f);
+	if (outputs[TRI_OUTPUT].isConnected())
+		outputs[TRI_OUTPUT].setVoltage(6.0f * oscillator.tri());
+	if (outputs[SAW_OUTPUT].isConnected())
+		outputs[SAW_OUTPUT].setVoltage(6.0f * oscillator.saw());
+	if (outputs[SQR_OUTPUT].isConnected())
+		outputs[SQR_OUTPUT].setVoltage(6.0f * oscillator.sqr());
+	if (outputs[HALF_OUTPUT].isConnected())
+		outputs[HALF_OUTPUT].setVoltage(6.0f * oscillator.half());
+	if (outputs[FULL_OUTPUT].isConnected())
+		outputs[FULL_OUTPUT].setVoltage(6.0f * oscillator.full());
 
 };
 

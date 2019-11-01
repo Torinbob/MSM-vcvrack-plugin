@@ -63,23 +63,23 @@ struct RingMod : Module
 
 void RingMod::process(const ProcessArgs& args)
 {
-	carA = inputs[CARRIER_A].value / 5.0;
-	modA = inputs[MODULATOR_A].value / 5.0;
+	carA = inputs[CARRIER_A].getVoltage() / 5.0;
+	modA = inputs[MODULATOR_A].getVoltage() / 5.0;
 
-	float waveA = clamp(params[MIXA].value + inputs[MIXA_CV].value / 10.0f, 0.0f, 1.0f);
+	float waveA = clamp(params[MIXA].getValue() + inputs[MIXA_CV].getVoltage() / 10.0f, 0.0f, 1.0f);
 	float ringoutA = carA * modA * 5.0;
-	float outA = crossfade(inputs[CARRIER_A].value, ringoutA, waveA);
+	float outA = crossfade(inputs[CARRIER_A].getVoltage(), ringoutA, waveA);
 
-	outputs[OUTPUT_A].value = outA;
+	outputs[OUTPUT_A].setVoltage(outA);
 
-	carB = inputs[CARRIER_B].value / 5.0;
-	modB = inputs[MODULATOR_B].value / 5.0;
+	carB = inputs[CARRIER_B].getVoltage() / 5.0;
+	modB = inputs[MODULATOR_B].getVoltage() / 5.0;
 
-	float waveB = clamp(params[MIXB].value + inputs[MIXB_CV].value / 10.0f, 0.0f, 1.0f);
+	float waveB = clamp(params[MIXB].getValue() + inputs[MIXB_CV].getVoltage() / 10.0f, 0.0f, 1.0f);
 	float ringoutB = carB * modB * 5.0;
-	float outB = crossfade(inputs[CARRIER_B].value, ringoutB, waveB);
+	float outB = crossfade(inputs[CARRIER_B].getVoltage(), ringoutB, waveB);
 
-	outputs[OUTPUT_B].value = outB;
+	outputs[OUTPUT_B].setVoltage(outB);
 };
 
 struct RMClassicMenu : MenuItem {

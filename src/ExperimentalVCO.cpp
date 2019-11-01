@@ -83,57 +83,57 @@ void ExperimentalVCO::process(const ProcessArgs& args) {
 	char type = 0;
 	// Pitch
 	//float pitchCv = 0.0f;
-	float FreqFine = params[FREQ_PARAM].value;
-	float Fine = params[FINE_PARAM].value;
+	float FreqFine = params[FREQ_PARAM].getValue();
+	float Fine = params[FINE_PARAM].getValue();
 	//float window = 0.0f;
 	float mod1, mod2, mod3;
 
-	Oct = clamp(params[FREQ_OCT_PARAM].value, 0.0, 12.0) * 12;
+	Oct = clamp(params[FREQ_OCT_PARAM].getValue(), 0.0, 12.0) * 12;
 
-	bool lfomode = params[LFOMODE].value;
+	bool lfomode = params[LFOMODE].getValue();
 
-	float pitchCv = 12.0f * inputs[VOCT_INPUT].value;
+	float pitchCv = 12.0f * inputs[VOCT_INPUT].getVoltage();
 
-	pitchCv += (dsp::quadraticBipolar(params[FM_PARAM].value) * 12.0f * inputs[LIN_INPUT].value);
+	pitchCv += (dsp::quadraticBipolar(params[FM_PARAM].getValue()) * 12.0f * inputs[LIN_INPUT].getVoltage());
 
 	oscillator.setPitch(Oct, pitchCv + FreqFine + Fine, lfomode);
-	oscillator.process(1.0f / args.sampleRate, inputs[RESET_INPUT].value, inputs[RESET_INPUT].active);
+	oscillator.process(1.0f / args.sampleRate, inputs[RESET_INPUT].getVoltage(), inputs[RESET_INPUT].isConnected());
 
-	float window = clamp(params[WINDOW].value + (120.0f * inputs[WINDOW_CV].value), 512.0f, 2047.0f);
+	float window = clamp(params[WINDOW].getValue() + (120.0f * inputs[WINDOW_CV].getVoltage()), 512.0f, 2047.0f);
 
-	if(inputs[MOD1_CV].active) {
-		mod1 = clamp(params[MOD1].value + (dsp::quadraticBipolar(params[MOD1_CV_PARAM].value) * 12.0f * inputs[MOD1_CV].value) / 10.0f, 0.01f, 1.0f);
+	if(inputs[MOD1_CV].isConnected()) {
+		mod1 = clamp(params[MOD1].getValue() + (dsp::quadraticBipolar(params[MOD1_CV_PARAM].getValue()) * 12.0f * inputs[MOD1_CV].getVoltage()) / 10.0f, 0.01f, 1.0f);
 	}
 	else {
-		mod1 = clamp(params[MOD1].value, 0.01f, 1.0f);
+		mod1 = clamp(params[MOD1].getValue(), 0.01f, 1.0f);
 	}
-	if(inputs[MOD2_CV].active) {
-		mod2 = clamp(params[MOD2].value + (dsp::quadraticBipolar(params[MOD2_CV_PARAM].value) * 12.0f * inputs[MOD2_CV].value) / 10.0f, 0.01f, 1.0f);
-	}
-	else {
-		mod2 = clamp(params[MOD2].value, 0.01f, 1.0f);
-	}
-	if(inputs[MOD3_CV].active) {
-		mod3 = clamp(params[MOD3].value + (dsp::quadraticBipolar(params[MOD3_CV_PARAM].value) * 12.0f * inputs[MOD3_CV].value) / 10.0f, 0.01f, 1.0f);
+	if(inputs[MOD2_CV].isConnected()) {
+		mod2 = clamp(params[MOD2].getValue() + (dsp::quadraticBipolar(params[MOD2_CV_PARAM].getValue()) * 12.0f * inputs[MOD2_CV].getVoltage()) / 10.0f, 0.01f, 1.0f);
 	}
 	else {
-		mod3 = clamp(params[MOD3].value, 0.01f, 1.0f);
+		mod2 = clamp(params[MOD2].getValue(), 0.01f, 1.0f);
 	}
-	if(inputs[TYPE_INPUT].active) {
-		type = clamp(params[TYPE].value + 3 * inputs[TYPE_INPUT].value, 0.0, 13.0);
+	if(inputs[MOD3_CV].isConnected()) {
+		mod3 = clamp(params[MOD3].getValue() + (dsp::quadraticBipolar(params[MOD3_CV_PARAM].getValue()) * 12.0f * inputs[MOD3_CV].getVoltage()) / 10.0f, 0.01f, 1.0f);
 	}
 	else {
-		type = clamp(params[TYPE].value, 0.0, 13.0);
+		mod3 = clamp(params[MOD3].getValue(), 0.01f, 1.0f);
+	}
+	if(inputs[TYPE_INPUT].isConnected()) {
+		type = clamp(params[TYPE].getValue() + 3 * inputs[TYPE_INPUT].getVoltage(), 0.0, 13.0);
+	}
+	else {
+		type = clamp(params[TYPE].getValue(), 0.0, 13.0);
 	}
 
 	oscillator.TYPE(type);
 	oscillator.Window(window);
 	oscillator.Mods(mod1, mod2, mod3);
 
-	oscillator.outEnabled(outputs[OUTPUT].active);
+	oscillator.outEnabled(outputs[OUTPUT].isConnected());
 
-	if(outputs[OUTPUT].active) {
-		outputs[OUTPUT].value = saturate2(7.0f * oscillator.getOutput());
+	if(outputs[OUTPUT].isConnected()) {
+		outputs[OUTPUT].setVoltage(saturate2(7.0f * oscillator.getOutput()));
 	}
 
 };

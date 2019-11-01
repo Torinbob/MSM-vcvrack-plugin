@@ -91,84 +91,84 @@ struct VCA : Module {
 
 void VCA::process(const ProcessArgs& args) {
 
-	float IN_A = inputs[IN_L_A].active ? inputs[IN_L_A].value : 0.0f;
-	float IN_B = inputs[IN_R_A].active ? inputs[IN_R_A].value : 0.0f;
+	float IN_A = inputs[IN_L_A].isConnected() ? inputs[IN_L_A].getVoltage() : 0.0f;
+	float IN_B = inputs[IN_R_A].isConnected() ? inputs[IN_R_A].getVoltage() : 0.0f;
 	float IN_PAN = IN_A + IN_B;
 
-	if(params[MODE_A].value==1) { // normal mode
+	if(params[MODE_A].getValue()==1) { // normal mode
 		//VCA L
-		mixL_A = IN_A * params[LEVEL_A_L].value;
-		if(inputs[CV1_A].active){
-			if(params[MODE_LIN_EXP_L_PARAM_A].value==1){
-				mixL_A *= clamp(inputs[CV1_A].value / 10.0f, 0.0f, 1.0f);
+		mixL_A = IN_A * params[LEVEL_A_L].getValue();
+		if(inputs[CV1_A].isConnected()){
+			if(params[MODE_LIN_EXP_L_PARAM_A].getValue()==1){
+				mixL_A *= clamp(inputs[CV1_A].getVoltage() / 10.0f, 0.0f, 1.0f);
 			}
 			else{
-				mixL_A *= rescale(powf(expBase, clamp(inputs[CV1_A].value / 10.0f, 0.0f, 1.0f)), 1.0f, expBase, 0.0f, 1.0f);
+				mixL_A *= rescale(powf(expBase, clamp(inputs[CV1_A].getVoltage() / 10.0f, 0.0f, 1.0f)), 1.0f, expBase, 0.0f, 1.0f);
 			}
 		}
 
 		//VCA R
-		mixR_A = IN_B * params[LEVEL_A_R].value;
-		if(inputs[CV2_A].active){
-			if(params[MODE_LIN_EXP_R_PARAM_A].value==1){
-				mixR_A *= clamp(inputs[CV2_A].value / 10.0f, 0.0f, 1.0f);
+		mixR_A = IN_B * params[LEVEL_A_R].getValue();
+		if(inputs[CV2_A].isConnected()){
+			if(params[MODE_LIN_EXP_R_PARAM_A].getValue()==1){
+				mixR_A *= clamp(inputs[CV2_A].getVoltage() / 10.0f, 0.0f, 1.0f);
 			}
 			else{
-				mixR_A *= rescale(powf(expBase, clamp(inputs[CV2_A].value / 10.0f, 0.0f, 1.0f)), 1.0f, expBase, 0.0f, 1.0f);
+				mixR_A *= rescale(powf(expBase, clamp(inputs[CV2_A].getVoltage() / 10.0f, 0.0f, 1.0f)), 1.0f, expBase, 0.0f, 1.0f);
 			}
 		}
 
 		// Outputs
-		if(outputs[OUTL_A].active) {
-			outputs[OUTL_A].value = 1.5f * saturate(mixL_A);
+		if(outputs[OUTL_A].isConnected()) {
+			outputs[OUTL_A].setVoltage(1.5f * saturate(mixL_A));
 		}
-		if(outputs[OUTR_A].active) {
-			outputs[OUTR_A].value = 1.5f * saturate(mixR_A);
+		if(outputs[OUTR_A].isConnected()) {
+			outputs[OUTR_A].setVoltage(1.5f * saturate(mixR_A));
 		}
-		if(outputs[SUM_POS_A].active) {
-			outputs[SUM_POS_A].value = saturate(mixL_A + mixR_A);
+		if(outputs[SUM_POS_A].isConnected()) {
+			outputs[SUM_POS_A].setVoltage(saturate(mixL_A + mixR_A));
 		}
-		if(outputs[SUM_NEG_A].active) {
-			outputs[SUM_NEG_A].value = 1.0f - saturate(mixL_A + mixR_A);
+		if(outputs[SUM_NEG_A].isConnected()) {
+			outputs[SUM_NEG_A].setVoltage(1.0f - saturate(mixL_A + mixR_A));
 		}
 	}
 
 
-	if(params[MODE_A].value==0) { // pan mode
+	if(params[MODE_A].getValue()==0) { // pan mode
 		// VCA L PAN
-		mixRP_A = (IN_PAN * params[LEVEL_A_R].value) * PanR(params[PAN_A].value,(inputs[CV_PAN_INPUT_A].value));
-		if(inputs[CV2_A].active) {
-			if(params[MODE_LIN_EXP_R_PARAM_A].value==1) {
-				mixRP_A *= clamp(inputs[CV2_A].value / 10.0f, 0.0f, 1.0f);
+		mixRP_A = (IN_PAN * params[LEVEL_A_R].getValue()) * PanR(params[PAN_A].getValue(),(inputs[CV_PAN_INPUT_A].getVoltage()));
+		if(inputs[CV2_A].isConnected()) {
+			if(params[MODE_LIN_EXP_R_PARAM_A].getValue()==1) {
+				mixRP_A *= clamp(inputs[CV2_A].getVoltage() / 10.0f, 0.0f, 1.0f);
 			}
 			else {
-				mixRP_A *= rescale(powf(expBase, clamp(inputs[CV2_A].value / 10.0f, 0.0f, 1.0f)), 1.0f, expBase, 0.0f, 1.0f);
+				mixRP_A *= rescale(powf(expBase, clamp(inputs[CV2_A].getVoltage() / 10.0f, 0.0f, 1.0f)), 1.0f, expBase, 0.0f, 1.0f);
 			}
 		}
 
 		// VCA R PAN
-		mixLP_A = (IN_PAN * params[LEVEL_A_L].value) * PanL(params[PAN_A].value,(inputs[CV_PAN_INPUT_A].value));
-		if(inputs[CV1_A].active) {
-			if(params[MODE_LIN_EXP_L_PARAM_A].value==1) {
-				mixLP_A *= clamp(inputs[CV1_A].value / 10.0f, 0.0f, 1.0f);
+		mixLP_A = (IN_PAN * params[LEVEL_A_L].getValue()) * PanL(params[PAN_A].getValue(),(inputs[CV_PAN_INPUT_A].getVoltage()));
+		if(inputs[CV1_A].isConnected()) {
+			if(params[MODE_LIN_EXP_L_PARAM_A].getValue()==1) {
+				mixLP_A *= clamp(inputs[CV1_A].getVoltage() / 10.0f, 0.0f, 1.0f);
 			}
 			else {
-				mixLP_A *= rescale(powf(expBase, clamp(inputs[CV1_A].value / 10.0f, 0.0f, 1.0f)), 1.0f, expBase, 0.0f, 1.0f);
+				mixLP_A *= rescale(powf(expBase, clamp(inputs[CV1_A].getVoltage() / 10.0f, 0.0f, 1.0f)), 1.0f, expBase, 0.0f, 1.0f);
 			}
 		}
 
 		// Outputs
-		if(outputs[OUTL_A].active) {
-		outputs[OUTL_A].value = saturate(mixLP_A);
+		if(outputs[OUTL_A].isConnected()) {
+		outputs[OUTL_A].setVoltage(saturate(mixLP_A));
 		}
-		if(outputs[OUTR_A].active) {
-		outputs[OUTR_A].value = saturate(mixRP_A);
+		if(outputs[OUTR_A].isConnected()) {
+		outputs[OUTR_A].setVoltage(saturate(mixRP_A));
 		}
-		if(outputs[SUM_POS_A].active) {
-			outputs[SUM_POS_A].value = saturate(mixLP_A + mixRP_A);
+		if(outputs[SUM_POS_A].isConnected()) {
+			outputs[SUM_POS_A].setVoltage(saturate(mixLP_A + mixRP_A));
 		}
-		if(outputs[SUM_NEG_A].active) {
-			outputs[SUM_NEG_A].value = 1.0f - saturate(mixLP_A + mixRP_A);
+		if(outputs[SUM_NEG_A].isConnected()) {
+			outputs[SUM_NEG_A].setVoltage(1.0f - saturate(mixLP_A + mixRP_A));
 		}
 
 	}

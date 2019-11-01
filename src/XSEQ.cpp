@@ -107,9 +107,9 @@ void xseq::process(const ProcessArgs& args) {
 
 	char Button1 = 0.0f, Button2 = 0.0f, Button3 = 0.0f, Button4 = 0.0f, Button5 = 0.0f, Button6 = 0.0f, Button7 = 0.0f, Button8 = 0.0f, Button9 = false;
 
-	IN_1 = trigger1.process(inputs[IN1_INPUT].value >= 10.0f);
-	IN_2 = trigger2.process(inputs[IN2_INPUT].value >= 10.0f);
-	IN_3 = trigger3.process(inputs[IN3_INPUT].value >= 10.0f);
+	IN_1 = trigger1.process(inputs[IN1_INPUT].getVoltage() >= 10.0f);
+	IN_2 = trigger2.process(inputs[IN2_INPUT].getVoltage() >= 10.0f);
+	IN_3 = trigger3.process(inputs[IN3_INPUT].getVoltage() >= 10.0f);
 
 	//////////////////////////////////////////////////////////////////////
 
@@ -120,16 +120,16 @@ void xseq::process(const ProcessArgs& args) {
 	//NOR1 = true;
 
 
-	if(inputs[IN1_INPUT].active) {
-		IN_1 = inputs[IN1_INPUT].value;
+	if(inputs[IN1_INPUT].isConnected()) {
+		IN_1 = inputs[IN1_INPUT].getVoltage();
 	}
 
-	if(inputs[IN2_INPUT].active) {
-		IN_2 = inputs[IN2_INPUT].value;
+	if(inputs[IN2_INPUT].isConnected()) {
+		IN_2 = inputs[IN2_INPUT].getVoltage();
 	}
 
 
-	Button1 = clamp(params[BUT1_PARAM].value + dsp::quadraticBipolar(inputs[B1_INPUT].value) / 10.0f, -1.0f, 1.0f);
+	Button1 = clamp(params[BUT1_PARAM].getValue() + dsp::quadraticBipolar(inputs[B1_INPUT].getVoltage()) / 10.0f, -1.0f, 1.0f);
 
 	switch(Button1) {
 		case 1:
@@ -141,9 +141,9 @@ void xseq::process(const ProcessArgs& args) {
 	};
 
 	//Output
-	if(outputs[NOR1_OUTPUT].active)
-       outputs[NOR1_OUTPUT].value =  10.0 * NOR1;
-   lights[NOR1_LIGHT].value = 10.0 * NOR1;
+	if(outputs[NOR1_OUTPUT].isConnected())
+       outputs[NOR1_OUTPUT].setVoltage( 10.0 * NOR1);
+   lights[NOR1_LIGHT].setBrightness(10.0 * NOR1);
 
 	//////////////////////////////////////////////////////////////////////
 
@@ -153,15 +153,15 @@ void xseq::process(const ProcessArgs& args) {
 	IN_2 = false;
 	//NAND1 = false;
 
-	if(inputs[IN1_INPUT].active) {
-		IN_1 = inputs[IN1_INPUT].value;
+	if(inputs[IN1_INPUT].isConnected()) {
+		IN_1 = inputs[IN1_INPUT].getVoltage();
 	}
 
-	if(inputs[IN3_INPUT].active) {
-		IN_2 = inputs[IN3_INPUT].value;
+	if(inputs[IN3_INPUT].isConnected()) {
+		IN_2 = inputs[IN3_INPUT].getVoltage();
 	}
 
-	Button2 = clamp(params[BUT2_PARAM].value + dsp::quadraticBipolar(inputs[B2_INPUT].value) / 10.0f, -1.0f, 1.0f);
+	Button2 = clamp(params[BUT2_PARAM].getValue() + dsp::quadraticBipolar(inputs[B2_INPUT].getVoltage()) / 10.0f, -1.0f, 1.0f);
 
 	switch(Button2) {
 		case 1:
@@ -173,9 +173,9 @@ void xseq::process(const ProcessArgs& args) {
 	}
 
 	//Output
-	if(outputs[NAND1_OUTPUT].active)
-	outputs[NAND1_OUTPUT].value =  10.0 * NAND1;
-   lights[NAND1_LIGHT].value = 10.0 * NAND1;
+	if(outputs[NAND1_OUTPUT].isConnected())
+	outputs[NAND1_OUTPUT].setVoltage( 10.0 * NAND1);
+   lights[NAND1_LIGHT].setBrightness(10.0 * NAND1);
 
 	//////////////////////////////////////////////////////////////////////
 
@@ -192,8 +192,8 @@ void xseq::process(const ProcessArgs& args) {
 	NOT1 = !(IN_3); // <- NOT
 
 	//Output
-	if(outputs[NOT1_OUTPUT].active)
-       outputs[NOT1_OUTPUT].value = 10.0 * NOT1;
+	if(outputs[NOT1_OUTPUT].isConnected())
+       outputs[NOT1_OUTPUT].setVoltage(10.0 * NOT1);
 
 	//////////////////////////////////////////////////////////////////////
 
@@ -212,7 +212,7 @@ void xseq::process(const ProcessArgs& args) {
 	}
 
 
-	Button3 = clamp(params[BUT3_PARAM].value + dsp::quadraticBipolar(inputs[B3_INPUT].value) / 10.0f, -1.0f, 1.0f);
+	Button3 = clamp(params[BUT3_PARAM].getValue() + dsp::quadraticBipolar(inputs[B3_INPUT].getVoltage()) / 10.0f, -1.0f, 1.0f);
 
 	switch(Button3) {
 		case 1:
@@ -224,9 +224,9 @@ void xseq::process(const ProcessArgs& args) {
 	}
 
 	//Output
-	if(outputs[OR1_OUTPUT].active)
-       outputs[OR1_OUTPUT].value = 10.0 * OR1;
-   lights[OR1_LIGHT].value = 10.0 * OR1;
+	if(outputs[OR1_OUTPUT].isConnected())
+       outputs[OR1_OUTPUT].setVoltage(10.0 * OR1);
+   lights[OR1_LIGHT].setBrightness(10.0 * OR1);
 
    	//////////////////////////////////////////////////////////////////////
 
@@ -244,7 +244,7 @@ void xseq::process(const ProcessArgs& args) {
 		IN_2 = OR1;
 	}
 
-	Button4 = clamp(params[BUT4_PARAM].value + dsp::quadraticBipolar(inputs[B4_INPUT].value) / 10.0f, -1.0f, 1.0f);
+	Button4 = clamp(params[BUT4_PARAM].getValue() + dsp::quadraticBipolar(inputs[B4_INPUT].getVoltage()) / 10.0f, -1.0f, 1.0f);
 
 	switch(Button4) {
 		case 1:
@@ -257,9 +257,9 @@ void xseq::process(const ProcessArgs& args) {
 	}
 
 	//Output
-	if(outputs[NAND2_OUTPUT].active)
-       outputs[NAND2_OUTPUT].value = 10 * NAND2;
-   lights[NAND2_LIGHT].value = 10.0 * NAND2;
+	if(outputs[NAND2_OUTPUT].isConnected())
+       outputs[NAND2_OUTPUT].setVoltage(10 * NAND2);
+   lights[NAND2_LIGHT].setBrightness(10.0 * NAND2);
 
    	//////////////////////////////////////////////////////////////////////
 
@@ -276,8 +276,8 @@ void xseq::process(const ProcessArgs& args) {
 	NOT2 = !(IN_3); // <- NOT
 
 	//Output
-	if(outputs[NOT2_OUTPUT].active)
-       outputs[NOT2_OUTPUT].value = 10.0 * NOT2;
+	if(outputs[NOT2_OUTPUT].isConnected())
+       outputs[NOT2_OUTPUT].setVoltage(10.0 * NOT2);
 
 	//////////////////////////////////////////////////////////////////////
 
@@ -291,11 +291,11 @@ void xseq::process(const ProcessArgs& args) {
 		IN_1 = NOT2;
 	}
 
-	if(inputs[IN2_INPUT].active) {
-		IN_2 = inputs[IN2_INPUT].value;
+	if(inputs[IN2_INPUT].isConnected()) {
+		IN_2 = inputs[IN2_INPUT].getVoltage();
 	}
 
-	Button5 = clamp(params[BUT5_PARAM].value + dsp::quadraticBipolar(inputs[B5_INPUT].value) / 10.0f, -1.0f, 1.0f);
+	Button5 = clamp(params[BUT5_PARAM].getValue() + dsp::quadraticBipolar(inputs[B5_INPUT].getVoltage()) / 10.0f, -1.0f, 1.0f);
 
 	switch(Button5) {
 		case 1:
@@ -307,9 +307,9 @@ void xseq::process(const ProcessArgs& args) {
 	}
 
 	//Output
-	if(outputs[AND1_OUTPUT].active)
-		outputs[AND1_OUTPUT].value = 10.0 * AND1;
-   lights[AND1_LIGHT].value = 10.0 * AND1;
+	if(outputs[AND1_OUTPUT].isConnected())
+		outputs[AND1_OUTPUT].setVoltage(10.0 * AND1);
+   lights[AND1_LIGHT].setBrightness(10.0 * AND1);
 
 	//////////////////////////////////////////////////////////////////////
 
@@ -326,8 +326,8 @@ void xseq::process(const ProcessArgs& args) {
 	NOT3 = !(IN_3); // <- NOT
 
 	//Output
-	if(outputs[NOT3_OUTPUT].active)
-       outputs[NOT3_OUTPUT].value = 10.0 * NOT3;
+	if(outputs[NOT3_OUTPUT].isConnected())
+       outputs[NOT3_OUTPUT].setVoltage(10.0 * NOT3);
 
 	//////////////////////////////////////////////////////////////////////
 
@@ -341,11 +341,11 @@ void xseq::process(const ProcessArgs& args) {
 		IN_1 = NOT3;
 	}
 
-	if(inputs[IN2_INPUT].active) {
-		IN_2 = inputs[IN2_INPUT].value;
+	if(inputs[IN2_INPUT].isConnected()) {
+		IN_2 = inputs[IN2_INPUT].getVoltage();
 	}
 
-	Button6 = clamp(params[BUT6_PARAM].value + dsp::quadraticBipolar(inputs[B6_INPUT].value) / 10.0f, -1.0f, 1.0f);
+	Button6 = clamp(params[BUT6_PARAM].getValue() + dsp::quadraticBipolar(inputs[B6_INPUT].getVoltage()) / 10.0f, -1.0f, 1.0f);
 
 	switch(Button6) {
 		case 1:
@@ -357,9 +357,9 @@ void xseq::process(const ProcessArgs& args) {
 	}
 
 	//Output
-	if(outputs[AND2_OUTPUT].active)
-		outputs[AND2_OUTPUT].value = 10.0 * AND2;
-   lights[AND2_LIGHT].value = 10.0 * AND2;
+	if(outputs[AND2_OUTPUT].isConnected())
+		outputs[AND2_OUTPUT].setVoltage(10.0 * AND2);
+   lights[AND2_LIGHT].setBrightness(10.0 * AND2);
 
 	//////////////////////////////////////////////////////////////////////
 
@@ -373,11 +373,11 @@ void xseq::process(const ProcessArgs& args) {
 		IN_1 = AND2;
 	}
 
-	if(inputs[IN3_INPUT].active) {
-		IN_2 = inputs[IN3_INPUT].value;
+	if(inputs[IN3_INPUT].isConnected()) {
+		IN_2 = inputs[IN3_INPUT].getVoltage();
 	}
 
-	Button7 = clamp(params[BUT7_PARAM].value + dsp::quadraticBipolar(inputs[B7_INPUT].value) / 10.0f, -1.0f, 1.0f);
+	Button7 = clamp(params[BUT7_PARAM].getValue() + dsp::quadraticBipolar(inputs[B7_INPUT].getVoltage()) / 10.0f, -1.0f, 1.0f);
 
 	switch(Button7) {
 		case 1:
@@ -389,9 +389,9 @@ void xseq::process(const ProcessArgs& args) {
 	}
 
 	//Output
-	if(outputs[XOR1_OUTPUT].active)
-		outputs[XOR1_OUTPUT].value = 10.0 * XOR1;
-   lights[XOR1_LIGHT].value = 10.0 * XOR1;
+	if(outputs[XOR1_OUTPUT].isConnected())
+		outputs[XOR1_OUTPUT].setVoltage(10.0 * XOR1);
+   lights[XOR1_LIGHT].setBrightness(10.0 * XOR1);
 
 	//////////////////////////////////////////////////////////////////////
 
@@ -410,7 +410,7 @@ void xseq::process(const ProcessArgs& args) {
 		IN_2 = OR1;
 	}
 
-	Button8 = clamp(params[BUT8_PARAM].value + dsp::quadraticBipolar(inputs[B8_INPUT].value) / 10.0f, -1.0f, 1.0f);
+	Button8 = clamp(params[BUT8_PARAM].getValue() + dsp::quadraticBipolar(inputs[B8_INPUT].getVoltage()) / 10.0f, -1.0f, 1.0f);
 
 	switch(Button8) {
 		case 1:
@@ -422,9 +422,9 @@ void xseq::process(const ProcessArgs& args) {
 	}
 
 	//Output
-	if(outputs[NOR2_OUTPUT].active)
-       outputs[NOR2_OUTPUT].value =  10.0 * NOR2;
-   lights[NOR2_LIGHT].value = 10.0 * NOR2;
+	if(outputs[NOR2_OUTPUT].isConnected())
+       outputs[NOR2_OUTPUT].setVoltage( 10.0 * NOR2);
+   lights[NOR2_LIGHT].setBrightness(10.0 * NOR2);
 
 	//////////////////////////////////////////////////////////////////////
 
@@ -434,15 +434,15 @@ void xseq::process(const ProcessArgs& args) {
 	IN_2 = false;
 	//XNOR1 = true;
 
-	if(inputs[IN1_INPUT].active) {
-		IN_1 = inputs[IN1_INPUT].value;
+	if(inputs[IN1_INPUT].isConnected()) {
+		IN_1 = inputs[IN1_INPUT].getVoltage();
 	}
 
 	if(XOR1) {
 		IN_2 = XOR1;
 	}
 
-	Button9 = clamp(params[BUT9_PARAM].value + dsp::quadraticBipolar(inputs[B9_INPUT].value) / 10.0f, -1.0f, 1.0f);
+	Button9 = clamp(params[BUT9_PARAM].getValue() + dsp::quadraticBipolar(inputs[B9_INPUT].getVoltage()) / 10.0f, -1.0f, 1.0f);
 
 	switch(Button9) {
 		case 1:
@@ -454,9 +454,9 @@ void xseq::process(const ProcessArgs& args) {
 	}
 
 	//Output
-	if(outputs[XNOR1_OUTPUT].active)
-		outputs[XNOR1_OUTPUT].value = 10.0 * XNOR1;
-   lights[XNOR1_LIGHT].value = 10.0 * XNOR1;
+	if(outputs[XNOR1_OUTPUT].isConnected())
+		outputs[XNOR1_OUTPUT].setVoltage(10.0 * XNOR1);
+   lights[XNOR1_LIGHT].setBrightness(10.0 * XNOR1);
 
 	//////////////////////////////////////////////////////////////////////
 

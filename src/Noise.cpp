@@ -79,7 +79,7 @@ void Noise::process(const ProcessArgs& args) {
 		  pink = b0 + b1 + b2 + b3 + b4 + b5 + b6 + WNoise * 0.5362;
 		  b6 = WNoise * 0.115926;
 
-	char Type = params[TYPE].value;
+	char Type = params[TYPE].getValue();
 	switch(Type) {
 		case 2:
 		NoiSetyPe = 8.0f * BNoise;
@@ -93,13 +93,13 @@ void Noise::process(const ProcessArgs& args) {
 	}
 
 	// Filter
-	float LP = params[LP_PARAM].value;
+	float LP = params[LP_PARAM].getValue();
 	float lowpassFreq = 10000.0f * powf(5.0f, clamp(2.0f*LP, 0.0f, 1.0f));
 	filterL.setCutoff(lowpassFreq / args.sampleRate);
 	filterL.process(CNoise);
 	CNoise = filterL.lowpass();
 
-	float HP = params[HP_PARAM].value;
+	float HP = params[HP_PARAM].getValue();
 	float highpassFreq = 500.0f * powf(5.0f, clamp(2.0f*HP, 0.0f, 1.0f));
 	filterH.setCutoff(highpassFreq / args.sampleRate);
 	filterH.process(CNoise);
@@ -107,25 +107,25 @@ void Noise::process(const ProcessArgs& args) {
 
 	float Fast_RandFloat = 1.5f * CNoise;
 
-	float mixcontrol = params[MIX_PARAM].value;
+	float mixcontrol = params[MIX_PARAM].getValue();
 
 	float mix = crossfade(WNoise, Fast_RandFloat, mixcontrol);
 
 	// Noise
-	if(inputs[CV_INPUT].active) {
-		NoiSetyPe *= clamp(inputs[CV_INPUT].value / 10.0f, 0.0f, 1.0f);
-		outputs[WNOISE_OUTPUT].value = saturate2(NoiSetyPe);
+	if(inputs[CV_INPUT].isConnected()) {
+		NoiSetyPe *= clamp(inputs[CV_INPUT].getVoltage() / 10.0f, 0.0f, 1.0f);
+		outputs[WNOISE_OUTPUT].setVoltage(saturate2(NoiSetyPe));
 	}
 	else {
-		outputs[WNOISE_OUTPUT].value = saturate2(NoiSetyPe);
+		outputs[WNOISE_OUTPUT].setVoltage(saturate2(NoiSetyPe));
 	}
 	// Colored Noise
-	if(inputs[CV_INPUT].active) {
-		mix *= clamp(inputs[CV_INPUT].value / 10.0f, 0.0f, 1.0f);
-		outputs[CNOISE_OUTPUT].value = saturate2(mix);
+	if(inputs[CV_INPUT].isConnected()) {
+		mix *= clamp(inputs[CV_INPUT].getVoltage() / 10.0f, 0.0f, 1.0f);
+		outputs[CNOISE_OUTPUT].setVoltage(saturate2(mix));
 	}
 	else {
-		outputs[CNOISE_OUTPUT].value = saturate2(mix);
+		outputs[CNOISE_OUTPUT].setVoltage(saturate2(mix));
 	}
 };
 

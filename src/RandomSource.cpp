@@ -58,10 +58,10 @@ struct RandomSource : Module {
 void RandomSource::process(const ProcessArgs& args) {
 
 	//sample and hold
-	double range = params[RANGE_PARAM].value + params[RANGE_CV_PARAM].value * (inputs[RANGE_CV_INPUT].value / 5.0f);
- 	double Switch = params[SWITCH_PARAM].value;
+	double range = params[RANGE_PARAM].getValue() + params[RANGE_CV_PARAM].getValue() * (inputs[RANGE_CV_INPUT].getVoltage() / 5.0f);
+ 	double Switch = params[SWITCH_PARAM].getValue();
 
-	if (trigger.process(inputs[TRIG_INPUT].value)) {
+	if (trigger.process(inputs[TRIG_INPUT].getVoltage())) {
 		if(Switch > 0.0) {
 		sample = inputs[SH_INPUT].getNormalVoltage(range) + 5.0;
 		}
@@ -73,11 +73,11 @@ void RandomSource::process(const ProcessArgs& args) {
 	double SHOut = (sample ? sample : 0.0f) * range;
 
 	// S&H Output
-	outputs[SH_OUTPUT].value = saturate(SHOut);
+	outputs[SH_OUTPUT].setVoltage(saturate(SHOut));
 
 	//slew limiter
-	double in = outputs[SH_OUTPUT].value;
-	double shape = params[SHAPE_PARAM].value;
+	double in = outputs[SH_OUTPUT].getVoltage();
+	double shape = params[SHAPE_PARAM].getValue();
 
 	const double slewMin = 0.1;
 	const double slewMax = 10000.0;
@@ -85,7 +85,7 @@ void RandomSource::process(const ProcessArgs& args) {
 
 	// Rise
 	if (in > out) {
-		double rise = inputs[SLEW_CV].value / 10.0 + params[SLEW_PARAM].value;
+		double rise = inputs[SLEW_CV].getVoltage() / 10.0 + params[SLEW_PARAM].getValue();
 		double slew = slewMax * powf(slewMin / slewMax, rise);
 		out += slew * crossfade(1.0f, shapeScale * (in - out), shape) * args.sampleTime;
 		if (out > in)
@@ -93,14 +93,14 @@ void RandomSource::process(const ProcessArgs& args) {
 	}
 	// Fall
 	else if (in < out) {
-		double fall = inputs[SLEW_CV].value / 10.0 + params[SLEW_PARAM].value;
+		double fall = inputs[SLEW_CV].getVoltage() / 10.0 + params[SLEW_PARAM].getValue();
 		double slew = slewMax * powf(slewMin / slewMax, fall);
 		out -= slew * crossfade(1.0f, shapeScale * (out - in), shape) * args.sampleTime;
 		if (out < in)
 			out = in;
 	}
 
-	outputs[SLEWED_OUT].value = saturate(out);
+	outputs[SLEWED_OUT].setVoltage(saturate(out));
 };
 
 struct RandomSClassicMenu : MenuItem {
