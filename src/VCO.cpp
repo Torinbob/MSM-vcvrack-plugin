@@ -133,10 +133,10 @@ class Boscillator {
 		void process(float deltaTime, float syncValue) {
 			if (analog) {
 				// Adjust pitch slew
-				if (++pitchSlewIndex > 32.0f) {
+				if (++pitchSlewIndex > 32) {
 					const float pitchSlewTau = 100.0f; // Time constant for leaky integrator in seconds
 					pitchSlew += (random::normal() - pitchSlew / pitchSlewTau) / APP->engine->getSampleRate();
-					pitchSlewIndex = 0.0f;
+					pitchSlewIndex = 0;
 				}
 			}
 
@@ -321,7 +321,7 @@ class Boscillator {
 		float pitch;
 		// For analog detuning effect
 		float pitchSlew = 0.0f;
-		int pitchSlewIndex = 0.0f;
+		int pitchSlewIndex = 0;
 
 		dsp::Decimator<OVERSAMPLE, QUALITY> sinDecimator;
 		dsp::Decimator<OVERSAMPLE, QUALITY> cosDecimator;
