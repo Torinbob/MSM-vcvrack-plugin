@@ -135,7 +135,7 @@ class Boscillator {
 				// Adjust pitch slew
 				if (++pitchSlewIndex > 32) {
 					const float pitchSlewTau = 100.0f; // Time constant for leaky integrator in seconds
-					pitchSlew += (random::normal() - pitchSlew / pitchSlewTau) / APP->engine->getSampleRate();
+					pitchSlew += (clamp(random::normal(), -3.0f, 3.0f) - pitchSlew / pitchSlewTau) / APP->engine->getSampleRate();
 					pitchSlewIndex = 0;
 				}
 			}
