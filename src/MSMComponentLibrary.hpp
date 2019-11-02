@@ -173,14 +173,12 @@ struct RedLargeToggleKnob : MSMToggle2Knob {
 struct MSMSlider : SVGSlider {
 	MSMSlider() {
 		Vec margin = Vec(3.6, 3.6);
-		maxHandlePos = Vec(11, 0.0).plus(margin);
-		minHandlePos = Vec(11, 140).plus(margin);
-		background->svg = APP->window->loadSvg(asset::plugin(pluginInstance,"res/Slider/slider.svg"));
-		background->wrap();
+		maxHandlePos = Vec(11.0, 0.0).plus(margin);
+		minHandlePos = Vec(11.0, 140.0).plus(margin);
+		setBackgroundSvg(APP->window->loadSvg(asset::plugin(pluginInstance,"res/Slider/slider.svg")));
+		setHandleSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Slider/sliderhandle.svg")));
 		background->box.pos = margin;
 		box.size = background->box.size.plus(margin.mult(2));
-		handle->svg = APP->window->loadSvg(asset::plugin(pluginInstance, "res/Slider/sliderhandle.svg"));
-		handle->wrap();
 	}
 };
 
@@ -189,12 +187,10 @@ struct MSMSlidePot : SVGSlider {
 		Vec margin = Vec(4, 4);
 		maxHandlePos = Vec(0.0, -5.0).plus(margin);
 		minHandlePos = Vec(0.0, 90.0).plus(margin);
-		background->svg = APP->window->loadSvg(asset::plugin(pluginInstance,"res/Slider/SlidePot.svg"));
-		background->wrap();
+		setBackgroundSvg(APP->window->loadSvg(asset::plugin(pluginInstance,"res/Slider/SlidePot.svg")));
+		setHandleSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Slider/SlidePotHandle.svg")));
 		background->box.pos = margin;
 		box.size = background->box.size.plus(margin.mult(2));
-		handle->svg = APP->window->loadSvg(asset::plugin(pluginInstance, "res/Slider/SlidePotHandle.svg"));
-		handle->wrap();
 	}
 };
 
