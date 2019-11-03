@@ -304,4 +304,4 @@ void ExperimentalVCOWidget::step() {
 	ModuleWidget::step();
 }
 
-Model *modelExperimentalVCO = createModel<ExperimentalVCO, ExperimentalVCOWidget>("ExperimentalVCO");
+Model *modelExperimentalVCO = createModel<ExperimentalVCO, ExperimentalVCOWidget>("TreasureVCO");

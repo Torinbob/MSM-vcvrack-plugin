@@ -766,4 +766,4 @@ void DelayWidget::step() {
 	ModuleWidget::step();
 }
 
-Model *modelDelay = createModel<Delay, DelayWidget>("Delay");
+Model *modelDelay = createModel<Delay, DelayWidget>("DualDelay");

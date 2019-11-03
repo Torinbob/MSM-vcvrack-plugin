@@ -38,7 +38,7 @@
       ]
     },
     {
-      "slug": "Delay",
+      "slug": "DualDelay",
       "name": "Dual Delay",
       "description": "",
       "tags": [
@@ -46,7 +46,7 @@
       ]
     },
     {
-      "slug": "ExperimentalVCO",
+      "slug": "TreasureVCO",
       "name": "Treasure VCO",
       "description": "",
       "tags": [
