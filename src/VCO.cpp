@@ -692,11 +692,13 @@ VCOWidget::VCOWidget(VCO *module) {
 	panelClassic = new SvgPanel();
 	panelClassic->box.size = box.size;
 	panelClassic->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/VCO.svg")));
+	panelClassic->visible = true;
 	addChild(panelClassic);
 	// Night Mode Theme
 	panelNightMode = new SvgPanel();
 	panelNightMode->box.size = box.size;
 	panelNightMode->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/VCO-Dark.svg")));
+	panelNightMode->visible = false;
 	addChild(panelNightMode);
 
 	addChild(createWidget<MScrewA>(Vec(15, 0)));
@@ -940,11 +942,13 @@ BVCOWidget::BVCOWidget(BVCO *module) {
 	pClassic = new SvgPanel();
 	pClassic->box.size = box.size;
 	pClassic->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/BVCO.svg")));
+	pClassic->visible = true;
 	addChild(pClassic);
 
 	pNightMode = new SvgPanel();
 	pNightMode->box.size = box.size;
 	pNightMode->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/BVCO-Dark.svg")));
+	pNightMode->visible = false;
 	addChild(pNightMode);
 
 	addChild(createWidget<MScrewA>(Vec(15, 0)));

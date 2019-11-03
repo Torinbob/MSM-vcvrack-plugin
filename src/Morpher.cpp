@@ -311,11 +311,13 @@ MorpherWidget::MorpherWidget(Morpher *module) {
 	panelClassic = new SvgPanel();
 	panelClassic->box.size = box.size;
 	panelClassic->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/Morpher.svg")));
+  panelClassic->visible = true;
 	addChild(panelClassic);
 
 	panelNightMode = new SvgPanel();
 	panelNightMode->box.size = box.size;
 	panelNightMode->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/Morpher-Dark.svg")));
+  panelNightMode->visible = false;
 	addChild(panelNightMode);
 
   addChild(createWidget<MScrewB>(Vec(0, 0)));

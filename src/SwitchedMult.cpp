@@ -309,11 +309,13 @@ CrazyMultWidget::CrazyMultWidget(CrazyMult *module) {
 	panelClassic = new SvgPanel();
 	panelClassic->box.size = box.size;
 	panelClassic->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/CrazyMult.svg")));
+	panelClassic->visible = true;
 	addChild(panelClassic);
 
 	panelNightMode = new SvgPanel();
 	panelNightMode->box.size = box.size;
 	panelNightMode->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/CrazyMult-Dark.svg")));
+	panelNightMode->visible = false;
 	addChild(panelNightMode);
 
 	int space = 25;

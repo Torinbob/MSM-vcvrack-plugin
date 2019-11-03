@@ -115,11 +115,13 @@ SimpleSliderWidget::SimpleSliderWidget(SimpleSlider *module) {
 	panelClassic = new SvgPanel();
 	panelClassic->box.size = box.size;
 	panelClassic->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/SimpleSlider.svg")));
+	panelClassic->visible = true;
 	addChild(panelClassic);
 
 	panelNightMode = new SvgPanel();
 	panelNightMode->box.size = box.size;
 	panelNightMode->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/SimpleSlider-Dark.svg")));
+	panelNightMode->visible = false;
 	addChild(panelNightMode);
 
 

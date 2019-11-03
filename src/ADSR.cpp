@@ -218,11 +218,13 @@ ADSRWidget::ADSRWidget(ADSR *module) {
 	panelClassic = new SvgPanel();
 	panelClassic->box.size = box.size;
 	panelClassic->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/ADSR.svg")));
+	panelClassic->visible = true;
 	addChild(panelClassic);
 	// Night Mode Theme
 	panelNightMode = new SvgPanel();
 	panelNightMode->box.size = box.size;
 	panelNightMode->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/ADSR-Dark.svg")));
+	panelNightMode->visible = false;
 	addChild(panelNightMode);
 
 	addChild(createWidget<MScrewA>(Vec(15, 0)));

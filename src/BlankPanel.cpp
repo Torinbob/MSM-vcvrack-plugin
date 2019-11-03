@@ -88,11 +88,13 @@ BlankPanelWidget::BlankPanelWidget(BlankPanel *module) {
 	panelClassic = new SvgPanel();
 	panelClassic->box.size = box.size;
 	panelClassic->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/BlankPanelLight.svg")));
+	panelClassic->visible = true;
 	addChild(panelClassic);
 
 	panelNightMode = new SvgPanel();
 	panelNightMode->box.size = box.size;
 	panelNightMode->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/BlankPanelDark.svg")));
+	panelNightMode->visible = false;
 	addChild(panelNightMode);
 
 	addChild(createWidget<MScrewD>(Vec(15, 0)));

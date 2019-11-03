@@ -616,11 +616,13 @@ PhaserModuleWidget::PhaserModuleWidget(PhaserModule *module) {
 	panelClassic = new SvgPanel();
 	panelClassic->box.size = box.size;
 	panelClassic->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/Phaser.svg")));
+  panelClassic->visible = true;
 	addChild(panelClassic);
 
 	panelNightMode = new SvgPanel();
 	panelNightMode->box.size = box.size;
 	panelNightMode->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/Phaser-Dark.svg")));
+  panelNightMode->visible = false;
 	addChild(panelNightMode);
 
 	addChild(createWidget<MScrewA>(Vec(0, 0)));

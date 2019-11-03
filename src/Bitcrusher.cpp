@@ -158,11 +158,13 @@ BitcrusherWidget::BitcrusherWidget(Bitcrusher *module) {
 	panelClassic = new SvgPanel();
 	panelClassic->box.size = box.size;
 	panelClassic->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/Bitcrusher.svg")));
+	panelClassic->visible = true;
 	addChild(panelClassic);
 
 	panelNightMode = new SvgPanel();
 	panelNightMode->box.size = box.size;
 	panelNightMode->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/Bitcrusher-Dark.svg")));
+	panelNightMode->visible = false;
 	addChild(panelNightMode);
 
 	addChild(createWidget<MScrewD>(Vec(0, 0)));
