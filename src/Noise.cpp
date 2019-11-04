@@ -94,13 +94,13 @@ void Noise::process(const ProcessArgs& args) {
 
 	// Filter
 	float LP = params[LP_PARAM].getValue();
-	float lowpassFreq = 10000.0f * powf(5.0f, clamp(2.0f*LP, 0.0f, 1.0f));
+	float lowpassFreq = 10000.0f * powf(5.0f, clamp(LP, 0.0f, 1.0f));
 	filterL.setCutoff(lowpassFreq / args.sampleRate);
 	filterL.process(CNoise);
 	CNoise = filterL.lowpass();
 
 	float HP = params[HP_PARAM].getValue();
-	float highpassFreq = 500.0f * powf(5.0f, clamp(2.0f*HP, 0.0f, 1.0f));
+	float highpassFreq = 500.0f * powf(5.0f, clamp(HP, 0.0f, 1.0f));
 	filterH.setCutoff(highpassFreq / args.sampleRate);
 	filterH.process(CNoise);
 	CNoise = filterH.highpass();
