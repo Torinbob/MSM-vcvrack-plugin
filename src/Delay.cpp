@@ -92,6 +92,10 @@ struct Delay : Module {
 	enum LightIds {
 		CLEAR_A_LIGHT,
 		CLEAR_B_LIGHT,
+    LP_A_LIGHT,
+    HP_A_LIGHT,
+    LP_B_LIGHT,
+    HP_B_LIGHT,
 		NUM_LIGHTS
 	};
 
@@ -351,16 +355,26 @@ void Delay::process(const ProcessArgs& args) {
 	}
 
 	// Apply LP/HP filter to Wet Output
-	float LPA = clamp(params[LP_A_PARAM].getValue() + inputs[LP_A_INPUT].getVoltage() / 10.0f, 0.0f, 1.0f);
-	float lowpassFreqA = 1000.0f * powf(10.0f, clamp(2.0f*LPA, 0.0f, 1.0f));
-	lowpassFilterA.setCutoff(lowpassFreqA / args.sampleRate);
-	lowpassFilterA.process(wetfiltA);
-	wetfiltA = lowpassFilterA.lowpass();
-	float HPA = clamp(params[HP_A_PARAM].getValue() + inputs[HP_A_INPUT].getVoltage() / 10.0f, 0.0f, 1.0f);
-	float highpassFreqA = 1000.0f * powf(10.0f, clamp(2.0f*HPA, 0.0f, 1.0f));
-	highpassFilterA.setCutoff(highpassFreqA / args.sampleRate);
-	highpassFilterA.process(wetfiltA);
-	wetfiltA = highpassFilterA.highpass();
+  if (params[LP_A_PARAM].getValue() < 0.99f || inputs[LP_A_INPUT].isConnected()) {
+    lights[LP_A_LIGHT].setBrightness(1.0);
+  	float LPA = clamp(params[LP_A_PARAM].getValue() + inputs[LP_A_INPUT].getVoltage() / 10.0f, 0.0f, 1.0f);
+  	float lowpassFreqA = 1000.0f * powf(10.0f, clamp(LPA, 0.0f, 1.0f));
+  	lowpassFilterA.setCutoff(lowpassFreqA / args.sampleRate);
+  	lowpassFilterA.process(wetfiltA);
+  	wetfiltA = lowpassFilterA.lowpass();
+  } else {
+    lights[LP_A_LIGHT].setBrightness(0.0);
+  }
+  if (params[HP_A_PARAM].getValue() > 0.01f || inputs[HP_A_INPUT].isConnected()) {
+    lights[HP_A_LIGHT].setBrightness(1.0);
+  	float HPA = clamp(params[HP_A_PARAM].getValue() + inputs[HP_A_INPUT].getVoltage() / 10.0f, 0.0f, 1.0f);
+  	float highpassFreqA = 1000.0f * powf(10.0f, clamp(HPA, 0.0f, 1.0f));
+  	highpassFilterA.setCutoff(highpassFreqA / args.sampleRate);
+  	highpassFilterA.process(wetfiltA);
+  	wetfiltA = highpassFilterA.highpass();
+  } else {
+    lights[HP_A_LIGHT].setBrightness(0.0);
+  }
 
 	lastWetA = wetA;
 
@@ -445,16 +459,26 @@ void Delay::process(const ProcessArgs& args) {
 	}
 
 	// Apply LP/HP filter to Wet Output
-	float LPB = clamp(params[LP_B_PARAM].getValue() + inputs[LP_B_INPUT].getVoltage() / 10.0f, 0.0f, 1.0f);
-	float lowpassFreqB = 1000.0f * powf(10.0f, clamp(2.0f*LPB, 0.0f, 1.0f));
-	lowpassFilterB.setCutoff(lowpassFreqB / args.sampleRate);
-	lowpassFilterB.process(wetfiltB);
-	wetfiltB = lowpassFilterB.lowpass();
-	float HPB = clamp(params[HP_B_PARAM].getValue() + inputs[HP_B_INPUT].getVoltage() / 10.0f, 0.0f, 1.0f);
-	float highpassFreqB = 1000.0f * powf(10.0f, clamp(2.0f*HPB, 0.0f, 1.0f));
-	highpassFilterB.setCutoff(highpassFreqB / args.sampleRate);
-	highpassFilterB.process(wetfiltB);
-	wetfiltB = highpassFilterB.highpass();
+  if (params[LP_B_PARAM].getValue() < 0.99f || inputs[LP_B_INPUT].isConnected()) {
+    lights[LP_B_LIGHT].setBrightness(1.0);
+  	float LPB = clamp(params[LP_B_PARAM].getValue() + inputs[LP_B_INPUT].getVoltage() / 10.0f, 0.0f, 1.0f);
+  	float lowpassFreqB = 1000.0f * powf(10.0f, clamp(LPB, 0.0f, 1.0f));
+  	lowpassFilterB.setCutoff(lowpassFreqB / args.sampleRate);
+  	lowpassFilterB.process(wetfiltB);
+  	wetfiltB = lowpassFilterB.lowpass();
+  } else {
+    lights[LP_B_LIGHT].setBrightness(0.0);
+  }
+  if (params[HP_B_PARAM].getValue() > 0.01f || inputs[HP_B_INPUT].isConnected()) {
+    lights[HP_B_LIGHT].setBrightness(1.0);
+  	float HPB = clamp(params[HP_B_PARAM].getValue() + inputs[HP_B_INPUT].getVoltage() / 10.0f, 0.0f, 1.0f);
+  	float highpassFreqB = 1000.0f * powf(10.0f, clamp(HPB, 0.0f, 1.0f));
+  	highpassFilterB.setCutoff(highpassFreqB / args.sampleRate);
+  	highpassFilterB.process(wetfiltB);
+  	wetfiltB = highpassFilterB.highpass();
+  } else {
+    lights[HP_B_LIGHT].setBrightness(0.0);
+  }
 
 	lastWetB = wetB;
 
@@ -712,7 +736,9 @@ DelayWidget::DelayWidget(Delay *module) {
 	addParam(createParam<BlueLargeKnob>(Vec(77, 32), module, Delay::TIME_A_PARAM));
 	addParam(createParam<GreenLargeKnob>(Vec(77, 106), module, Delay::FEEDBACK_A_PARAM));
 	addParam(createParam<BlueSmallKnob>(Vec(60.5, 189.5), module, Delay::LP_A_PARAM));
+  addChild(createLight<SmallLight<GreenLight>>(Vec(72.75, 201.75), module, Delay::LP_A_LIGHT));
 	addParam(createParam<BlueSmallKnob>(Vec(109, 189.5), module, Delay::HP_A_PARAM));
+  addChild(createLight<SmallLight<GreenLight>>(Vec(121.25, 201.75), module, Delay::HP_A_LIGHT));
 	addParam(createParam<GreenLargeKnob>(Vec(77, 261), module, Delay::MIX_A_PARAM));
 
 	addParam(createParam<VioMSwitch>(Vec(329, 99), module, Delay::SYNCB_PARAM));
@@ -724,7 +750,9 @@ DelayWidget::DelayWidget(Delay *module) {
 	addParam(createParam<BlueLargeKnob>(Vec(250, 32), module, Delay::TIME_B_PARAM));
 	addParam(createParam<GreenLargeKnob>(Vec(250, 106), module, Delay::FEEDBACK_B_PARAM));
 	addParam(createParam<BlueSmallKnob>(Vec(235, 189.5), module, Delay::LP_B_PARAM));
+  addChild(createLight<SmallLight<GreenLight>>(Vec(247.25, 201.75), module, Delay::LP_B_LIGHT));
 	addParam(createParam<BlueSmallKnob>(Vec(281, 189.5), module, Delay::HP_B_PARAM));
+  addChild(createLight<SmallLight<GreenLight>>(Vec(293.25, 201.75), module, Delay::HP_B_LIGHT));
 	addParam(createParam<GreenLargeKnob>(Vec(250, 261), module, Delay::MIX_B_PARAM));
 
 	addInput(createInput<SilverSixPortB>(Vec(174, 150), module, Delay::CLOCK_INPUT));
