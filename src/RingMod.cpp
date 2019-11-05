@@ -36,8 +36,8 @@ struct RingMod : Module
 
   RingMod() {
     config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-    configParam(RingMod::MIXA, 0.0f, 1.0f, 0.5f, "");
-    configParam(RingMod::MIXB, 0.0f, 1.0f, 0.5f, "");
+    configParam(RingMod::MIXA, 0.0f, 1.0f, 0.5f, "Modulation", "%", 0.f, 100);
+    configParam(RingMod::MIXB, 0.0f, 1.0f, 0.5f, "Modulation", "%", 0.f, 100);
   }
 
   void process(const ProcessArgs& args) override;

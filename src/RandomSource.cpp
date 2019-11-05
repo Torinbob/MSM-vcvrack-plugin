@@ -33,11 +33,11 @@ struct RandomSource : Module {
 
 		RandomSource() {
 			config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS);
-			configParam(RandomSource::RANGE_PARAM, 0.0, 1.0, 0.0, "");
-			configParam(RandomSource::SLEW_PARAM, 0.0, 1.0, 0.5, "");
-			configParam(RandomSource::SHAPE_PARAM, 0.0, 1.0, 0.5, "");
-			configParam(RandomSource::RANGE_CV_PARAM, 0.0, 1.0, 0.0, "");
-			configParam(RandomSource::SWITCH_PARAM, 0.0, 1.0, 0.0, "");
+			configParam(RandomSource::RANGE_PARAM, 0.0, 1.0, 0.0, "Sample Range");
+			configParam(RandomSource::SLEW_PARAM, 0.0, 1.0, 0.5, "Slew");
+			configParam(RandomSource::SHAPE_PARAM, 0.0, 1.0, 0.5, "Shape");
+			configParam(RandomSource::RANGE_CV_PARAM, 0.0, 1.0, 0.0, "Sample Range CV");
+			configParam(RandomSource::SWITCH_PARAM, 0.0, 1.0, 0.0, "Uni/Bi");
 		}
 
 		void process(const ProcessArgs& args) override;

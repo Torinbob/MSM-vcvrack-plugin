@@ -429,30 +429,30 @@ struct VCO : Module {
 	bool LFOMODE1 = 1;
 	bool LFOMODE2 = 1;
 	bool easteregg = 0;
-
+//261.626f * std::pow(2.0f, pitch / 12.0f)
 	VCO() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS);
-		configParam(VCO::EASTEREGG_PARAM, 0.0, 1.0, 0.0, "");
-		configParam(VCO::MODE1_PARAM, 0.0, 1.0, 1.0, "");
-		configParam(VCO::SYNCSWITCHA_PARAM, 0.0, 1.0, 0.0, "");
-		configParam(VCO::SYNCSWITCHB_PARAM, 0.0, 1.0, 0.0, "");
-		configParam(VCO::LFOMODE1_PARAM, 0.0, 1.0, 1.0, "");
-		configParam(VCO::LFOMODE2_PARAM, 0.0, 1.0, 1.0, "");
-		configParam(VCO::FREQ_1_PARAM, -54.0, 54.0, 0.0, "");
-		configParam(VCO::FINE_1_PARAM, -1.0, 1.0, 0.0, "");
-		configParam(VCO::FREQ_2_PARAM, -54.0, 54.0, 0.0, "");
-		configParam(VCO::FINE_2_PARAM, -1.0, 1.0, 0.0, "");
-		configParam(VCO::FMLIN_1_PARAM, -1.0, 1.0, 0.0, "");
-		configParam(VCO::FMLIN_2_PARAM, -1.0, 1.0, 0.0, "");
-		configParam(VCO::FMEXP_1_PARAM, -1.0, 1.0, 0.0, "");
-		configParam(VCO::FMEXP_2_PARAM, -1.0, 1.0, 0.0, "");
-		configParam(VCO::PW_2_PARAM, 0.0, 1.0, 0.5, "");
-		configParam(VCO::FMBUS_PARAM, 0.0, 1.0, 0.0, "");
-		configParam(VCO::INPUT_GAIN_PARAM, 0.0, 1.0, 0.0, "");
-		configParam(VCO::SHAPE_1_PARAM, 0.0, 1.0, 0.0, "");
-		configParam(VCO::SHAPE_CV_PARAM, -1.0, 1.0, 0.0, "");
-		configParam(VCO::UP_PARAM, 0.0, 1.0, 0.0, "");
-		configParam(VCO::DOWN_PARAM, 0.0, 1.0, 0.0, "");
+		configParam(VCO::EASTEREGG_PARAM, 0.0, 1.0, 0.0, "OSCiX");
+		configParam(VCO::MODE1_PARAM, 0.0, 1.0, 1.0, "Anlg/Digi");
+		configParam(VCO::SYNCSWITCHA_PARAM, 0.0, 1.0, 0.0, "Sync");
+		configParam(VCO::SYNCSWITCHB_PARAM, 0.0, 1.0, 0.0, "Sync");
+		configParam(VCO::LFOMODE1_PARAM, 0.0, 1.0, 1.0, "VCO/LFO");
+		configParam(VCO::LFOMODE2_PARAM, 0.0, 1.0, 1.0, "VCO/LFO");
+		configParam(VCO::FREQ_1_PARAM, -54.0, 54.0, 0.0, "Frequency", "Hz", 1.05946309436f, 261.626f, 0.f);
+		configParam(VCO::FINE_1_PARAM, -1.0, 1.0, 0.0, "Fine Frequency");
+		configParam(VCO::FREQ_2_PARAM, -54.0, 54.0, 0.0, "Frequency", "Hz", 1.05946309436f, 261.626f, 0.f);
+		configParam(VCO::FINE_2_PARAM, -1.0, 1.0, 0.0, "Fine Frequency");
+		configParam(VCO::FMLIN_1_PARAM, -1.0, 1.0, 0.0, "Linear FM", "%", 0.f, 100);
+		configParam(VCO::FMLIN_2_PARAM, -1.0, 1.0, 0.0, "Linear FM", "%", 0.f, 100);
+		configParam(VCO::FMEXP_1_PARAM, -1.0, 1.0, 0.0, "Exponential FM", "%", 0.f, 100);
+		configParam(VCO::FMEXP_2_PARAM, -1.0, 1.0, 0.0, "Exponential FM", "%", 0.f, 100);
+		configParam(VCO::PW_2_PARAM, 0.0, 1.0, 0.5, "Pulse Width", "%", 0.f, 100);
+		configParam(VCO::FMBUS_PARAM, 0.0, 1.0, 0.0, "FM Master Index");
+		configParam(VCO::INPUT_GAIN_PARAM, 0.0, 1.0, 0.0, "Fold Gain");
+		configParam(VCO::SHAPE_1_PARAM, 0.0, 1.0, 0.0, "Fold Shape");
+		configParam(VCO::SHAPE_CV_PARAM, -1.0, 1.0, 0.0, "Fold Shape CV");
+		configParam(VCO::UP_PARAM, 0.0, 1.0, 0.0, "Upper Shape");
+		configParam(VCO::DOWN_PARAM, 0.0, 1.0, 0.0, "Lower Shape");
 	}
 
 	void process(const ProcessArgs& args) override;
@@ -817,13 +817,13 @@ struct BVCO : Module {
 
 	BVCO() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS);
-		configParam(BVCO::MODE1_PARAM, 0.0, 1.0, 1.0, "");
-		configParam(BVCO::LFOMODE1_PARAM, 0.0, 1.0, 1.0, "");
-		configParam(BVCO::FREQ_PARAM, -54.0, 54.0, 0.0, "");
-		configParam(BVCO::FINE_PARAM, -1.0, 1.0, 0.0, "");
-		configParam(BVCO::FMLIN_PARAM, 0.0, 1.0, 0.0, "");
-		configParam(BVCO::FMEXP_PARAM, 0.0, 1.0, 0.0, "");
-		configParam(BVCO::PW_PARAM, 0.0, 1.0, 0.5, "");
+		configParam(BVCO::MODE1_PARAM, 0.0, 1.0, 1.0, "Anlg/Digi");
+		configParam(BVCO::LFOMODE1_PARAM, 0.0, 1.0, 1.0, "VCO/LFO");
+		configParam(BVCO::FREQ_PARAM, -54.0, 54.0, 0.0, "Frequency", "Hz", 1.05946309436f, 261.626f, 0.f);
+		configParam(BVCO::FINE_PARAM, -1.0, 1.0, 0.0, "Fine Frequency");
+		configParam(BVCO::FMLIN_PARAM, 0.0, 1.0, 0.0, "Linear FM", "%", 0.f, 100);
+		configParam(BVCO::FMEXP_PARAM, 0.0, 1.0, 0.0, "Exponential FM", "%", 0.f, 100);
+		configParam(BVCO::PW_PARAM, 0.0, 1.0, 0.5, "Pulse Width", "%", 0.f, 100);
 	}
 
 	void process(const ProcessArgs& args) override;

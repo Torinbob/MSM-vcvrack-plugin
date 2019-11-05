@@ -75,15 +75,15 @@ struct xseq : Module {
 
 	xseq() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-		configParam(xseq::BUT1_PARAM, 0.0, 1.0, 0.0, "");
-		configParam(xseq::BUT2_PARAM, 0.0, 1.0, 0.0, "");
-		configParam(xseq::BUT3_PARAM, 0.0, 1.0, 0.0, "");
-		configParam(xseq::BUT4_PARAM, 0.0, 1.0, 0.0, "");
-		configParam(xseq::BUT5_PARAM, 0.0, 1.0, 0.0, "");
-		configParam(xseq::BUT6_PARAM, 0.0, 1.0, 0.0, "");
-		configParam(xseq::BUT7_PARAM, 0.0, 1.0, 0.0, "");
-		configParam(xseq::BUT8_PARAM, 0.0, 1.0, 0.0, "");
-		configParam(xseq::BUT9_PARAM, 0.0, 1.0, 0.0, "");
+		configParam(xseq::BUT1_PARAM, 0.0, 1.0, 0.0, "Logic Select");
+		configParam(xseq::BUT2_PARAM, 0.0, 1.0, 0.0, "Logic Select");
+		configParam(xseq::BUT3_PARAM, 0.0, 1.0, 0.0, "Logic Select");
+		configParam(xseq::BUT4_PARAM, 0.0, 1.0, 0.0, "Logic Select");
+		configParam(xseq::BUT5_PARAM, 0.0, 1.0, 0.0, "Logic Select");
+		configParam(xseq::BUT6_PARAM, 0.0, 1.0, 0.0, "Logic Select");
+		configParam(xseq::BUT7_PARAM, 0.0, 1.0, 0.0, "Logic Select");
+		configParam(xseq::BUT8_PARAM, 0.0, 1.0, 0.0, "Logic Select");
+		configParam(xseq::BUT9_PARAM, 0.0, 1.0, 0.0, "Logic Select");
 	}
 
 	void process(const ProcessArgs& args) override;

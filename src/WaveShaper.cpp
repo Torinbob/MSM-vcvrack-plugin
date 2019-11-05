@@ -50,14 +50,14 @@ struct WaveShaper : Module {
 
 	WaveShaper() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-		configParam(WaveShaper::SHAPE_1_PARAM, 1.0, -0.4, 1.0, "");
-		configParam(WaveShaper::SHAPE_1_CV_PARAM, -1.0, 1.0, 0.0, "");
-		configParam(WaveShaper::SHAPE_2_PARAM, 0.0, 1.0, 0.0, "");
-		configParam(WaveShaper::SHAPE_2_CV_PARAM, -1.0, 1.0, 0.0, "");
-		configParam(WaveShaper::SHAPE_3_PARAM, -1.0, 1.0, -1.0, "");
-		configParam(WaveShaper::SHAPE_3_CV_PARAM, -1.0, 1.0, 0.0, "");
-		configParam(WaveShaper::MIX_PARAM, 0.0, 1.0, 0.5, "");
-		configParam(WaveShaper::OUTPUT_GAIN_PARAM, 0.0, 1.0, 0.5, "");
+		configParam(WaveShaper::SHAPE_1_PARAM, 1.0, -0.4, 1.0, "Shape A");
+		configParam(WaveShaper::SHAPE_1_CV_PARAM, -1.0, 1.0, 0.0, "Shape A CV");
+		configParam(WaveShaper::SHAPE_2_PARAM, 0.0, 1.0, 0.0, "Shape B");
+		configParam(WaveShaper::SHAPE_2_CV_PARAM, -1.0, 1.0, 0.0, "Shape B CV");
+		configParam(WaveShaper::SHAPE_3_PARAM, -1.0, 1.0, -1.0, "Shape C");
+		configParam(WaveShaper::SHAPE_3_CV_PARAM, -1.0, 1.0, 0.0, "Shape C CV");
+		configParam(WaveShaper::MIX_PARAM, 0.0, 1.0, 0.5, "Dry/Wet Mix");
+		configParam(WaveShaper::OUTPUT_GAIN_PARAM, 0.0, 1.0, 0.5, "Wet Level");
 	}
 
 	void process(const ProcessArgs& args) override;

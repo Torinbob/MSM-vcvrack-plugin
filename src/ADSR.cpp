@@ -61,13 +61,13 @@ struct ADSR : Module {
 
 	ADSR() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-		configParam(ADSR::ATTACK_PARAM, 0.0f, 1.0f, 0.1f, "");
-		configParam(ADSR::DECAY_PARAM, 0.0f, 1.0f, 0.2f, "");
-		configParam(ADSR::SUSTAIN_PARAM, 0.0f, 1.0f, 0.5f, "");
-		configParam(ADSR::RELEASE_PARAM, 0.0f, 1.0f, 0.15f, "");
-		configParam(ADSR::ATT_SHAPE, 0.1f, 4.0f, 1.0f, "");
-		configParam(ADSR::DEC_SHAPE, 0.1f, 4.0f, 1.0f, "");
-		configParam(ADSR::REL_SHAPE, 0.1f, 4.0f, 1.0f, "");
+		configParam(ADSR::ATTACK_PARAM, 0.0f, 1.0f, 0.1f, "Attack");
+		configParam(ADSR::DECAY_PARAM, 0.0f, 1.0f, 0.2f, "Decay");
+		configParam(ADSR::SUSTAIN_PARAM, 0.0f, 1.0f, 0.5f, "Sustain");
+		configParam(ADSR::RELEASE_PARAM, 0.0f, 1.0f, 0.15f, "Release");
+		configParam(ADSR::ATT_SHAPE, 0.1f, 4.0f, 1.0f, "Attack Shape");
+		configParam(ADSR::DEC_SHAPE, 0.1f, 4.0f, 1.0f, "Decay Shape");
+		configParam(ADSR::REL_SHAPE, 0.1f, 4.0f, 1.0f, "Release Shape");
 		onReset();
 		onSampleRateChange();
 	}

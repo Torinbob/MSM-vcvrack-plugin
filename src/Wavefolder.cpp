@@ -57,15 +57,15 @@ struct Wavefolder : Module {
 
 	Wavefolder() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-		configParam(Wavefolder::TYPESWITCH, 0.0, 1.0, 0.0, "");
-		configParam(Wavefolder::RANGE, 0.0, 5.0, 2.5, "");
-		configParam(Wavefolder::SHAPE_PARAM, 0.0, 1.5, 0.0, "");
-		configParam(Wavefolder::SHAPE_CV_PARAM, -1.0, 1.0, 0.0, "");
-		configParam(Wavefolder::SYM_PARAM, -2.0, 2.0, 0.0, "");
-		configParam(Wavefolder::UP_PARAM, 0.0, 1.0, 0.0, "");
-		configParam(Wavefolder::DOWN_PARAM, 0.0, 1.0, 0.0, "");
-		configParam(Wavefolder::GAIN_PARAM, 0.0, 1.0, 0.0, "");
-		configParam(Wavefolder::GAIN_CV_PARAM, -1.0, 1.0, 0.0, "");
+		configParam(Wavefolder::TYPESWITCH, 0.0, 1.0, 0.0, "Fold Type");
+		configParam(Wavefolder::RANGE, 0.0, 5.0, 2.5, "Fold Range");
+		configParam(Wavefolder::SHAPE_PARAM, 0.0, 1.5, 0.0, "Fold Shape");
+		configParam(Wavefolder::SHAPE_CV_PARAM, -1.0, 1.0, 0.0, "Fold Shape CV");
+		configParam(Wavefolder::SYM_PARAM, -2.0, 2.0, 0.0, "Simmetry");
+		configParam(Wavefolder::UP_PARAM, 0.0, 1.0, 0.0, "Upper Shape");
+		configParam(Wavefolder::DOWN_PARAM, 0.0, 1.0, 0.0, "Lower Shape");
+		configParam(Wavefolder::GAIN_PARAM, 0.0, 1.0, 0.0, "Fold Gain");
+		configParam(Wavefolder::GAIN_CV_PARAM, -1.0, 1.0, 0.0, "Fold Gain CV");
 	}
 
 	void process(const ProcessArgs& args) override;

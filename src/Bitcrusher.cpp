@@ -73,9 +73,9 @@ struct Bitcrusher : Module {
 
 	Bitcrusher() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-		configParam(Bitcrusher::BITS_PARAM, 0.0, 8.0, 8.0, "");
-		configParam(Bitcrusher::SR_PARAM, 0.01, 1.0, 1.0, "");
-		configParam(Bitcrusher::QD_PARAM, 0.0, 0.95, 0.0, "");
+		configParam(Bitcrusher::BITS_PARAM, 0.0, 8.0, 8.0, "Bits");
+		configParam(Bitcrusher::SR_PARAM, 0.01, 1.0, 1.0, "Sample Rate");
+		configParam(Bitcrusher::QD_PARAM, 0.0, 0.95, 0.0, "Overdrive");
 	}
 
 	void process(const ProcessArgs& args) override;

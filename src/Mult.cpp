@@ -47,9 +47,9 @@ struct Mult : Module
 
 		Mult() {
 			config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS);
-			configParam(Mult::MODE1_PARAM, 0.0, 1.0, 1.0, "");
-			configParam(Mult::MODE2_PARAM, 0.0, 1.0, 1.0, "");
-			configParam(Mult::MODE3_PARAM, 0.0, 1.0, 1.0, "");
+			configParam(Mult::MODE1_PARAM, 0.0, 1.0, 1.0, "Add/Sub");
+			configParam(Mult::MODE2_PARAM, 0.0, 1.0, 1.0, "Add/Sub");
+			configParam(Mult::MODE3_PARAM, 0.0, 1.0, 1.0, "Add/Sub");
 		}
 
 		void process(const ProcessArgs& args) override;

@@ -25,8 +25,8 @@ struct SimpleSlider : Module {
 
 	SimpleSlider() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS);
-		configParam(SimpleSlider::SLIDER_PARAM, 0.0, 1.0, 0.5, "");
-		configParam(SimpleSlider::TYPE_PARAM, 0.0, 1.0, 0.0, "");
+		configParam(SimpleSlider::SLIDER_PARAM, 0.0, 1.0, 0.5, "Slider");
+		configParam(SimpleSlider::TYPE_PARAM, 0.0, 1.0, 0.0, "Type");
 	}
 
 	void process(const ProcessArgs& args) override;

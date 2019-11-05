@@ -37,9 +37,9 @@ struct Fade : Module {
 
 	Fade() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-		configParam(Fade::CF_A_PARAM, 0.0, 1.0, 0.5, "");
-		configParam(Fade::CF_B_PARAM, 0.0, 1.0, 0.5, "");
-		configParam(Fade::CF_AB_PARAM, 0.0, 1.0, 0.5, "");
+		configParam(Fade::CF_A_PARAM, 0.0, 1.0, 0.5, "A");
+		configParam(Fade::CF_B_PARAM, 0.0, 1.0, 0.5, "B");
+		configParam(Fade::CF_AB_PARAM, 0.0, 1.0, 0.5, "AB");
 	}
 
 	void process(const ProcessArgs& args) override;

@@ -506,15 +506,15 @@ struct PhaserModule : Module {
 
 	PhaserModule() {
     config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS);
-    configParam(PhaserModule::TYPE, 0.0, 3.0, 0.0, "");
-    configParam(PhaserModule::RANGE_LOW, 0.0, 1.0, 0.2, "");
-    configParam(PhaserModule::RANGE_HIGH, 0.0, 1.0, 0.4, "");
-    configParam(PhaserModule::RATE_PARAM, 0.0, 1.0, 0.05, "");
-    configParam(PhaserModule::FEEDBACK_PARAM, 0.0, 0.95, 0.475, "");
-    configParam(PhaserModule::STAGE_PARAM, 0.0, 18.0, 1.0, "");
-    configParam(PhaserModule::LFODEPTH, 0.0, 1.0, 0.1, "");
-    configParam(PhaserModule::PW_PARAM, 0.0, 1.0, 0.5, "");
-    configParam(PhaserModule::DEPTH_PARAM, 0.0, 1.0, 0.5, "");
+    configParam(PhaserModule::TYPE, 0.0, 3.0, 0.0, "Wave Type");
+    configParam(PhaserModule::RANGE_LOW, 0.0, 1.0, 0.2, "Range Low Frequency", "Hz", 0.f, 7990, 10.0f);
+    configParam(PhaserModule::RANGE_HIGH, 0.0, 1.0, 0.4, "Range High Frequency", "Hz", 0.f, 7990, 10.0f);
+    configParam(PhaserModule::RATE_PARAM, 0.0, 1.0, 0.05, "LFO Rate", "Hz", 0.f, 7.5f);
+    configParam(PhaserModule::FEEDBACK_PARAM, 0.0, 0.95, 0.475, "Feedback", "%", 0.f, 100);
+    configParam(PhaserModule::STAGE_PARAM, 0.0, 18.0, 1.0, "Stages", "", 0.f, 1.f, 2.f);
+    configParam(PhaserModule::LFODEPTH, 0.0, 1.0, 0.1, "LFO Depth");
+    configParam(PhaserModule::PW_PARAM, 0.0, 1.0, 0.5, "Pulse Width", "%", 0.f, 100);
+    configParam(PhaserModule::DEPTH_PARAM, 0.0, 1.0, 0.5, "Depth");
   }
 
 	void process(const ProcessArgs& args) override;

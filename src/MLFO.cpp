@@ -61,18 +61,18 @@ struct LFO : Module {
 
 	LFO() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS);
-		configParam(LFO::OFFSET_1_PARAM, 0.0, 1.0, 0.0, "");
-		configParam(LFO::INVERT_1_PARAM, 0.0, 1.0, 1.0, "");
-		configParam(LFO::FREQ_PARAM, -9.0, 7.0, -1.0, "");
-		configParam(LFO::FM_PARAM, 0.0, 1.0, 0.0, "");
-		configParam(LFO::PW_1_PARAM, 0.0, 1.0, 0.5, "");
-		configParam(LFO::OFFSET_2_PARAM, 0.0, 1.0, 0.0, "");
-		configParam(LFO::INVERT_2_PARAM, 0.0, 1.0, 1.0, "");
-		configParam(LFO::FM_2_PARAM, 0.0, 1.0, 0.0, "");
-		configParam(LFO::PW_2_PARAM, 0.0, 1.0, 0.5, "");
-		configParam(LFO::WAVE_A_PARAM, 0.0, 3.0, 0.0, "");
-		configParam(LFO::WAVE_B_PARAM, 0.0, 3.0, 0.0, "");
-		configParam(LFO::MIX_PARAM, 0.0, 1.0, 0.5, "");
+		configParam(LFO::OFFSET_1_PARAM, 0.0, 1.0, 0.0, "Offset");
+		configParam(LFO::INVERT_1_PARAM, 0.0, 1.0, 1.0, "Invert");
+		configParam(LFO::FREQ_PARAM, -9.0, 7.0, -1.0, "Frequency", "Hz", 2.f, 1.f);
+		configParam(LFO::FM_PARAM, 0.0, 1.0, 0.0, "FM CV", "%", 0.0f, 100);
+		configParam(LFO::PW_1_PARAM, 0.0, 1.0, 0.5, "Pulse Width", "%", 0.0f, 100);
+		configParam(LFO::OFFSET_2_PARAM, 0.0, 1.0, 0.0, "Offset");
+		configParam(LFO::INVERT_2_PARAM, 0.0, 1.0, 1.0, "Invert");
+		configParam(LFO::FM_2_PARAM, 0.0, 1.0, 0.0, "FM CV", "%", 0.0f, 100);
+		configParam(LFO::PW_2_PARAM, 0.0, 1.0, 0.5, "Pulse Width", "%", 0.0f, 100);
+		configParam(LFO::WAVE_A_PARAM, 0.0, 3.0, 0.0, "Wave Type");
+		configParam(LFO::WAVE_B_PARAM, 0.0, 3.0, 0.0, "Wave Type");
+		configParam(LFO::MIX_PARAM, 0.0, 1.0, 0.5, "Crossfeed");
 	}
 
 	void process(const ProcessArgs& args) override;

@@ -57,8 +57,8 @@ struct Morpher : Module
 
   Morpher() {
     config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-    configParam(Morpher::MORPH_PARAM, 0.0, 1.0, 0.0, "");
-    configParam(Morpher::SWITCHCOUNT, 0.0, 6.0, 0.0, "");
+    configParam(Morpher::MORPH_PARAM, 0.0, 1.0, 0.0, "Morph Control", "%", 0.0f, 100);
+    configParam(Morpher::SWITCHCOUNT, 0.0, 6.0, 0.0, "Input Count", "", 0.0f, 1.0f, 2);
   }
 
   void process(const ProcessArgs& args) override;

@@ -41,10 +41,10 @@ struct Noise : Module {
 
 	Noise() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-		configParam(Noise::TYPE, 0.0, 2.0, 0.0, "");
-		configParam(Noise::LP_PARAM, 0.0, 1.0, 1.0, "");
-		configParam(Noise::HP_PARAM, 0.0, 1.0, 0.0, "");
-		configParam(Noise::MIX_PARAM, 0.0, 1.0, 0.5, "");
+		configParam(Noise::TYPE, 0.0, 2.0, 0.0, "Noise type");
+		configParam(Noise::LP_PARAM, 0.0, 1.0, 1.0, "Cutoff", "Hz", 5.0f, 1e4, 0.0f);
+		configParam(Noise::HP_PARAM, 0.0, 1.0, 0.0, "Cutoff", "Hz", 5.0f, 500.0f, 0.0f);
+		configParam(Noise::MIX_PARAM, 0.0, 1.0, 0.5, "Mix");
 	}
 
 	void process(const ProcessArgs& args) override;

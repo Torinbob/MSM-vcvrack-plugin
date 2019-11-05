@@ -95,14 +95,14 @@ struct CrazyMult : Module {
 
 	CrazyMult() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS);
-		configParam(CrazyMult::AorB_1_PARAM, -1.0, 1.0, 0.0, "");
-		configParam(CrazyMult::AorB_2_PARAM, -1.0, 1.0, 0.0, "");
-		configParam(CrazyMult::AorB_3_PARAM, -1.0, 1.0, 0.0, "");
-		configParam(CrazyMult::AorB_4_PARAM, -1.0, 1.0, 0.0, "");
-		configParam(CrazyMult::AorB_5_PARAM, -1.0, 1.0, 0.0, "");
-		configParam(CrazyMult::AorB_6_PARAM, -1.0, 1.0, 0.0, "");
-		configParam(CrazyMult::AorB_7_PARAM, -1.0, 1.0, 0.0, "");
-		configParam(CrazyMult::AorB_8_PARAM, -1.0, 1.0, 0.0, "");
+		configParam(CrazyMult::AorB_1_PARAM, -1.0, 1.0, 0.0, "A/Off/B");
+		configParam(CrazyMult::AorB_2_PARAM, -1.0, 1.0, 0.0, "A/Off/B");
+		configParam(CrazyMult::AorB_3_PARAM, -1.0, 1.0, 0.0, "A/Off/B");
+		configParam(CrazyMult::AorB_4_PARAM, -1.0, 1.0, 0.0, "A/Off/B");
+		configParam(CrazyMult::AorB_5_PARAM, -1.0, 1.0, 0.0, "A/Off/B");
+		configParam(CrazyMult::AorB_6_PARAM, -1.0, 1.0, 0.0, "A/Off/B");
+		configParam(CrazyMult::AorB_7_PARAM, -1.0, 1.0, 0.0, "A/Off/B");
+		configParam(CrazyMult::AorB_8_PARAM, -1.0, 1.0, 0.0, "A/Off/B");
 	}
 
 	void process(const ProcessArgs& args) override;

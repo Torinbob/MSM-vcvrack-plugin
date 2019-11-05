@@ -47,19 +47,19 @@ struct ExperimentalVCO : Module {
 
 	ExperimentalVCO() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS);
-		configParam(ExperimentalVCO::LFOMODE, 0.0, 1.0, 1.0, "");
-		configParam(ExperimentalVCO::FREQ_OCT_PARAM, 0.0, 6.0, 3.0, "");
-		configParam(ExperimentalVCO::FREQ_PARAM, 0.0, 12.0, 0.0, "");
-		configParam(ExperimentalVCO::FINE_PARAM, -1.0, 1.0, 0.0, "");
-		configParam(ExperimentalVCO::MOD1, 0.01f, 1.0, 1.0, "");
-		configParam(ExperimentalVCO::MOD2, 0.01f, 1.0, 1.0, "");
-		configParam(ExperimentalVCO::MOD3, 0.01f, 1.0, 1.0, "");
-		configParam(ExperimentalVCO::MOD1_CV_PARAM, 1.0f, -1.0, 0.0, "");
-		configParam(ExperimentalVCO::MOD2_CV_PARAM, 1.0f, -1.0, 0.0, "");
-		configParam(ExperimentalVCO::MOD3_CV_PARAM, 1.0f, -1.0, 0.0, "");
-		configParam(ExperimentalVCO::TYPE, 0.0, 13.0, 0.0, "");
-		configParam(ExperimentalVCO::WINDOW, 512.0, 2047.0, 1024.0, "");
-		configParam(ExperimentalVCO::FM_PARAM, -1.0, 1.0, 0.0, "");
+		configParam(ExperimentalVCO::LFOMODE, 0.0, 1.0, 1.0, "LFO/VCO");
+		configParam(ExperimentalVCO::FREQ_OCT_PARAM, 0.0, 6.0, 3.0, "Octave", "", 0.0f, 1.0f, 1.0f);
+		configParam(ExperimentalVCO::FREQ_PARAM, 0.0, 12.0, 0.0, "Note");
+		configParam(ExperimentalVCO::FINE_PARAM, -1.0, 1.0, 0.0, "Fine");
+		configParam(ExperimentalVCO::MOD1, 0.01f, 1.0, 1.0, "Mod 1");
+		configParam(ExperimentalVCO::MOD2, 0.01f, 1.0, 1.0, "Mod 2");
+		configParam(ExperimentalVCO::MOD3, 0.01f, 1.0, 1.0, "Mod 3");
+		configParam(ExperimentalVCO::MOD1_CV_PARAM, 1.0f, -1.0, 0.0, "Mod 1 CV", "%", 0.0f, 100);
+		configParam(ExperimentalVCO::MOD2_CV_PARAM, 1.0f, -1.0, 0.0, "Mod 2 CV", "%", 0.0f, 100);
+		configParam(ExperimentalVCO::MOD3_CV_PARAM, 1.0f, -1.0, 0.0, "Mod 3 CV", "%", 0.0f, 100);
+		configParam(ExperimentalVCO::TYPE, 0.0, 13.0, 0.0, "Type");
+		configParam(ExperimentalVCO::WINDOW, 512.0, 2047.0, 1024.0, "Window Size");
+		configParam(ExperimentalVCO::FM_PARAM, -1.0, 1.0, 0.0, "FM CV", "%", 0.0f, 100);
 
 	}
 

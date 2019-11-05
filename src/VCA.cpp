@@ -43,12 +43,12 @@ struct VCA : Module {
 
 	VCA() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-		configParam(VCA::MODE_A, 0.0, 1.0, 1.0, "");
-		configParam(VCA::MODE_LIN_EXP_L_PARAM_A, 0.0, 1.0, 1.0, "");
-		configParam(VCA::MODE_LIN_EXP_R_PARAM_A, 0.0, 1.0, 1.0, "");
-		configParam(VCA::LEVEL_A_L, 0.0, 1.0, 0.5, "");
-		configParam(VCA::LEVEL_A_R, 0.0, 1.0, 0.5, "");
-		configParam(VCA::PAN_A, -1.0, 1.0, 0.0, "");
+		configParam(VCA::MODE_A, 0.0, 1.0, 1.0, "Normal/Pan");
+		configParam(VCA::MODE_LIN_EXP_L_PARAM_A, 0.0, 1.0, 1.0, "Lin/Exp");
+		configParam(VCA::MODE_LIN_EXP_R_PARAM_A, 0.0, 1.0, 1.0, "Lin/Exp");
+		configParam(VCA::LEVEL_A_L, 0.0, 1.0, 0.5, "Left Amp", "%", 0.f, 100);
+		configParam(VCA::LEVEL_A_R, 0.0, 1.0, 0.5, "Right Amp", "%", 0.f, 100);
+		configParam(VCA::PAN_A, -1.0, 1.0, 0.0, "Pan");
 	}
 
 	void process(const ProcessArgs& args) override;
