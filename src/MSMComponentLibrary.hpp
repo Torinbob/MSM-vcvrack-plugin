@@ -140,6 +140,15 @@ struct RedSmallToggleKnob : MSMToggleKnob {
 	}
 };
 
+struct BlueSmallToggleKnob : MSMToggleKnob {
+	BlueSmallToggleKnob() {
+		box.size = Vec(32, 32);
+		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Knobs/BlueSmallKnob.svg")));
+		snap = true;
+		smooth = false;
+	}
+};
+
 struct MSMToggle2Knob : SVGKnob {
 	MSMToggle2Knob() {
 		minAngle = -0.78*M_PI;

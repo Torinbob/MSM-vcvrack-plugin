@@ -639,7 +639,7 @@ PhaserModuleWidget::PhaserModuleWidget(PhaserModule *module) {
 	addParam(createParam<GreenSmallKnob>(Vec(9, 98), module, PhaserModule::RATE_PARAM));
 	addParam(createParam<GreenSmallKnob>(Vec(50, 98), module, PhaserModule::FEEDBACK_PARAM));
 
-	addParam(createParam<BlueSmallKnob>(Vec(9, 148), module, PhaserModule::STAGE_PARAM));
+	addParam(createParam<BlueSmallToggleKnob>(Vec(9, 148), module, PhaserModule::STAGE_PARAM));
 	addParam(createParam<GreenSmallKnob>(Vec(50, 148), module, PhaserModule::LFODEPTH));
 
 	addParam(createParam<BlueSmallKnob>(Vec(50, 208), module, PhaserModule::PW_PARAM));
