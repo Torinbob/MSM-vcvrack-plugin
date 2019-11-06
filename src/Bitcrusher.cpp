@@ -172,7 +172,7 @@ BitcrusherWidget::BitcrusherWidget(Bitcrusher *module) {
 	addChild(createWidget<MScrewC>(Vec(45, 0)));
 	addChild(createWidget<MScrewB>(Vec(45, 365)));
 
-	addParam(createParam<GreenSmallKnob>(Vec(15, 48), module, Bitcrusher::BITS_PARAM));
+	addParam(createParam<GreenToggleKnobSmall>(Vec(15, 48), module, Bitcrusher::BITS_PARAM));
 	addParam(createParam<GreenSmallKnob>(Vec(15, 98), module, Bitcrusher::SR_PARAM));
 	addParam(createParam<GreenSmallKnob>(Vec(15, 148), module, Bitcrusher::QD_PARAM));
 
