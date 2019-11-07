@@ -57,7 +57,7 @@ struct ExperimentalVCO : Module {
 		configParam(ExperimentalVCO::MOD1_CV_PARAM, 1.0f, -1.0, 0.0, "Mod 1 CV", "%", 0.0f, 100);
 		configParam(ExperimentalVCO::MOD2_CV_PARAM, 1.0f, -1.0, 0.0, "Mod 2 CV", "%", 0.0f, 100);
 		configParam(ExperimentalVCO::MOD3_CV_PARAM, 1.0f, -1.0, 0.0, "Mod 3 CV", "%", 0.0f, 100);
-		configParam(ExperimentalVCO::TYPE, 0.0, 13.0, 0.0, "Type");
+		configParam(ExperimentalVCO::TYPE, 0.0, 13.0, 0.0, "Type", "", 0.0f, 1.0f, 1.0f);
 		configParam(ExperimentalVCO::WINDOW, 512.0, 2047.0, 1024.0, "Window Size");
 		configParam(ExperimentalVCO::FM_PARAM, -1.0, 1.0, 0.0, "FM CV", "%", 0.0f, 100);
 
