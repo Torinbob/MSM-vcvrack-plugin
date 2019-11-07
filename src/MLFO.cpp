@@ -70,8 +70,8 @@ struct LFO : Module {
 		configParam(LFO::INVERT_2_PARAM, 0.0, 1.0, 1.0, "Invert");
 		configParam(LFO::FM_2_PARAM, 0.0, 1.0, 0.0, "FM CV", "%", 0.0f, 100);
 		configParam(LFO::PW_2_PARAM, 0.0, 1.0, 0.5, "Pulse Width", "%", 0.0f, 100);
-		configParam(LFO::WAVE_A_PARAM, 0.0, 3.0, 0.0, "Wave Type");
-		configParam(LFO::WAVE_B_PARAM, 0.0, 3.0, 0.0, "Wave Type");
+		configParam(LFO::WAVE_A_PARAM, 0.0, 4.0, 0.0, "Wave Type");
+		configParam(LFO::WAVE_B_PARAM, 0.0, 4.0, 0.0, "Wave Type");
 		configParam(LFO::MIX_PARAM, 0.0, 1.0, 0.5, "Crossfeed");
 	}
 
@@ -127,14 +127,16 @@ void LFO::process(const ProcessArgs& args)
 	outputs[SH_OUTPUT].setVoltage(5.0f * SHOut1);
 
 	float WAVE_A = params[WAVE_A_PARAM].getValue() + inputs[WAVE_A_INPUT].getVoltage();
-	WAVE_A = clamp(WAVE_A, 0.0f, 3.0f);
+	WAVE_A = clamp(WAVE_A, 0.0f, 4.0f);
 	float WAVE_1_OUT;
 	if (WAVE_A < 1.0f)
 		WAVE_1_OUT = crossfade(oscillator.sin(), oscillator.tri(), WAVE_A);
 	else if (WAVE_A < 2.0f)
 		WAVE_1_OUT = crossfade(oscillator.tri(), oscillator.saw(), WAVE_A - 1.0f);
+	else if (WAVE_A < 3.0f)
+		WAVE_1_OUT = crossfade(oscillator.saw(), oscillator.sqr(), WAVE_A - 2.0f);
 	else
-		WAVE_1_OUT = crossfade(oscillator.sqr(), SHOut1, WAVE_A - 2.0f);
+		WAVE_1_OUT = crossfade(oscillator.sqr(), SHOut1, WAVE_A - 3.0f);
 	outputs[LFO_A_OUTPUT].setVoltage(5.0f * WAVE_1_OUT);
 
 
@@ -167,14 +169,16 @@ void LFO::process(const ProcessArgs& args)
 	outputs[SH_2_OUTPUT].setVoltage(5.0f * SHOut2);
 
 	float WAVE_B = params[WAVE_B_PARAM].getValue() + inputs[WAVE_B_INPUT].getVoltage();
-	WAVE_B = clamp(WAVE_B, 0.0f, 3.0f);
+	WAVE_B = clamp(WAVE_B, 0.0f, 4.0f);
 	float WAVE_2_OUT;
 	if (WAVE_B < 1.0f)
 		WAVE_2_OUT = crossfade(oscillatorB.sin(), oscillatorB.tri(), WAVE_B);
 	else if (WAVE_B < 2.0f)
 		WAVE_2_OUT = crossfade(oscillatorB.tri(), oscillatorB.saw(), WAVE_B - 1.0f);
+	else if (WAVE_B < 3.0f)
+		WAVE_2_OUT = crossfade(oscillatorB.saw(), oscillatorB.sqr(), WAVE_B - 2.0f);
 	else
-		WAVE_2_OUT = crossfade(oscillatorB.sqr(), SHOut2, WAVE_B - 2.0f);
+		WAVE_2_OUT = crossfade(oscillatorB.sqr(), SHOut2, WAVE_B - 3.0f);
 	outputs[LFO_B_OUTPUT].setVoltage(5.0f * WAVE_2_OUT);
 
 
