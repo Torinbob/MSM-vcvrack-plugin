@@ -51,7 +51,7 @@ struct Wavefolder : Module {
 	double SHAPE_MOD = 0.0f;
 	double FOLD = 0.0f;
 
-	bool type = 0;
+	bool type = false;
 
 	Wavefold wavefold;
 
@@ -85,7 +85,7 @@ struct Wavefolder : Module {
 
 void Wavefolder::process(const ProcessArgs& args) {
 
-	type = params[TYPESWITCH].getValue();
+	type = params[TYPESWITCH].getValue() > 0;
 
 	IN_1 = inputs[IN_INPUT].isConnected() ? inputs[IN_INPUT].getVoltage() : 0.0f;
 	UP = clamp(params[UP_PARAM].getValue() + inputs[UP_INPUT].getVoltage(), 0.0f, 4.0f);
@@ -98,14 +98,10 @@ void Wavefolder::process(const ProcessArgs& args) {
 
 	wavefold.Shape(IN_1, SHAPE_MOD, SHAPE_CV, SHAPE_SYM, params[RANGE].getValue(), UP, DOWN, outputs[OUT_OUTPUT].isConnected());
 
-	switch(type) {
-		case 1:
+	if (type)
 			wavefold.processB();
-		break;
-		case 0:
+	else
 			wavefold.processA();
-		break;
-	}
 
 	FOLD = saturate(wavefold.Output());
 
