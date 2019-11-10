@@ -16,5 +16,5 @@ SOURCES += $(wildcard src/*.cpp)
 # Add files to the ZIP package when running `make dist`
 DISTRIBUTABLES += $(wildcard Manual* License*) res
 
-RACK_DIR ?= ../..
-include ../../plugin.mk
+include $(RACK_DIR)/plugin.mk
+
