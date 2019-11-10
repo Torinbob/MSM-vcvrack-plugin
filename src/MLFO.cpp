@@ -188,11 +188,7 @@ void LFO::process(const ProcessArgs& args)
 	float MIX_IN_2 = outputs[LFO_B_OUTPUT].getVoltage();
 	float OutMix;
 
-	if(CrossfadeMix < 0.5f) {
-		OutMix = crossfade(MIX_IN_1, MIX_IN_1, CrossfadeMix);
-	}
-	else(CrossfadeMix > 1.0f);
-		OutMix = crossfade(MIX_IN_1, MIX_IN_2, CrossfadeMix);
+	OutMix = crossfade(MIX_IN_1, MIX_IN_2, CrossfadeMix);
 	outputs[OUT_MIX_OUTPUT].setVoltage(OutMix);
 };
 

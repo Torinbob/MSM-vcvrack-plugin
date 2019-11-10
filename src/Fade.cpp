@@ -64,11 +64,7 @@ void Fade::process(const ProcessArgs& args)
 	double IN_2 = inputs[IN_2_INPUT].getVoltage();
 	double OutA;
 
-	if(CrossfadeA < 0.5f) {
-		OutA = crossfade(IN_1, IN_1, CrossfadeA);
-	}
-	else(CrossfadeA > 1.0f);
-		OutA = crossfade(IN_1, IN_2, CrossfadeA);
+	OutA = crossfade(IN_1, IN_2, CrossfadeA);
 	outputs[OUT_A_OUTPUT].setVoltage(OutA);
 
 
@@ -77,11 +73,7 @@ void Fade::process(const ProcessArgs& args)
 	double IN_4 = inputs[IN_4_INPUT].getVoltage();
 	double OutB;
 
-	if(CrossfadeB < 0.5f) {
-		OutB = crossfade(IN_3, IN_3, CrossfadeB);
-	}
-	else(CrossfadeB > 1.0f);
-		OutB = crossfade(IN_3, IN_4, CrossfadeB);
+	OutB = crossfade(IN_3, IN_4, CrossfadeB);
 	outputs[OUT_B_OUTPUT].setVoltage(OutB);
 
 
@@ -90,11 +82,7 @@ void Fade::process(const ProcessArgs& args)
 	double IN_B = OutB;
 	double OutAB;
 
-	if(CrossfadeAB < 0.5f) {
-		OutAB = crossfade(IN_A, IN_A, CrossfadeAB);
-	}
-	else(CrossfadeAB > 1.0f);
-		OutAB = crossfade(IN_A, IN_B, CrossfadeAB);
+	OutAB = crossfade(IN_A, IN_B, CrossfadeAB);
 	outputs[OUT_AB_OUTPUT].setVoltage(OutAB);
 
 

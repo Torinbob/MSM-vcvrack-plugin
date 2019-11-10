@@ -630,18 +630,9 @@ void VCO::process(const ProcessArgs& args) {
 
 	folder.process();
 
-	float CrossfadeA = clamp(params[INPUT_GAIN_PARAM].getValue() + inputs[SHAPE_1_CV_INPUT].getVoltage(), 0.0f, 1.0f);
-	float IN_1F = 0.0f;
-	float IN_2F = folder.Output();
-	float OutA;
-
-	if(CrossfadeA < 0.5f) {
-		OutA = crossfade(IN_1F, IN_1F, CrossfadeA);
-	}
-	else(CrossfadeA > 1.0f);
-		OutA = crossfade(IN_1F, IN_2F, CrossfadeA);
-
-	outputs[FOLD_OUTPUT].setVoltage(saturate(OutA / 1.5f));
+	float FoldAmp = clamp(params[INPUT_GAIN_PARAM].getValue() + inputs[SHAPE_1_CV_INPUT].getVoltage(), 0.0f, 1.0f);
+	float FoldOut = folder.Output() * FoldAmp;
+	outputs[FOLD_OUTPUT].setVoltage(saturate(FoldOut / 1.5f));
 };
 
 struct VCOClassicMenu : MenuItem {

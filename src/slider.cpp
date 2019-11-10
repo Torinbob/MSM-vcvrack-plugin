@@ -53,16 +53,12 @@ void SimpleSlider::process(const ProcessArgs& args) {
 	double OUT = outputs[MAIN_OUTPUT].getVoltage();
 
 	if(TYPE == 0.0f) {
-		if(SLIDER > 0.5f)
-			OUT = crossfade(IN1, IN1, SLIDER);
-		else(SLIDER < 1.0f);
-			OUT = crossfade(IN1, IN2, SLIDER);
-		outputs[MAIN_OUTPUT].setVoltage(OUT);
+		OUT = crossfade(IN1, IN2, SLIDER);
 	}
 	else {
 		OUT = (IN1 + IN2) * SLIDER;
-		outputs[MAIN_OUTPUT].setVoltage(OUT);
 	}
+	outputs[MAIN_OUTPUT].setVoltage(OUT);
 
 
 };
