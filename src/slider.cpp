@@ -46,7 +46,7 @@ struct SimpleSlider : Module {
 
 void SimpleSlider::process(const ProcessArgs& args) {
 
-	double SLIDER = clamp(params[SLIDER_PARAM].getValue() + inputs[CV_INPUT].getVoltage(), 0.0f, 1.0f);
+	double SLIDER = clamp(params[SLIDER_PARAM].getValue() + inputs[CV_INPUT].getVoltage() / 10.f, 0.0f, 1.0f);
 	double IN1 = inputs[IN1_INPUT].getVoltage();
 	double IN2 = inputs[IN2_INPUT].getVoltage();
 	double TYPE = params[TYPE_PARAM].getValue();

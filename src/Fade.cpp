@@ -59,7 +59,7 @@ struct Fade : Module {
 
 void Fade::process(const ProcessArgs& args)
 {
-	double CrossfadeA = clamp(params[CF_A_PARAM].getValue() + inputs[CVA_INPUT].getVoltage(), 0.0f, 1.0f);
+	double CrossfadeA = clamp(params[CF_A_PARAM].getValue() + inputs[CVA_INPUT].getVoltage() / 10.f, 0.0f, 1.0f);
 	double IN_1 = inputs[IN_1_INPUT].getVoltage();
 	double IN_2 = inputs[IN_2_INPUT].getVoltage();
 	double OutA;
@@ -68,7 +68,7 @@ void Fade::process(const ProcessArgs& args)
 	outputs[OUT_A_OUTPUT].setVoltage(OutA);
 
 
-	double CrossfadeB = clamp(params[CF_B_PARAM].getValue() + inputs[CVB_INPUT].getVoltage(), 0.0f, 1.0f);
+	double CrossfadeB = clamp(params[CF_B_PARAM].getValue() + inputs[CVB_INPUT].getVoltage() / 10.f, 0.0f, 1.0f);
 	double IN_3 = inputs[IN_3_INPUT].getVoltage();
 	double IN_4 = inputs[IN_4_INPUT].getVoltage();
 	double OutB;
@@ -77,7 +77,7 @@ void Fade::process(const ProcessArgs& args)
 	outputs[OUT_B_OUTPUT].setVoltage(OutB);
 
 
-	double CrossfadeAB = clamp(params[CF_AB_PARAM].getValue() + inputs[CVAB_INPUT].getVoltage(), 0.0f, 1.0f);
+	double CrossfadeAB = clamp(params[CF_AB_PARAM].getValue() + inputs[CVAB_INPUT].getVoltage() / 10.f, 0.0f, 1.0f);
 	double IN_A = OutA;
 	double IN_B = OutB;
 	double OutAB;

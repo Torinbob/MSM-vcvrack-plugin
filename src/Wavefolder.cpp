@@ -88,8 +88,8 @@ void Wavefolder::process(const ProcessArgs& args) {
 	type = params[TYPESWITCH].getValue() > 0;
 
 	IN_1 = inputs[IN_INPUT].isConnected() ? inputs[IN_INPUT].getVoltage() : 0.0f;
-	UP = clamp(params[UP_PARAM].getValue() + inputs[UP_INPUT].getVoltage(), 0.0f, 4.0f);
-	DOWN = clamp(params[DOWN_PARAM].getValue() + inputs[DOWN_INPUT].getVoltage(), 0.0f, 4.0f);
+	UP = clamp(params[UP_PARAM].getValue() + inputs[UP_INPUT].getVoltage() / 2.5f, 0.0f, 4.0f);
+	DOWN = clamp(params[DOWN_PARAM].getValue() + inputs[DOWN_INPUT].getVoltage() / 2.5f, 0.0f, 4.0f);
 
 		SHAPE_MOD = params[SHAPE_PARAM].getValue();
 

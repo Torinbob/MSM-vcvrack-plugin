@@ -622,15 +622,15 @@ void VCO::process(const ProcessArgs& args) {
 
 	float SHAPE_CV = inputs[SHAPE_CV_INPUT].getVoltage() * params[SHAPE_CV_PARAM].getValue();
 
-	float upW = clamp(params[UP_PARAM].getValue() + inputs[UP_INPUT].getVoltage(), 0.0f, 4.0f);
+	float upW = clamp(params[UP_PARAM].getValue() + inputs[UP_INPUT].getVoltage() / 2.5f, 0.0f, 4.0f);
 
-	float downW = clamp(params[DOWN_PARAM].getValue() + inputs[DOWN_INPUT].getVoltage(), 0.0f, 4.0f);
+	float downW = clamp(params[DOWN_PARAM].getValue() + inputs[DOWN_INPUT].getVoltage() / 2.5f, 0.0f, 4.0f);
 
 	folder.Shape(IN_1, SHAPE_MOD, SHAPE_CV, upW, downW, outputs[FOLD_OUTPUT].isConnected());
 
 	folder.process();
 
-	float FoldAmp = clamp(params[INPUT_GAIN_PARAM].getValue() + inputs[SHAPE_1_CV_INPUT].getVoltage(), 0.0f, 1.0f);
+	float FoldAmp = clamp(params[INPUT_GAIN_PARAM].getValue() + inputs[SHAPE_1_CV_INPUT].getVoltage() / 10.f, 0.0f, 1.0f);
 	float FoldOut = folder.Output() * FoldAmp;
 	outputs[FOLD_OUTPUT].setVoltage(saturate(FoldOut / 1.5f));
 };

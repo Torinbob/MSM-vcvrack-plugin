@@ -125,7 +125,7 @@ void ADSR::process(const ProcessArgs& args) {
 		*/
 
 		attackshape = clamp(params[ATT_SHAPE].getValue(), 0.1f, 4.0f);
-		decayshape = clamp(params[DEC_SHAPE].getValue() + inputs[DEC_SHAPE_CV].getVoltage(), 0.1f, 4.0f);
+		decayshape = clamp(params[DEC_SHAPE].getValue() + inputs[DEC_SHAPE_CV].getVoltage() / 2.5f, 0.1f, 4.0f);
 		releaseshape = clamp(params[REL_SHAPE].getValue(), 0.1f, 4.0f);
 		_envelope.setShapes(attackshape, decayshape, releaseshape);
 	}

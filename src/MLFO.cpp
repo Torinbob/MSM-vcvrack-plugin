@@ -183,7 +183,7 @@ void LFO::process(const ProcessArgs& args)
 
 
 	//MIX LFO 1 & LFO 2
-	float CrossfadeMix = clamp(params[MIX_PARAM].getValue() + inputs[CV_MIX_INPUT].getVoltage(), 0.0f, 1.0f);
+	float CrossfadeMix = clamp(params[MIX_PARAM].getValue() + inputs[CV_MIX_INPUT].getVoltage() / 10.f, 0.0f, 1.0f);
 	float MIX_IN_1 = outputs[LFO_A_OUTPUT].getVoltage();
 	float MIX_IN_2 = outputs[LFO_B_OUTPUT].getVoltage();
 	float OutMix;
