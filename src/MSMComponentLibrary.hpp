@@ -12,7 +12,7 @@
 // Knobs
 ////////////////////
 
-struct MSMLargeKnob : SVGKnob {
+struct MSMLargeKnob : SvgKnob {
 	MSMLargeKnob() {
 		minAngle = -0.78*M_PI;
 		maxAngle = 0.78*M_PI;
@@ -57,7 +57,7 @@ struct VioLargeKnob : MSMLargeKnob {
 	}
 };
 
-struct MSMSmallKnob : SVGKnob {
+struct MSMSmallKnob : SvgKnob {
 	MSMSmallKnob() {
 		minAngle = -0.78*M_PI;
 		maxAngle = 0.78*M_PI;
@@ -108,7 +108,7 @@ struct GreenTinyKnob : MSMSmallKnob {
 	}
 };
 
-struct MSMToggleKnob : SVGKnob {
+struct MSMToggleKnob : SvgKnob {
 	MSMToggleKnob() {
 		minAngle = -0.78*M_PI;
 		maxAngle = 0.78*M_PI;
@@ -118,7 +118,7 @@ struct MSMToggleKnob : SVGKnob {
 
 	void onChange(const event::Change &e) override {
     paramQuantity->setValue(roundf(paramQuantity->getValue()));
-    SVGKnob::onChange(e);
+    SvgKnob::onChange(e);
   }
 };
 
@@ -149,7 +149,7 @@ struct BlueSmallToggleKnob : MSMToggleKnob {
 	}
 };
 
-struct MSMToggle2Knob : SVGKnob {
+struct MSMToggle2Knob : SvgKnob {
 	MSMToggle2Knob() {
 		minAngle = -0.78*M_PI;
 		maxAngle = 0.78*M_PI;
@@ -161,7 +161,7 @@ struct MSMToggle2Knob : SVGKnob {
 
 	void onChange(const event::Change &e) override {
     paramQuantity->setValue(roundf(paramQuantity->getValue()));
-    SVGKnob::onChange(e);
+    SvgKnob::onChange(e);
   }
 };
 
@@ -179,7 +179,7 @@ struct RedLargeToggleKnob : MSMToggle2Knob {
 // Slider
 /////////////////////////
 
-struct MSMSlider : SVGSlider {
+struct MSMSlider : SvgSlider {
 	MSMSlider() {
 		Vec margin = Vec(3.6, 3.6);
 		maxHandlePos = Vec(11.0, 0.0).plus(margin);
@@ -191,7 +191,7 @@ struct MSMSlider : SVGSlider {
 	}
 };
 
-struct MSMSlidePot : SVGSlider {
+struct MSMSlidePot : SvgSlider {
 	MSMSlidePot() {
 		Vec margin = Vec(4, 4);
 		maxHandlePos = Vec(0.0, -5.0).plus(margin);
@@ -207,7 +207,7 @@ struct MSMSlidePot : SVGSlider {
 // Jacks
 /////////////////////////
 
-struct MSMPort : SVGPort {
+struct MSMPort : SvgPort {
 	MSMPort() {
 	}
 };
@@ -270,14 +270,14 @@ struct SilverSixPortE : MSMPort {
 // Switch
 /////////////////////////
 
-struct ToggleMe : SVGSwitch {
+struct ToggleMe : SvgSwitch {
 	ToggleMe()
 	{
 
 	}
 };
 
-struct ToggleMe2 : SVGSwitch {
+struct ToggleMe2 : SvgSwitch {
 	ToggleMe2()
 	{
 
@@ -335,7 +335,7 @@ struct FMSM : ToggleMe {
 // Button
 /////////////////////////
 
-struct MSwitchGrey : SVGSwitch {
+struct MSwitchGrey : SvgSwitch {
 	MSwitchGrey() {
 		momentary = true;
 		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/GreyRoundButton_0.svg")));
@@ -343,7 +343,7 @@ struct MSwitchGrey : SVGSwitch {
 	}
 };
 
-struct MSwitchGrey2 : SVGSwitch {
+struct MSwitchGrey2 : SvgSwitch {
 	MSwitchGrey2() {
 		momentary = true;
 		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/GreyRoundButtonBlue_0.svg")));
@@ -351,28 +351,28 @@ struct MSwitchGrey2 : SVGSwitch {
 	}
 };
 
-struct MToggleGrey : SVGSwitch {
+struct MToggleGrey : SvgSwitch {
 	MToggleGrey() {
 		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/GreyRoundToggle_0.svg")));
 		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/GreyRoundToggle_1.svg")));
 	}
 };
 
-struct OSCiXEGG : SVGSwitch {
+struct OSCiXEGG : SvgSwitch {
 	OSCiXEGG() {
 		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/Easteregg_0.svg")));
 		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/Easteregg_1.svg")));
 	}
 };
 
-struct MButton : SVGSwitch {
+struct MButton : SvgSwitch {
 	MButton() {
 		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/ButtonGreen0.svg")));
 		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/ButtonGreen1.svg")));
 	}
 };
 
-struct ThreeColorButton : SVGSwitch {
+struct ThreeColorButton : SvgSwitch {
 	ThreeColorButton() {
 		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/ColorButton0.svg")));
 		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/ColorButton1.svg")));
@@ -380,7 +380,7 @@ struct ThreeColorButton : SVGSwitch {
 	}
 };
 
-struct FiveColorButton : SVGSwitch {
+struct FiveColorButton : SvgSwitch {
 	FiveColorButton() {
 		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/ColorButton0.svg")));
 		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/ColorButton1.svg")));
@@ -390,7 +390,7 @@ struct FiveColorButton : SVGSwitch {
 	}
 };
 
-struct SixColorButton : SVGSwitch {
+struct SixColorButton : SvgSwitch {
 	SixColorButton() {
 		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/ColorButton0.svg")));
 		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Button/ColorButton1.svg")));
@@ -405,28 +405,28 @@ struct SixColorButton : SVGSwitch {
 // Screws
 ////////////////////////
 
-struct MScrewA : SVGScrew {
+struct MScrewA : SvgScrew {
 		MScrewA() {
 		sw->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Screws/MScrewA.svg")));
 		box.size = sw->box.size;
 	}
 };
 
-struct MScrewB : SVGScrew {
+struct MScrewB : SvgScrew {
 		MScrewB() {
 		sw->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Screws/MScrewB.svg")));
 		box.size = sw->box.size;
 	}
 };
 
-struct MScrewC : SVGScrew {
+struct MScrewC : SvgScrew {
 		MScrewC() {
 		sw->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Screws/MScrewC.svg")));
 		box.size = sw->box.size;
 	}
 };
 
-struct MScrewD : SVGScrew {
+struct MScrewD : SvgScrew {
 		MScrewD() {
 		sw->setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Screws/MScrewD.svg")));
 		box.size = sw->box.size;
