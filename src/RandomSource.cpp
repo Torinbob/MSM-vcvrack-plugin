@@ -148,13 +148,13 @@ RandomSourceWidget::RandomSourceWidget(RandomSource *module) {
 	box.size = Vec(8 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
 	panelClassic = new SvgPanel();
 	panelClassic->box.size = box.size;
-	panelClassic->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/Random Source.svg")));
+	panelClassic->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/RandomSource.svg")));
 	panelClassic->visible = true;
 	addChild(panelClassic);
 
 	panelNightMode = new SvgPanel();
 	panelNightMode->box.size = box.size;
-	panelNightMode->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/Random Source-Dark.svg")));
+	panelNightMode->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/RandomSource-Dark.svg")));
 	panelNightMode->visible = false;
 	addChild(panelNightMode);
 
