@@ -103,6 +103,18 @@ struct CrazyMult : Module {
 		configParam(CrazyMult::AorB_6_PARAM, -1.0, 1.0, 0.0, "A/Off/B");
 		configParam(CrazyMult::AorB_7_PARAM, -1.0, 1.0, 0.0, "A/Off/B");
 		configParam(CrazyMult::AorB_8_PARAM, -1.0, 1.0, 0.0, "A/Off/B");
+
+		getParamQuantity(AorB_1_PARAM)->randomizeEnabled = false;
+		getParamQuantity(AorB_2_PARAM)->randomizeEnabled = false;
+		getParamQuantity(AorB_3_PARAM)->randomizeEnabled = false;
+		getParamQuantity(AorB_4_PARAM)->randomizeEnabled = false;
+		getParamQuantity(AorB_5_PARAM)->randomizeEnabled = false;
+		getParamQuantity(AorB_6_PARAM)->randomizeEnabled = false;
+		getParamQuantity(AorB_7_PARAM)->randomizeEnabled = false;
+		getParamQuantity(AorB_8_PARAM)->randomizeEnabled = false;
+
+		onReset();
+
 	}
 
 	void process(const ProcessArgs& args) override;

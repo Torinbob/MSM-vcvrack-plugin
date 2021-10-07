@@ -61,6 +61,10 @@ struct ExperimentalVCO : Module {
 		configParam(ExperimentalVCO::WINDOW, 512.0, 2047.0, 1024.0, "Window Size");
 		configParam(ExperimentalVCO::FM_PARAM, -1.0, 1.0, 0.0, "FM CV", "%", 0.0f, 100);
 
+		getParamQuantity(LFOMODE)->randomizeEnabled = false;
+
+		onReset();
+
 	}
 
 	void process(const ProcessArgs& args) override;

@@ -66,6 +66,10 @@ struct Wavefolder : Module {
 		configParam(Wavefolder::DOWN_PARAM, 0.0, 1.0, 0.0, "Lower Shape");
 		configParam(Wavefolder::GAIN_PARAM, 0.0, 1.0, 0.0, "Fold Gain");
 		configParam(Wavefolder::GAIN_CV_PARAM, -1.0, 1.0, 0.0, "Fold Gain CV");
+
+		getParamQuantity(TYPESWITCH)->randomizeEnabled = false;
+
+		onReset();
 	}
 
 	void process(const ProcessArgs& args) override;

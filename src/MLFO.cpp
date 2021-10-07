@@ -73,6 +73,13 @@ struct LFO : Module {
 		configParam(LFO::WAVE_A_PARAM, 0.0, 4.0, 0.0, "Wave Type");
 		configParam(LFO::WAVE_B_PARAM, 0.0, 4.0, 0.0, "Wave Type");
 		configParam(LFO::MIX_PARAM, 0.0, 1.0, 0.5, "Crossfeed");
+
+		getParamQuantity(OFFSET_1_PARAM)->randomizeEnabled = false;
+		getParamQuantity(INVERT_1_PARAM)->randomizeEnabled = false;
+		getParamQuantity(OFFSET_2_PARAM)->randomizeEnabled = false;
+		getParamQuantity(INVERT_2_PARAM)->randomizeEnabled = false;
+
+		onReset();
 	}
 
 	void process(const ProcessArgs& args) override;

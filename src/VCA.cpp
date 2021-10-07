@@ -49,6 +49,12 @@ struct VCA : Module {
 		configParam(VCA::LEVEL_A_L, 0.0, 1.0, 0.5, "Left Amp", "%", 0.f, 100);
 		configParam(VCA::LEVEL_A_R, 0.0, 1.0, 0.5, "Right Amp", "%", 0.f, 100);
 		configParam(VCA::PAN_A, -1.0, 1.0, 0.0, "Pan");
+
+		getParamQuantity(MODE_A)->randomizeEnabled = false;
+		getParamQuantity(MODE_LIN_EXP_L_PARAM_A)->randomizeEnabled = false;
+		getParamQuantity(MODE_LIN_EXP_R_PARAM_A)->randomizeEnabled = false;
+
+		onReset();
 	}
 
 	void process(const ProcessArgs& args) override;

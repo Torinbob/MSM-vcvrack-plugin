@@ -117,6 +117,7 @@ struct MSMToggleKnob : SvgKnob {
 	}
 
 	void onChange(const event::Change &e) override {
+		ParamQuantity* paramQuantity = getParamQuantity();
     paramQuantity->setValue(roundf(paramQuantity->getValue()));
     SvgKnob::onChange(e);
   }
@@ -160,6 +161,7 @@ struct MSMToggle2Knob : SvgKnob {
 	}
 
 	void onChange(const event::Change &e) override {
+	ParamQuantity* paramQuantity = getParamQuantity();
     paramQuantity->setValue(roundf(paramQuantity->getValue()));
     SvgKnob::onChange(e);
   }
@@ -282,7 +284,7 @@ struct ToggleMe2 : SvgSwitch {
 	{
 
 	}
-	void randomize() override {}
+	// void randomize() override {}
 };
 
 struct MThree : ToggleMe {

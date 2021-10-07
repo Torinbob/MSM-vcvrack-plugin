@@ -453,6 +453,11 @@ struct VCO : Module {
 		configParam(VCO::SHAPE_CV_PARAM, -1.0, 1.0, 0.0, "Fold Shape CV");
 		configParam(VCO::UP_PARAM, 0.0, 1.0, 0.0, "Upper Shape");
 		configParam(VCO::DOWN_PARAM, 0.0, 1.0, 0.0, "Lower Shape");
+
+		getParamQuantity(LFOMODE1_PARAM)->randomizeEnabled = false;
+		getParamQuantity(LFOMODE2_PARAM)->randomizeEnabled = false;
+
+		onReset();
 	}
 
 	void process(const ProcessArgs& args) override;
