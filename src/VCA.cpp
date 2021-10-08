@@ -54,7 +54,6 @@ struct VCA : Module {
 		getParamQuantity(MODE_LIN_EXP_L_PARAM_A)->randomizeEnabled = false;
 		getParamQuantity(MODE_LIN_EXP_R_PARAM_A)->randomizeEnabled = false;
 
-		onReset();
 	}
 
 	void process(const ProcessArgs& args) override;

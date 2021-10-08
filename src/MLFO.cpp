@@ -79,7 +79,6 @@ struct LFO : Module {
 		getParamQuantity(OFFSET_2_PARAM)->randomizeEnabled = false;
 		getParamQuantity(INVERT_2_PARAM)->randomizeEnabled = false;
 
-		onReset();
 	}
 
 	void process(const ProcessArgs& args) override;

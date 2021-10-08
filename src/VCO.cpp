@@ -457,7 +457,6 @@ struct VCO : Module {
 		getParamQuantity(LFOMODE1_PARAM)->randomizeEnabled = false;
 		getParamQuantity(LFOMODE2_PARAM)->randomizeEnabled = false;
 
-		onReset();
 	}
 
 	void process(const ProcessArgs& args) override;

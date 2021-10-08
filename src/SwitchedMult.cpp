@@ -113,8 +113,6 @@ struct CrazyMult : Module {
 		getParamQuantity(AorB_7_PARAM)->randomizeEnabled = false;
 		getParamQuantity(AorB_8_PARAM)->randomizeEnabled = false;
 
-		onReset();
-
 	}
 
 	void process(const ProcessArgs& args) override;

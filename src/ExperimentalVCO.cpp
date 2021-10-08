@@ -63,8 +63,6 @@ struct ExperimentalVCO : Module {
 
 		getParamQuantity(LFOMODE)->randomizeEnabled = false;
 
-		onReset();
-
 	}
 
 	void process(const ProcessArgs& args) override;
