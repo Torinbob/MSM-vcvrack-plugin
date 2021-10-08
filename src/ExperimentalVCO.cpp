@@ -228,7 +228,7 @@ ExperimentalVCOWidget::ExperimentalVCOWidget(ExperimentalVCO *module) {
 
 	pEspenBack = new MSMLightPanel();
 	pEspenBack->box.size = box.size;
-	pEspenBack->backgroundImage = (APP->window->loadImage(asset::plugin(pluginInstance, "res/Panels/MSVCO-Espen-Back.png")));
+	pEspenBack->backgroundImagePath = "res/Panels/MSVCO-Espen-Back.png";
 	pEspenBack->visible = false;
 	addChild(pEspenBack);
 
@@ -240,7 +240,7 @@ ExperimentalVCOWidget::ExperimentalVCOWidget(ExperimentalVCO *module) {
 
 	pOmriBack = new MSMLightPanel();
 	pOmriBack->box.size = box.size;
-	pOmriBack->backgroundImage = (APP->window->loadImage(asset::plugin(pluginInstance, "res/Panels/MSVCO-Omri-Back.png")));
+	pOmriBack->backgroundImagePath = "res/Panels/MSVCO-Omri-Back.png";
 	pOmriBack->visible = false;
 	addChild(pOmriBack);
 

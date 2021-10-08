@@ -470,6 +470,7 @@ struct MBlueLight : MGrayModuleLightWidget {
 struct MSMPanel : TransparentWidget {
   NVGcolor backgroundColor;
   std::shared_ptr<Image> backgroundImage;
+  std::string backgroundImagePath = "";
 	void draw(const DrawArgs &args) override {
 	  nvgBeginPath(args.vg);
 	  nvgRect(args.vg, 0.0, 0.0, box.size.x, box.size.y);
@@ -481,12 +482,15 @@ struct MSMPanel : TransparentWidget {
 	  }
 
 	  // Background image
-	  if (backgroundImage) {
-	    int width, height;
-	    nvgImageSize(args.vg, backgroundImage->handle, &width, &height);
-	    NVGpaint paint = nvgImagePattern(args.vg, 0.0, 0.0, width, height, 0.0, backgroundImage->handle, 1.0);
-	    nvgFillPaint(args.vg, paint);
-	    nvgFill(args.vg);
+	  if (!backgroundImagePath.empty()) {
+	    backgroundImage = APP->window->loadImage(asset::plugin(pluginInstance, backgroundImagePath));
+		 if (backgroundImage) {
+			int width, height;
+			nvgImageSize(args.vg, backgroundImage->handle, &width, &height);
+			NVGpaint paint = nvgImagePattern(args.vg, 0.0, 0.0, width, height, 0.0, backgroundImage->handle, 1.0);
+			nvgFillPaint(args.vg, paint);
+			nvgFill(args.vg);
+		 }
 	  }
 
 	  // Border
