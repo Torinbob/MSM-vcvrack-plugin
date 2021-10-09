@@ -140,6 +140,8 @@ void ExperimentalVCO::process(const ProcessArgs& args) {
 
 };
 
+
+
 struct ExperimentalVCOClassicMenu : MenuItem {
 	ExperimentalVCO *experimentalvco;
 	void onAction(const event::Action &e) override {
@@ -186,24 +188,24 @@ struct ExperimentalVCOOmriMenu : MenuItem {
 
 struct ExperimentalVCOWidget : ModuleWidget {
 	// Panel Themes
-	SvgPanel *pClassic;
-	SvgPanel *pNightMode;
+SvgPanel *pClassic;
+SvgPanel *pNightMode;
 
-	SvgPanel *pEspenFront;
-	MSMPanel *pEspenBack;
+//SvgPanel *pEspenFront;
+//	MSMPanel *pEspenBack;
 
-	MSMPanel *pOmriBack;
-	SvgPanel *pOmriFront;
+//	MSMPanel *pOmriBack;
+//SvgPanel *pOmriFront;
 
-	void appendContextMenu(Menu *menu) override {
+void appendContextMenu(Menu *menu) override {
 		ExperimentalVCO *experimentalvco = dynamic_cast<ExperimentalVCO*>(module);
 		assert(experimentalvco);
 		menu->addChild(construct<MenuEntry>());
 		menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Theme"));
 		menu->addChild(construct<ExperimentalVCOClassicMenu>(&ExperimentalVCOClassicMenu::text, "Classic (default)", &ExperimentalVCOClassicMenu::experimentalvco, experimentalvco));
 		menu->addChild(construct<ExperimentalVCONightModeMenu>(&ExperimentalVCONightModeMenu::text, "Night Mode", &ExperimentalVCONightModeMenu::experimentalvco, experimentalvco));
-		menu->addChild(construct<ExperimentalVCOEspenMenu>(&ExperimentalVCOEspenMenu::text, "Espen's Treasure | Jedi", &ExperimentalVCOEspenMenu::experimentalvco, experimentalvco));
-		menu->addChild(construct<ExperimentalVCOOmriMenu>(&ExperimentalVCOOmriMenu::text, "Omri's Treasure | Mushroom", &ExperimentalVCOOmriMenu::experimentalvco, experimentalvco));
+		//menu->addChild(construct<ExperimentalVCOEspenMenu>(&ExperimentalVCOEspenMenu::text, "Espen's Treasure | Jedi", &ExperimentalVCOEspenMenu::experimentalvco, experimentalvco));
+		//menu->addChild(construct<ExperimentalVCOOmriMenu>(&ExperimentalVCOOmriMenu::text, "Omri's Treasure | Mushroom", &ExperimentalVCOOmriMenu::experimentalvco, experimentalvco));
 	}
 
 	ExperimentalVCOWidget(ExperimentalVCO *module);
@@ -226,6 +228,7 @@ ExperimentalVCOWidget::ExperimentalVCOWidget(ExperimentalVCO *module) {
 	pNightMode->visible = false;
 	addChild(pNightMode);
 
+/*
 	pEspenBack = new MSMLightPanel();
 	pEspenBack->box.size = box.size;
 	pEspenBack->backgroundImagePath = "res/Panels/MSVCO-Espen-Back.png";
@@ -249,6 +252,8 @@ ExperimentalVCOWidget::ExperimentalVCOWidget(ExperimentalVCO *module) {
 	pOmriFront->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Panels/MSVCO-Omri-Front.svg")));
 	pOmriFront->visible = false;
 	addChild(pOmriFront);
+
+	*/
 
 
 	addChild(createWidget<MScrewA>(Vec(15, 0)));
@@ -289,6 +294,7 @@ ExperimentalVCOWidget::ExperimentalVCOWidget(ExperimentalVCO *module) {
 
 };
 
+
 void ExperimentalVCOWidget::step() {
 	if (module) {
 		ExperimentalVCO *experimentalvco = dynamic_cast<ExperimentalVCO*>(module);
@@ -296,14 +302,16 @@ void ExperimentalVCOWidget::step() {
 		pClassic->visible = (experimentalvco->Theme == 0);
 		pNightMode->visible = (experimentalvco->Theme == 1);
 
-		pEspenBack->visible = (experimentalvco->Theme == 2);
-		pEspenFront->visible = (experimentalvco->Theme == 2);
+		// pEspenBack->visible = (experimentalvco->Theme == 2);
+		// pEspenFront->visible = (experimentalvco->Theme == 2);
 
-		pOmriBack->visible = (experimentalvco->Theme == 3);
-		pOmriFront->visible = (experimentalvco->Theme == 3);
+		// pOmriBack->visible = (experimentalvco->Theme == 3);
+		// pOmriFront->visible = (experimentalvco->Theme == 3);
 	}
 
 	ModuleWidget::step();
 }
+
+
 
 Model *modelExperimentalVCO = createModel<ExperimentalVCO, ExperimentalVCOWidget>("TreasureVCO");

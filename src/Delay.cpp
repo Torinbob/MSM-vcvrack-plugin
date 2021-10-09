@@ -495,7 +495,7 @@ void Delay::process(const ProcessArgs& args) {
 struct DisplayWidget : TransparentWidget {
 
 	int *value = nullptr;
-	std::shared_ptr<Font> font = APP->window->loadFont(asset::plugin(pluginInstance, "res/Fonts/Crysta.ttf"));
+	std::string fontPath = "res/Fonts/Crysta.ttf";
 
 	DisplayWidget()
 	{
@@ -503,6 +503,7 @@ struct DisplayWidget : TransparentWidget {
 	};
 
 	void draw(const DrawArgs& args) override {
+		std::shared_ptr<Font> font = APP->window->loadFont(asset::plugin(pluginInstance, fontPath));
 		// Background
 		NVGcolor backgroundColor = nvgRGB(0x6, 0x9, 0x37);
 		NVGcolor borderColor = nvgRGB(0x10, 0x10, 0x10);
@@ -544,7 +545,7 @@ struct DisplayWidget : TransparentWidget {
 struct TRatioADisplay : TransparentWidget {
 
 	Delay *module{};
-	std::shared_ptr<Font> font = APP->window->loadFont(asset::plugin(pluginInstance, "res/Fonts/Crysta.ttf"));;
+	std::string fontPath = "res/Fonts/Crysta.ttf";
 
 	TRatioADisplay()
 	{
@@ -552,6 +553,7 @@ struct TRatioADisplay : TransparentWidget {
 	}
 
 	void drawDivision(NVGcontext *vg, Vec pos, int division) {
+		std::shared_ptr<Font> font = APP->window->loadFont(asset::plugin(pluginInstance, fontPath));
 		// Background
     if (module) {
   		NVGcolor backgroundColor = nvgRGB(0x6, 0x9, 0x37);
@@ -587,7 +589,7 @@ struct TRatioADisplay : TransparentWidget {
 struct TRatioBDisplay : TransparentWidget {
 
 	Delay *module{};
-	std::shared_ptr<Font> font = APP->window->loadFont(asset::plugin(pluginInstance, "res/Fonts/Crysta.ttf"));
+	std::string fontPath = "res/Fonts/Crysta.ttf";
 
 	TRatioBDisplay()
 	{
@@ -596,6 +598,7 @@ struct TRatioBDisplay : TransparentWidget {
 
 
 	void drawDiv(NVGcontext *vg, Vec pos, int division) {
+		std::shared_ptr<Font> font = APP->window->loadFont(asset::plugin(pluginInstance, fontPath));
     if (module) {
   		// Background
   		NVGcolor backgroundColor = nvgRGB(0x6, 0x9, 0x37);
